@@ -33,7 +33,7 @@ class Search
   end
 
   def to_url_params
-    %i[q what order].map { |p| "#{p}=#{CGI.escape(send(p).to_s)}" }.join('&amp;')
+    %i[q what order].map { |p| "#{p}=#{CGI.escape(public_send(p).to_s)}" }.join('&amp;')
   end
 
   def page_count

@@ -148,10 +148,10 @@ class Comment < ApplicationRecord
     js = {}
     h.each do |k|
       if k.is_a?(Symbol)
-        js[k] = send(k)
+        js[k] = public_send(k)
       elsif k.is_a?(Hash)
         js[k.keys.first] = if k.values.first.is_a?(Symbol)
-                             send(k.values.first)
+                             public_send(k.values.first)
                            else
                              k.values.first
                            end

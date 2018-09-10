@@ -13,7 +13,7 @@ class DownvotedCommenters
   def initialize(interval)
     @interval = interval
     length = time_interval(interval)
-    @period = length[:dur].send(length[:intv].downcase).ago
+    @period = length[:dur].public_send(length[:intv].downcase).ago
   end
 
   def check_list_for(showing_user)
