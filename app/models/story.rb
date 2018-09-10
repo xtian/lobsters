@@ -339,7 +339,7 @@ class Story < ApplicationRecord
       return false
     end
 
-    if self.taggings.select {|t| t.tag && t.tag.privileged? }.any?
+    if self.taggings.select {|t| t.tag&.privileged? }.any?
       return false
     end
 
@@ -463,7 +463,7 @@ class Story < ApplicationRecord
   end
 
   def is_editable_by_user?(user)
-    if user && user.is_moderator?
+    if user&.is_moderator?
       return true
     elsif user && user.id == self.user_id
       if self.is_moderated?
@@ -501,7 +501,7 @@ class Story < ApplicationRecord
   end
 
   def is_undeletable_by_user?(user)
-    if user && user.is_moderator?
+    if user&.is_moderator?
       return true
     elsif user && user.id == self.user_id && !self.is_moderated?
       return true
@@ -780,9 +780,7 @@ class Story < ApplicationRecord
   end
 
   def update_merged_into_story_comments
-    if self.merged_into_story
-      self.merged_into_story.update_comments_count!
-    end
+    self.merged_into_story&.update_comments_count!
   end
 
   def domain
@@ -821,7 +819,7 @@ class Story < ApplicationRecord
   def url_is_editable_by_user?(user)
     if self.new_record?
       true
-    elsif user && user.is_moderator? && self.url.present?
+    elsif user&.is_moderator? && self.url.present?
       true
     else
       false
@@ -843,7 +841,7 @@ class Story < ApplicationRecord
       next if v.vote == 0
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
-      if user && user.is_moderator?
+      if user&.is_moderator?
         r_whos[v.reason.to_s] ||= []
         r_whos[v.reason.to_s].push v.user.username
       end

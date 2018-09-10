@@ -12,7 +12,7 @@ FactoryBot.define do
       end
       banned_at { Time.current }
       banned_reason { 'some reason' }
-      banned_by_user_id { banner && banner.id }
+      banned_by_user_id { banner&.id }
     end
     trait(:noinvite) do
       transient do
@@ -20,7 +20,7 @@ FactoryBot.define do
       end
       disabled_invite_at { Time.current }
       disabled_invite_reason { 'some reason' }
-      disabled_invite_by_user_id { disabler && disabler.id }
+      disabled_invite_by_user_id { disabler&.id }
     end
     trait(:inactive) do
       username { 'inactive-user' }

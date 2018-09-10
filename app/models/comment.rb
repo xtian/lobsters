@@ -318,7 +318,7 @@ class Comment < ApplicationRecord
       c.push 'inactive_user'
     elsif self.user.is_new?
       c.push 'new_user'
-    elsif self.story && self.story.user_is_author? &&
+    elsif self.story&.user_is_author? &&
           self.story.user_id == self.user_id
       c.push 'user_is_author'
     end
@@ -327,7 +327,7 @@ class Comment < ApplicationRecord
   end
 
   def is_deletable_by_user?(user)
-    if user && user.is_moderator?
+    if user&.is_moderator?
       return true
     elsif user && user.id == self.user_id
       return self.created_at >= DELETEABLE_DAYS.days.ago
@@ -366,7 +366,7 @@ class Comment < ApplicationRecord
   end
 
   def is_undeletable_by_user?(user)
-    if user && user.is_moderator?
+    if user&.is_moderator?
       return true
     elsif user && user.id == self.user_id && !self.is_moderated?
       return true
@@ -376,7 +376,7 @@ class Comment < ApplicationRecord
   end
 
   def log_hat_use
-    return unless self.hat && self.hat.modlog_use
+    return unless self.hat&.modlog_use
 
     m = Moderation.new
     m.created_at = self.created_at
@@ -423,7 +423,7 @@ class Comment < ApplicationRecord
   def score_for_user(u)
     if self.showing_downvotes_for_user?(u)
       score
-    elsif u && u.can_downvote?(self)
+    elsif u&.can_downvote?(self)
       '~'
     else
       '&nbsp;'.html_safe
@@ -435,7 +435,7 @@ class Comment < ApplicationRecord
   end
 
   def showing_downvotes_for_user?(u)
-    return (u && u.is_moderator?) ||
+    return (u&.is_moderator?) ||
            (self.created_at && self.created_at < 36.hours.ago) ||
            !SCORE_RANGE_TO_HIDE.include?(self.score)
   end
@@ -469,7 +469,7 @@ class Comment < ApplicationRecord
         "+#{r_counts[k]}"
       else
         o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
-        if u && u.is_moderator? && self.user_id != u.id
+        if u&.is_moderator? && self.user_id != u.id
           o << " (#{r_users[k].join(', ')})"
         end
         o

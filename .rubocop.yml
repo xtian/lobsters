@@ -181,8 +181,6 @@ Style/RescueStandardError:
   EnforcedStyle: implicit
 Style/RegexpLiteral:
   AllowInnerSlashes: true
-Style/SafeNavigation:
-  Enabled: false
 Style/SymbolArray:
   EnforcedStyle: brackets
 Style/TrailingCommaInArrayLiteral:

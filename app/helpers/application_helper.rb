@@ -49,7 +49,7 @@ module ApplicationHelper
       @header_links[threads_path] = { :title => 'Your Threads' }
     end
 
-    if @user && @user.can_submit_stories?
+    if @user&.can_submit_stories?
       @header_links[new_story_path] = { :title => 'Submit Story' }
     end
 

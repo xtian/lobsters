@@ -17,7 +17,7 @@ module InactiveUser
   end
 
   def self.refresh_comment_counts! user
-    user.update_comments_posted_count! if user
+    user&.update_comments_posted_count!
     inactive_user.update_comments_posted_count!
   end
 end

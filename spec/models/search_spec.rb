@@ -55,7 +55,7 @@ describe Search do
   after(:all) do
     @comments.each(&:destroy!)
     @stories.each(&:destroy!)
-    @user.destroy! if @user
+    @user&.destroy!
   end
 
   it 'can search for stories' do
