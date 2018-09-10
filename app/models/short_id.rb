@@ -9,7 +9,7 @@ class ShortId
   end
 
   def generate
-    until (generated_id = candidate_id) && generated_id.valid? do
+    until (generated_id = candidate_id) && generated_id.valid?
       self.generation_attempts += 1
       raise 'too many hash collisions' if generation_attempts == 10
     end
