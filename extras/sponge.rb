@@ -112,7 +112,7 @@ class Sponge
       Timeout.timeout(MAX_DNS_TIME) do
         ips = Resolv.getaddresses(uri.host)
 
-        if !ips.any?
+        if ips.none?
           raise
         end
 

@@ -57,7 +57,7 @@ to_add.each_slice(100) do |g|
     g.reject! {|tu| tu.downcase == u['screen_name'].downcase }
   end
 
-  if !g.any?
+  if g.none?
     next
   end
 

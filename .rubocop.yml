@@ -137,8 +137,6 @@ Style/IfInsideElse:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
-Style/InverseMethods:
-  Enabled: false
 Style/Lambda:
   Enabled: false
 Style/MultilineBlockChain:

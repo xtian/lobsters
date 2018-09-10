@@ -156,7 +156,7 @@ class Story < ApplicationRecord
       errors.add(:title, ' may not contain graphic codepoints')
     end
 
-    if !errors.any? && url.blank?
+    if errors.none? && url.blank?
       self.user_is_author = true
     end
 
@@ -519,7 +519,7 @@ class Story < ApplicationRecord
     all_changes = changes.merge(tagging_changes)
     all_changes.delete('unavailable_at')
 
-    if !all_changes.any?
+    if all_changes.none?
       return
     end
 
