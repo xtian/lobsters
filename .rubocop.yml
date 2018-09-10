@@ -99,3 +99,5 @@ Style/Send:
   Enabled: true
 Style/StringMethods:
   Enabled: true
+Style/SymbolArray:
+  Enabled: true
