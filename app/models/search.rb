@@ -64,13 +64,11 @@ class Search
   end
 
   def with_stories_in_domain(base, domain)
-    begin
-      reg = Regexp.new("//([^/]*\.)?#{domain}/")
-      base.where("`stories`.`url` REGEXP '" +
-        ActiveRecord::Base.connection.quote_string(reg.source) + "'")
-    rescue RegexpError
-      return base
-    end
+    reg = Regexp.new("//([^/]*\.)?#{domain}/")
+    base.where("`stories`.`url` REGEXP '" +
+      ActiveRecord::Base.connection.quote_string(reg.source) + "'")
+  rescue RegexpError
+    base
   end
 
   def with_stories_matching_tags(base, tag_scopes)

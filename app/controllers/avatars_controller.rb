@@ -13,13 +13,12 @@ class AvatarsController < ApplicationController
     Dir.entries(CACHE_DIR).select {|f|
       f.match(/\A#{@user.username}-(\d+)\.png\z/)
     }.each do |f|
-      begin
-        Rails.logger.debug "Expiring #{f}"
-        File.unlink("#{CACHE_DIR}/#{f}")
-        expired += 1
-      rescue => e
-        Rails.logger.error "Failed expiring #{f}: #{e}"
-      end
+
+      Rails.logger.debug "Expiring #{f}"
+      File.unlink("#{CACHE_DIR}/#{f}")
+      expired += 1
+    rescue => e
+      Rails.logger.error "Failed expiring #{f}: #{e}"
     end
 
     flash[:success] = "Your avatar cache has been purged of #{'file'.pluralize(expired)}"

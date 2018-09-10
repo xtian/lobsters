@@ -11,49 +11,41 @@ class HomeController < ApplicationController
   before_action :require_logged_in_user, :only => [:upvoted]
 
   def four_oh_four
-    begin
-      @title = 'Resource Not Found'
-      render :action => '404', :status => :not_found
-    rescue ActionView::MissingTemplate
-      render :html => ('<div class="box wide">' +
-        '<div class="legend">404</div>' +
-        'Resource not found' +
-        '</div>').html_safe, :layout => 'application'
-    end
+    @title = 'Resource Not Found'
+    render :action => '404', :status => :not_found
+  rescue ActionView::MissingTemplate
+    render :html => ('<div class="box wide">' +
+      '<div class="legend">404</div>' +
+      'Resource not found' +
+      '</div>').html_safe, :layout => 'application'
   end
 
   def about
-    begin
-      @title = 'About'
-      render :action => 'about'
-    rescue ActionView::MissingTemplate
-      render :html => ('<div class="box wide">' +
-        'A mystery.' +
-        '</div>').html_safe, :layout => 'application'
-    end
+    @title = 'About'
+    render :action => 'about'
+  rescue ActionView::MissingTemplate
+    render :html => ('<div class="box wide">' +
+      'A mystery.' +
+      '</div>').html_safe, :layout => 'application'
   end
 
   def chat
-    begin
-      @title = 'Chat'
-      render :action => 'chat'
-    rescue ActionView::MissingTemplate
-      render :html => ('<div class="box wide">' +
-        '<div class="legend">Chat</div>' +
-        'Keep it on-site' +
-        '</div>').html_safe, :layout => 'application'
-    end
+    @title = 'Chat'
+    render :action => 'chat'
+  rescue ActionView::MissingTemplate
+    render :html => ('<div class="box wide">' +
+      '<div class="legend">Chat</div>' +
+      'Keep it on-site' +
+      '</div>').html_safe, :layout => 'application'
   end
 
   def privacy
-    begin
-      @title = 'Privacy'
-      render :action => 'privacy'
-    rescue ActionView::MissingTemplate
-      render :html => ('<div class="box wide">' +
-                      'You apparently have no privacy.' +
-                      '</div>').html_safe, :layout => 'application'
-    end
+    @title = 'Privacy'
+    render :action => 'privacy'
+  rescue ActionView::MissingTemplate
+    render :html => ('<div class="box wide">' +
+                    'You apparently have no privacy.' +
+                    '</div>').html_safe, :layout => 'application'
   end
 
   def hidden
