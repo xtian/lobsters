@@ -914,7 +914,7 @@ class Story < ApplicationRecord
 
       if site_name.present? &&
          site_name.length < title.length &&
-         title[-(site_name.length), site_name.length] == site_name
+         title[-site_name.length, site_name.length] == site_name
         title = title[0, title.length - site_name.length]
 
         # remove title/site name separator

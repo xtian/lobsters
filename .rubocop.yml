@@ -169,8 +169,6 @@ Style/RaiseArgs:
   EnforcedStyle: compact
 Style/RedundantBegin:
   Enabled: false
-Style/RedundantParentheses:
-  Enabled: false
 Style/RescueStandardError:
   EnforcedStyle: implicit
 Style/RegexpLiteral:
