@@ -155,8 +155,6 @@ Style/NegatedWhile:
   Enabled: false
 Style/Next:
   Enabled: false
-Style/NonNilCheck:
-  Enabled: false
 Style/NumericPredicate:
   Enabled: false
 Style/RaiseArgs:

@@ -493,7 +493,7 @@ class Story < ApplicationRecord
   end
 
   def is_unavailable
-    unavailable_at != nil
+    !unavailable_at.nil?
   end
 
   def is_unavailable=(what)
