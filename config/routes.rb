@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
     :as => "root"
 
+  get '/ping.txt', to: proc { [200, {}, ['ok']] }
+
   get "/404" => "home#four_oh_four", :via => :all
 
   get "/rss" => "home#index", :format => "rss"
