@@ -25,7 +25,7 @@ class String
   # like ActionView::Helpers::TextHelper but preserve > and indentation when
   # wrapping lines
   def word_wrap(len)
-    split("\n").collect do |line|
+    split("\n").map do |line|
       if line.length <= len
         line
       elsif (m = line.match(/^(> ?|   +)(.*)/))

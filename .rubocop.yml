@@ -74,6 +74,8 @@ Style/CommentedKeyword:
   Enabled: false
 Style/ClassVars:
   Enabled: false
+Style/CollectionMethods:
+  Enabled: true
 # It would be nice to have this on, but I'm not up for writing 66 of these in
 # the process of addressing the initial 4,489 cop warnings.
 Style/Documentation:

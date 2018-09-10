@@ -293,10 +293,10 @@ class Story < ApplicationRecord
         c.upvotes + 1 - c.downvotes
       end
     end
-      .inject(&:+).to_f * 0.5
+      .reduce(&:+).to_f * 0.5
 
     # mix in any stories this one cannibalized
-    cpoints += merged_stories.map(&:score).inject(&:+).to_f
+    cpoints += merged_stories.map(&:score).reduce(&:+).to_f
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
