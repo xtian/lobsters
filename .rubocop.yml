@@ -1,14 +1,9 @@
 # Project setup:
 Rails:
   Enabled: true
+
 AllCops:
-  Include:
-    - '**/*.rb'
-    - '**/Rakefile'
-    - '**/config.ru'
-    - '**/*.rake'
   Exclude:
-    - Gemfile
     - 'bin/**/*'
     - 'db/**/*'
     - 'vendor/**/*'
