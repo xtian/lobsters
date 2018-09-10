@@ -253,7 +253,7 @@ class StoriesController < ApplicationController
 
   def unvote
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => :bad_request
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
@@ -265,7 +265,7 @@ class StoriesController < ApplicationController
 
   def upvote
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => :bad_request
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
@@ -277,15 +277,15 @@ class StoriesController < ApplicationController
 
   def downvote
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => :bad_request
     end
 
     if !Vote::STORY_REASONS[params[:reason]]
-      return render :plain => "invalid reason", :status => 400
+      return render :plain => "invalid reason", :status => :bad_request
     end
 
     if !@user.can_downvote?(story)
-      return render :plain => "not permitted to downvote", :status => 400
+      return render :plain => "not permitted to downvote", :status => :bad_request
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
@@ -297,7 +297,7 @@ class StoriesController < ApplicationController
 
   def hide
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => :bad_request
     end
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
@@ -308,7 +308,7 @@ class StoriesController < ApplicationController
 
   def unhide
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => :bad_request
     end
 
     HiddenStory.where(:user_id => @user.id, :story_id => story.id).delete_all
@@ -318,7 +318,7 @@ class StoriesController < ApplicationController
 
   def save
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => :bad_request
     end
 
     SavedStory.save_story_for_user(story.id, @user.id)
@@ -328,7 +328,7 @@ class StoriesController < ApplicationController
 
   def unsave
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => :bad_request
     end
 
     SavedStory.where(:user_id => @user.id, :story_id => story.id).delete_all

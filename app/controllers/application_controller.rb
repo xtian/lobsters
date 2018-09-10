@@ -149,7 +149,7 @@ class ApplicationController < ActionController::Base
     if @user
       true
     else
-      render :plain => "not logged in", :status => 400
+      render :plain => "not logged in", :status => :bad_request
       return false
     end
   end

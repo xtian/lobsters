@@ -11,7 +11,7 @@ class HomeController < ApplicationController
   def four_oh_four
     begin
       @title = "Resource Not Found"
-      render :action => "404", :status => 404
+      render :action => "404", :status => :not_found
     rescue ActionView::MissingTemplate
       render :html => ("<div class=\"box wide\">" <<
         "<div class=\"legend\">404</div>" <<

@@ -96,8 +96,6 @@ Performance/RedundantMatch:
 # Rails
 Rails/FilePath:
   Enabled: false
-Rails/HttpStatus:
-  Enabled: false
 Rails/OutputSafety:
   Enabled: false
 Rails/SkipsModelValidations:
