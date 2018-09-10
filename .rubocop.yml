@@ -97,3 +97,5 @@ Style/RegexpLiteral:
   AllowInnerSlashes: true
 Style/Send:
   Enabled: true
+Style/StringMethods:
+  Enabled: true
