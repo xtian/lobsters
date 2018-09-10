@@ -4,12 +4,12 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.0'
 
-gem 'mysql2'
+gem 'pg'
+gem 'pg_search'
 
 # rails
 gem 'activerecord-typedstore'
 gem 'scenic'
-gem 'scenic-mysql_adapter'
 
 # js
 gem 'dynamic_form'
