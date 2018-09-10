@@ -5,14 +5,14 @@ require_relative 'boot'
 # included from https://github.com/rails/rails/blob/5-2-stable/railties/lib/rails/all.rb
 require 'rails'
 
-%w(
+%w[
   active_record/railtie
   action_controller/railtie
   action_view/railtie
   action_mailer/railtie
   rails/test_unit/railtie
   sprockets/railtie
-).each do |railtie|
+].each do |railtie|
 
   require railtie
 rescue LoadError

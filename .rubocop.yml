@@ -161,8 +161,6 @@ Style/NumericPredicate:
   Enabled: false
 Style/ParallelAssignment:
   Enabled: false
-Style/PercentLiteralDelimiters:
-  Enabled: false
 Style/RaiseArgs:
   EnforcedStyle: compact
 Style/RescueStandardError:

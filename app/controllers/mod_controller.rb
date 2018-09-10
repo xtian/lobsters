@@ -43,7 +43,7 @@ class ModController < ApplicationController
 private
 
   def default_periods
-    @periods = %w{1d 2d 3d 1w 1m}
+    @periods = %w[1d 2d 3d 1w 1m]
   end
 
   def period(query)

@@ -10,7 +10,7 @@ class FakeDataGenerator
     users = 0.upto(@users_count).map do
       name = Faker::Name.name
       password = Faker::Internet.password
-      user_name = Faker::Internet.user_name(name, %w(_))
+      user_name = Faker::Internet.user_name(name, %w[_])
       User.create! email: Faker::Internet.email(name),
         password: password,
         password_confirmation: password,
