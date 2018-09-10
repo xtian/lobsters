@@ -74,23 +74,21 @@ silence_warnings do
   ActionDispatch::Http::Parameters::DEFAULT_PARSERS = {}.freeze
 end
 
-# define site name and domain to be used globally, should be overridden in a
-# local file such as config/initializers/production.rb
 class << Rails.application
   def allow_invitation_requests?
-    true
+    Rails.application.secrets.allow_invitation_requests?
   end
 
   def open_signups?
-    ENV['OPEN_SIGNUPS'] == 'true'
+    Rails.application.secrets.open_signups?
   end
 
   def domain
-    'example.com'
+    Rails.application.secrets.domain
   end
 
   def name
-    'Lobsters'
+    Rails.application.secrets.name
   end
 
   # to force everyone to be considered logged-out (without destroying

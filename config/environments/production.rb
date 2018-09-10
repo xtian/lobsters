@@ -3,6 +3,21 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  Pushover.API_TOKEN = Rails.application.secrets.pushover_api_token
+  Pushover.SUBSCRIPTION_CODE = Rails.application.secrets.pushover_subscription_code
+
+  StoryCacher.DIFFBOT_API_KEY = Rails.application.secrets.diffbot_api_key
+
+  Twitter.CONSUMER_KEY = Rails.application.secrets.twitter_consumer_key
+  Twitter.CONSUMER_SECRET = Rails.application.secrets.twitter_consumer_secret
+  Twitter.AUTH_TOKEN = Rails.application.secrets.twitter_auth_token
+  Twitter.AUTH_SECRET = Rails.application.secrets.twitter_auth_secret
+
+  Github.CLIENT_ID = Rails.application.secrets.github_client_id
+  Github.CLIENT_SECRET = Rails.application.secrets.github_client_secret
+
+  BCrypt::Engine.cost = 12
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -56,6 +71,7 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "lobsters_#{Rails.env}"
 
   config.action_mailer.perform_caching = false
+  config.action_mailer.delivery_method = :sendmail
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
