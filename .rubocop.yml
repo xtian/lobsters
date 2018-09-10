@@ -143,8 +143,6 @@ Style/Lambda:
   Enabled: false
 Style/LineEndConcatenation:
   Enabled: false
-Style/MethodDefParentheses:
-  Enabled: false
 Style/MultilineBlockChain:
   Enabled: false
 Style/MultilineTernaryOperator:

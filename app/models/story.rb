@@ -785,7 +785,7 @@ class Story < ApplicationRecord
     set_domain url.match(URL_RE) if url
   end
 
-  def set_domain match
+  def set_domain(match)
     @domain = match ? match[:domain].sub(/^www\d*\./, '') : nil
   end
 
