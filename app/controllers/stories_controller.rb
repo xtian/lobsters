@@ -82,7 +82,7 @@ class StoriesController < ApplicationController
       sattrs = @story.fetched_attributes
 
       if sattrs[:url].present? && @story.url != sattrs[:url]
-        flash.now[:notice] = 'Note: URL has been changed to fetched ' +
+        flash.now[:notice] = 'Note: URL has been changed to fetched ' \
                              'canonicalized version'
         @story.url = sattrs[:url]
       end
@@ -395,7 +395,7 @@ private
     end
 
     if !@story
-      flash[:error] = 'Could not find story or you are not authorized ' +
+      flash[:error] = 'Could not find story or you are not authorized ' \
                       'to manage it.'
       redirect_to '/'
       return false

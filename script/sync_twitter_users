@@ -19,7 +19,7 @@ end
 list_id = our_list['id_str']
 
 # fetch its member list
-res = Twitter.oauth_request("/1.1/lists/members.json?list_id=#{list_id}" +
+res = Twitter.oauth_request("/1.1/lists/members.json?list_id=#{list_id}" \
   '&count=5000&skip_status=true', :get)
 their_users = res['users'].map {|u| [u['screen_name'].downcase, true] }.to_h
 

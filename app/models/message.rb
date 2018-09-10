@@ -87,7 +87,7 @@ class Message < ApplicationRecord
 
     if recipient.pushover_messages?
       recipient.pushover!(
-        :title => "#{Rails.application.name} message from " +
+        :title => "#{Rails.application.name} message from " \
           "#{author_username}: #{subject}",
         :message => plaintext_body,
         :url => url,

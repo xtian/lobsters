@@ -112,8 +112,8 @@ class Search
 
       if qwords.present?
         base.where!(
-          "(#{title_match_sql} OR " +
-          "#{description_match_sql} OR " +
+          "(#{title_match_sql} OR " \
+          "#{description_match_sql} OR " \
           "#{story_cache_match_sql})"
         )
 
@@ -136,8 +136,8 @@ class Search
       case order
       when 'relevance'
         if qwords.present?
-          results.order!(Arel.sql("((#{title_match_sql}) * 2) DESC, " +
-                                       "((#{description_match_sql}) * 1.5) DESC, " +
+          results.order!(Arel.sql("((#{title_match_sql}) * 2) DESC, " \
+                                       "((#{description_match_sql}) * 1.5) DESC, " \
                                        "(#{story_cache_match_sql}) DESC"))
         else
           results.order!('stories.created_at DESC')
@@ -160,7 +160,7 @@ class Search
         base = base.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
       end
       self.results = base.select(
-        'comments.*, ' +
+        'comments.*, ' \
         "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
       ).includes(:user, :story)
 

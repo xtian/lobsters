@@ -149,7 +149,7 @@ class Story < ApplicationRecord
     end
 
     if title.starts_with?('Ask') && tags_a.include?('ask')
-      errors.add(:title, " starting 'Ask #{Rails.application.name}' or similar is redundant " +
+      errors.add(:title, " starting 'Ask #{Rails.application.name}' or similar is redundant " \
                           'with the ask tag.')
     end
     if title.match?(GRAPHICS_RE)
@@ -170,7 +170,7 @@ class Story < ApplicationRecord
     return unless already_posted_story
 
     if already_posted_story.is_recent?
-      errors.add(:url, 'has already been submitted within the past ' +
+      errors.add(:url, 'has already been submitted within the past ' \
         "#{RECENT_DAYS} days")
     end
   end
@@ -225,7 +225,7 @@ class Story < ApplicationRecord
   end
 
   def self.score_sql
-    Arel.sql("(CAST(upvotes AS #{votes_cast_type}) - " +
+    Arel.sql("(CAST(upvotes AS #{votes_cast_type}) - " \
       "CAST(downvotes AS #{votes_cast_type}))")
   end
 
@@ -361,8 +361,8 @@ class Story < ApplicationRecord
     end
 
     if taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media? }.empty?
-      errors.add(:base, 'Must have at least one non-media (PDF, video) ' +
-        "tag.  If no tags apply to your content, it probably doesn't " +
+      errors.add(:base, 'Must have at least one non-media (PDF, video) ' \
+        "tag.  If no tags apply to your content, it probably doesn't " \
         'belong here.')
     end
   end
@@ -427,9 +427,9 @@ class Story < ApplicationRecord
     self.upvotes += upvote.to_i
     self.downvotes += downvote.to_i
 
-    Story.connection.execute("UPDATE #{Story.table_name} SET " +
-      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " +
-      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " +
+    Story.connection.execute("UPDATE #{Story.table_name} SET " \
+      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " \
+      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " \
       "hotness = '#{calculated_hotness}' WHERE id = #{id.to_i}")
   end
 
@@ -539,7 +539,7 @@ class Story < ApplicationRecord
       m.action = all_changes.map {|k, v|
         if k == 'merged_story_id'
           if v[1]
-            "merged into #{merged_into_story.short_id} " +
+            "merged into #{merged_into_story.short_id} " \
               "(#{merged_into_story.title})"
           else
             'unmerged from another story'
@@ -675,7 +675,7 @@ class Story < ApplicationRecord
     end
 
     if final_tags.any? && (final_tags.sort != tags_a.sort)
-      Rails.logger.info "[s#{id}] promoting suggested tags " +
+      Rails.logger.info "[s#{id}] promoting suggested tags " \
                         "#{final_tags.inspect} instead of #{tags_a.inspect}"
       self.editor = nil
       self.editing_from_suggestions = true
@@ -706,7 +706,7 @@ class Story < ApplicationRecord
 
     title_votes.sort_by {|_k, v| v }.reverse_each do |kv|
       next unless kv[1] >= SUGGESTION_QUORUM
-      Rails.logger.info "[s#{id}] promoting suggested title " +
+      Rails.logger.info "[s#{id}] promoting suggested title " \
                         "#{kv[0].inspect} instead of #{self.title.inspect}"
       self.editor = nil
       self.editing_from_suggestions = true

@@ -33,8 +33,8 @@ class Hat < ApplicationRecord
   def to_html_label
     hl = (link.present? && link.match(/^https?:\/\//))
 
-    h = '<span class="hat ' +
-        "hat_#{hat.gsub(/[^A-Za-z0-9]/, '_').downcase}\" " +
+    h = '<span class="hat ' \
+        "hat_#{hat.gsub(/[^A-Za-z0-9]/, '_').downcase}\" " \
         'title="Granted by ' + "#{granted_by_user.username} on " +
         created_at.strftime('%Y-%m-%d')
 
@@ -42,7 +42,7 @@ class Hat < ApplicationRecord
       h << " - #{ERB::Util.html_escape(link)}"
     end
 
-    h << '">' +
+    h << '">' \
       '<span class="crown">'
 
     if hl

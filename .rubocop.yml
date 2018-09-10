@@ -141,8 +141,6 @@ Style/InverseMethods:
   Enabled: false
 Style/Lambda:
   Enabled: false
-Style/LineEndConcatenation:
-  Enabled: false
 Style/MultilineBlockChain:
   Enabled: false
 Style/MultilineTernaryOperator:

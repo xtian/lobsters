@@ -9,7 +9,7 @@ class EmailReply < ActionMailer::Base
 
     mail(
       :to => user.email,
-      :subject => "[#{Rails.application.name}] Reply from " +
+      :subject => "[#{Rails.application.name}] Reply from " \
                   "#{comment.user.username} on #{comment.story.title}"
     )
   end
@@ -20,7 +20,7 @@ class EmailReply < ActionMailer::Base
 
     mail(
       :to => user.email,
-      :subject => "[#{Rails.application.name}] Mention from " +
+      :subject => "[#{Rails.application.name}] Mention from " \
                   "#{comment.user.username} on #{comment.story.title}"
     )
   end

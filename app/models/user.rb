@@ -208,10 +208,10 @@ class User < ApplicationRecord
       msg.author_user_id = disabler.id
       msg.recipient_user_id = id
       msg.subject = 'Your invite privileges have been revoked'
-      msg.body = "The reason given:\n" +
-                 "\n" +
-                 "> *#{reason}*\n" +
-                 "\n" +
+      msg.body = "The reason given:\n" \
+                 "\n" \
+                 "> *#{reason}*\n" \
+                 "\n" \
                  '*This is an automated message.*'
       msg.save!
 
@@ -532,7 +532,7 @@ class User < ApplicationRecord
 
   def votes_for_others
     votes.left_outer_joins(:story, :comment)
-      .where('(votes.comment_id is not null and comments.user_id <> votes.user_id) OR ' +
+      .where('(votes.comment_id is not null and comments.user_id <> votes.user_id) OR ' \
              '(votes.comment_id is null and stories.user_id <> votes.user_id)')
       .order('id DESC')
   end

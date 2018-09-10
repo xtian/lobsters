@@ -23,7 +23,7 @@ class HatRequest < ApplicationRecord
       m.author_user_id = user.id
       m.recipient_user_id = user_id
       m.subject = "Your hat \"#{hat}\" has been approved"
-      m.body = "This hat may now be worn when commenting.\n\n" +
+      m.body = "This hat may now be worn when commenting.\n\n" \
                'This is an automated message.'
       m.save!
 

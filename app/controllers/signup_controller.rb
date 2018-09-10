@@ -62,7 +62,7 @@ class SignupController < ApplicationController
     if @new_user.save
       @invitation&.update(used_at: Time.current, new_user: @new_user)
       session[:u] = @new_user.session_token
-      flash[:success] = "Welcome to #{Rails.application.name}, " +
+      flash[:success] = "Welcome to #{Rails.application.name}, " \
                         "#{@new_user.username}!"
 
       return redirect_to '/signup/invite'

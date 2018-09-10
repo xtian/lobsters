@@ -35,31 +35,31 @@ class Moderation < ApplicationRecord
       m.recipient_user_id = story.user_id
       m.subject = 'Your story has been edited by ' +
                   (is_from_suggestions? ? 'user suggestions' : 'a moderator')
-      m.body = "Your story [#{story.title}](" +
-               "#{story.comments_url}) has been edited with the following " +
-               "changes:\n" +
-               "\n" +
+      m.body = "Your story [#{story.title}](" \
+               "#{story.comments_url}) has been edited with the following " \
+               "changes:\n" \
+               "\n" \
                "> *#{action}*\n"
 
       if reason.present?
-        m.body << "\n" +
-          "The reason given:\n" +
-          "\n" +
+        m.body << "\n" \
+          "The reason given:\n" \
+          "\n" \
           "> *#{reason}*\n"
       end
 
     elsif comment
       m.recipient_user_id = comment.user_id
       m.subject = 'Your comment has been moderated'
-      m.body = "Your comment on [#{comment.story.title}](" +
-               "#{comment.story.comments_url}) has been moderated:\n" +
-               "\n" +
+      m.body = "Your comment on [#{comment.story.title}](" \
+               "#{comment.story.comments_url}) has been moderated:\n" \
+               "\n" \
                "> *#{comment.comment}*\n"
 
       if reason.present?
-        m.body << "\n" +
-          "The reason given:\n" +
-          "\n" +
+        m.body << "\n" \
+          "The reason given:\n" \
+          "\n" \
           "> *#{reason}*\n"
       end
 
@@ -68,7 +68,7 @@ class Moderation < ApplicationRecord
       return
     end
 
-    m.body << "\n" +
+    m.body << "\n" \
       '*This is an automated message.*'
 
     m.save

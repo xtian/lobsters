@@ -30,7 +30,7 @@ class InvitationsController < ApplicationController
     ir.is_verified = true
     ir.save!
 
-    flash[:success] = 'Your invitation request has been validated and ' +
+    flash[:success] = 'Your invitation request has been validated and ' \
                       'will now be shown to other logged-in users.'
     redirect_to '/invitations/request'
   end
@@ -53,7 +53,7 @@ class InvitationsController < ApplicationController
       flash[:success] = 'Successfully e-mailed invitation to ' +
                         params[:email].to_s << '.'
     rescue
-      flash[:error] = 'Could not send invitation, verify the e-mail ' +
+      flash[:error] = 'Could not send invitation, verify the e-mail ' \
                       'address is valid.'
     end
 
@@ -85,7 +85,7 @@ class InvitationsController < ApplicationController
 
   def send_for_request
     if !@user.can_see_invitation_requests?
-      flash[:error] = 'Your account is not permitted to view invitation ' +
+      flash[:error] = 'Your account is not permitted to view invitation ' \
                       'requests.'
       return redirect_to '/'
     end
@@ -124,7 +124,7 @@ class InvitationsController < ApplicationController
     flash[:success] = 'Successfully deleted invitation request from ' +
                       ir.name.to_s << '.'
 
-    Rails.logger.info "[u#{@user.id}] deleted invitation request " +
+    Rails.logger.info "[u#{@user.id}] deleted invitation request " \
                       "from #{ir.inspect}"
 
     redirect_to '/invitations'

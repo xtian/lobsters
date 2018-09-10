@@ -59,7 +59,7 @@ describe EmailParser do
 
     expect(parser.email).to_not be_nil
     expect(parser.body)
-      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" +
+      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" \
              "the site is increasing a bit each week, it's hard to tell.")
   end
 
@@ -72,7 +72,7 @@ describe EmailParser do
 
     expect(parser.email).to_not be_nil
     expect(parser.body)
-      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" +
+      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" \
              "the site is increasing a bit each week, it's hard to tell.")
   end
 end

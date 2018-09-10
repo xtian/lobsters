@@ -124,7 +124,7 @@ class Comment < ApplicationRecord
   end
 
   def self.score_sql
-    Arel.sql("(CAST(upvotes AS #{Story.votes_cast_type}) - " +
+    Arel.sql("(CAST(upvotes AS #{Story.votes_cast_type}) - " \
       "CAST(downvotes AS #{Story.votes_cast_type}))")
   end
 
@@ -245,7 +245,7 @@ class Comment < ApplicationRecord
 
       next unless u.pushover_mentions?
       u.pushover!(
-        :title => "#{Rails.application.name} mention by " +
+        :title => "#{Rails.application.name} mention by " \
           "#{user.username} on #{story.title}",
         :message => plaintext_comment,
         :url => url,
@@ -268,7 +268,7 @@ class Comment < ApplicationRecord
 
       if u.pushover_replies?
         u.pushover!(
-          :title => "#{Rails.application.name} reply from " +
+          :title => "#{Rails.application.name} reply from " \
             "#{user.username} on #{story.title}",
           :message => plaintext_comment,
           :url => url,
@@ -286,9 +286,9 @@ class Comment < ApplicationRecord
     self.upvotes += upvote.to_i
     self.downvotes += downvote.to_i
 
-    Comment.connection.execute("UPDATE #{Comment.table_name} SET " +
-      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " +
-      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " +
+    Comment.connection.execute("UPDATE #{Comment.table_name} SET " \
+      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " \
+      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " \
       "confidence = '#{calculated_confidence}' WHERE id = #{id}")
 
     story.recalculate_hotness!
