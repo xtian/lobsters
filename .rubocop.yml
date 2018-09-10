@@ -40,6 +40,8 @@ Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 Layout/MultilineMethodCallIndentation:
   Enabled: false
+Layout/MultilineOperationIndentation:
+  Enabled: false
 Layout/SpaceAroundOperators:
   Enabled: false
 Layout/SpaceInsideBlockBraces:
@@ -127,8 +129,6 @@ Style/ExpandPathArguments:
   Enabled: false
 Style/FormatString:
   Enabled: false
-Style/FrozenStringLiteralComment:
-  EnforcedStyle: never
 Style/GuardClause:
   Enabled: false
 Style/HashSyntax:

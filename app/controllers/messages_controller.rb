@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MessagesController < ApplicationController
   before_action :require_logged_in_user
   before_action :require_logged_in_moderator, only: [:mod_note]
@@ -59,7 +61,7 @@ class MessagesController < ApplicationController
       if @user.is_moderator? && @new_message.mod_note
         ModNote.create_from_message(@new_message, @user)
       end
-      flash[:success] = "Your message has been sent to " <<
+      flash[:success] = "Your message has been sent to " +
                         @new_message.recipient.username.to_s << "."
       return redirect_to "/messages"
     else
