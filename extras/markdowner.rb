@@ -24,7 +24,7 @@ class Markdowner
     ng.css('a').each do |h|
       h[:rel] = 'nofollow' unless begin
                                      URI.parse(h[:href]).host.nil?
-                                   rescue
+                                   rescue StandardError
                                      false
                                    end
     end
@@ -54,7 +54,7 @@ class Markdowner
 
       node.string_content = before
 
-      if User.exists?(:username => user[1..-1])
+      if User.exists?(username: user[1..-1])
         link = CommonMarker::Node.new(:link)
         link.url = Rails.application.root_url + "u/#{user[1..-1]}"
         node.insert_after(link)

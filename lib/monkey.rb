@@ -19,22 +19,20 @@ class String
 
       str = dup.force_encoding('binary').encode(
         'utf-8',
-        :invalid => :replace,
-        :undef => :replace,
-        :replace => '?'
+        invalid: :replace,
+        undef: :replace,
+        replace: '?'
       )
 
       if !str.valid_encoding? || str.encoding.to_s != 'UTF-8'
         raise Encoding::UndefinedConversionError
       end
     rescue Encoding::UndefinedConversionError
-      str = chars.map { |c|
-        begin
-          c.encode('UTF-8', :invalid => :replace, :undef => :replace)
-        rescue
-          '?'.encode('UTF-8')
-        end
-      }.join
+      str = chars.map do |c|
+        c.encode('UTF-8', invalid: :replace, undef: :replace)
+      rescue StandardError
+        '?'.encode('UTF-8')
+      end.join
 
       raise 'still bogus encoding' unless str.valid_encoding?
     end

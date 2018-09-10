@@ -79,17 +79,9 @@ Rails/SkipsModelValidations:
 # Security
 
 # Style
-Style/AndOr:
-  EnforcedStyle: conditionals
-Style/BlockDelimiters:
-  Enabled: false
-Style/BlockComments:
-  Enabled: false
 Style/CommentedKeyword:
   Enabled: false
 Style/ClassVars:
-  Enabled: false
-Style/ConditionalAssignment:
   Enabled: false
 # It would be nice to have this on, but I'm not up for writing 66 of these in
 # the process of addressing the initial 4,489 cop warnings.
@@ -98,15 +90,7 @@ Style/Documentation:
   Exclude: [db/migrate/**/*, spec/**/*, test/**/*]
 Style/DoubleNegation:
   Enabled: false
-Style/ExpandPathArguments:
-  Enabled: false
-Style/FormatString:
-  Enabled: false
 Style/GuardClause:
-  Enabled: false
-Style/HashSyntax:
-  EnforcedStyle: no_mixed_keys
-Style/IfInsideElse:
   Enabled: false
 Style/Lambda:
   Enabled: false
@@ -114,13 +98,7 @@ Style/MultilineBlockChain:
   Enabled: false
 Style/MultilineTernaryOperator:
   Enabled: false
-Style/NegatedIf:
-  EnforcedStyle: postfix
 Style/NumericPredicate:
   Enabled: false
-Style/RaiseArgs:
-  EnforcedStyle: compact
-Style/RescueStandardError:
-  EnforcedStyle: implicit
 Style/RegexpLiteral:
   AllowInnerSlashes: true

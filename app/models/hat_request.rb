@@ -3,10 +3,10 @@
 class HatRequest < ApplicationRecord
   belongs_to :user
 
-  validates :user, :presence => true
-  validates :hat, :presence => true
-  validates :link, :presence => true
-  validates :comment, :presence => true
+  validates :user, presence: true
+  validates :hat, presence: true
+  validates :link, presence: true
+  validates :comment, presence: true
 
   attr_accessor :rejection_comment
 

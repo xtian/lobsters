@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class HatsController < ApplicationController
-  before_action :require_logged_in_user, :except => [:index]
-  before_action :require_logged_in_moderator, :except => %i[build_request index create_request]
+  before_action :require_logged_in_user, except: [:index]
+  before_action :require_logged_in_moderator, except: %i[build_request index create_request]
 
   def build_request
     @title = 'Request a Hat'
@@ -33,7 +33,7 @@ class HatsController < ApplicationController
       return redirect_to '/hats'
     end
 
-    render :action => 'build_request'
+    render action: 'build_request'
   end
 
   def requests_index

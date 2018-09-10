@@ -9,17 +9,17 @@ class FiltersController < ApplicationController
 
     @tags = Tag.active.all_with_story_counts_for(@user)
 
-    if @user
-      @filtered_tags = @user.tag_filter_tags.to_a
-    else
-      @filtered_tags = tags_filtered_by_cookie.to_a
-    end
+    @filtered_tags = if @user
+                       @user.tag_filter_tags.to_a
+                     else
+                       tags_filtered_by_cookie.to_a
+                     end
   end
 
   def update
     tags_param = params[:tags]
     new_tags = tags_param.blank? ? [] :
-      Tag.active.where(:tag => tags_param).to_a
+      Tag.active.where(tag: tags_param).to_a
     new_tags.keep_if { |t| t.valid_for? @user }
 
     if @user

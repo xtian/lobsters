@@ -97,7 +97,7 @@ class Sponge
   end
 
   def fetch(url, method = :get, fields = nil, raw_post_data = nil, headers = {}, limit = 10)
-    raise ArgumentError.new('http redirection too deep') if limit <= 0
+    raise ArgumentError, 'http redirection too deep' if limit <= 0
 
     uri = URI.parse(url)
 
@@ -126,7 +126,7 @@ class Sponge
         retried = true
         retry
       end
-    rescue => e
+    rescue StandardError => e
       raise "couldn't resolve #{uri.host} (#{e.inspect})"
     end
 
@@ -187,11 +187,11 @@ class Sponge
     res = nil
     begin
       Timeout.timeout(timeout) do
-        if method == :post
-          res = host.post(path, post_data, send_headers)
-        else
-          res = host.get(path, send_headers)
-        end
+        res = if method == :post
+                host.post(path, post_data, send_headers)
+              else
+                host.get(path, send_headers)
+              end
       end
     rescue Timeout::Error
       dputs "timed out during #{method}"

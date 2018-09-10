@@ -3,13 +3,13 @@
 class MessagesController < ApplicationController
   before_action :require_logged_in_user
   before_action :require_logged_in_moderator, only: [:mod_note]
-  before_action :find_message, :only => %i[show destroy keep_as_new mod_note]
+  before_action :find_message, only: %i[show destroy keep_as_new mod_note]
 
   def index
     @messages = @user.undeleted_received_messages
 
     respond_to do |format|
-      format.html {
+      format.html do
         @cur_url = '/messages'
         @title = 'Messages'
 
@@ -18,10 +18,10 @@ class MessagesController < ApplicationController
         @direction = :in
 
         @new_message.recipient_username = params[:to] if params[:to]
-      }
-      format.json {
-        render :json => @messages
-      }
+      end
+      format.json do
+        render json: @messages
+      end
     end
   end
 
@@ -29,7 +29,7 @@ class MessagesController < ApplicationController
     @messages = @user.undeleted_sent_messages
 
     respond_to do |format|
-      format.html {
+      format.html do
         @cur_url = '/messages'
         @title = 'Messages Sent'
 
@@ -37,11 +37,11 @@ class MessagesController < ApplicationController
 
         @new_message = Message.new
 
-        render :action => 'index'
-      }
-      format.json {
-        render :json => @messages
-      }
+        render action: 'index'
+      end
+      format.json do
+        render json: @messages
+      end
     end
   end
 
@@ -63,7 +63,7 @@ class MessagesController < ApplicationController
                         @new_message.recipient.username.to_s << '.'
       return redirect_to '/messages'
     else
-      render :action => 'index'
+      render action: 'index'
     end
   end
 
@@ -76,11 +76,11 @@ class MessagesController < ApplicationController
       @new_message.recipient_username = (@message.author_user_id == @user.id ?
         @message.recipient.username : @message.author.username)
 
-      if @message.subject.match?(/^re:/i)
-        @new_message.subject = @message.subject
-      else
-        @new_message.subject = "Re: #{@message.subject}"
-      end
+      @new_message.subject = if @message.subject.match?(/^re:/i)
+                               @message.subject
+                             else
+                               "Re: #{@message.subject}"
+                             end
     end
 
     if @message.recipient_user_id == @user.id
@@ -110,7 +110,7 @@ class MessagesController < ApplicationController
 
     params.each do |k, v|
       next unless (v.to_s == '1') && (m = k.match(/^delete_(.+)$/))
-      next unless (message = Message.where(:short_id => m[1]).first)
+      next unless (message = Message.where(short_id: m[1]).first)
       ok = false
       if message.author_user_id == @user.id
         message.deleted_by_author = true
@@ -157,7 +157,7 @@ class MessagesController < ApplicationController
   end
 
   def find_message
-    if (@message = Message.where(:short_id => params[:message_id] || params[:id]).first)
+    if (@message = Message.where(short_id: params[:message_id] || params[:id]).first)
       return true if @message.author_user_id == @user.id || @message.recipient_user_id == @user.id
     end
 

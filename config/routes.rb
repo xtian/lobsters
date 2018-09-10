@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root :to => 'home#index',
-       :protocol => (Rails.application.config.force_ssl ? 'https://' : 'http://'),
-       :as => 'root'
+  root to: 'home#index',
+       protocol: (Rails.application.config.force_ssl ? 'https://' : 'http://'),
+       as: 'root'
 
   get '/ping.txt', to: proc { [200, {}, ['ok']] }
 
@@ -78,9 +78,9 @@ Rails.application.routes.draw do
     post 'save'
     post 'unsave'
     get 'suggest'
-    post 'suggest', :action => 'submit_suggestions'
+    post 'suggest', action: 'submit_suggestions'
   end
-  post '/stories/fetch_url_attributes', :format => 'json'
+  post '/stories/fetch_url_attributes', format: 'json'
   post '/stories/preview' => 'stories#preview'
   post '/stories/check_url_dupe' => 'stories#check_url_dupe'
 

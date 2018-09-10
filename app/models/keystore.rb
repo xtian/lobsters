@@ -6,11 +6,11 @@ class Keystore < ApplicationRecord
   validates :key, presence: true
 
   def self.get(key)
-    find_by(:key => key)
+    find_by(key: key)
   end
 
   def self.value_for(key)
-    find_by(:key => key).try(:value)
+    find_by(key: key).try(:value)
   end
 
   def self.put(key, value)
@@ -60,7 +60,7 @@ class Keystore < ApplicationRecord
 
   def self.find_or_create_key_for_update(key, init = nil)
     loop do
-      found = lock(true).find_by(:key => key)
+      found = lock(true).find_by(key: key)
       return found if found
 
       begin

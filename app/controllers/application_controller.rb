@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
     return true if Rails.application.read_only?
 
     if session[:u] &&
-       (user = User.find_by(:session_token => session[:u].to_s)) &&
+       (user = User.find_by(session_token: session[:u].to_s)) &&
        user.is_active?
       @user = user
       Rails.logger.info "  Logged in as user #{@user.id} (#{@user.username})"
@@ -73,7 +73,7 @@ class ApplicationController < ActionController::Base
     end
 
     # logo background intensity is based on traffic
-    intensity = sprintf('%02x', [(@traffic * 7).floor + 50.0, 255].min)
+    intensity = format('%02x', [(@traffic * 7).floor + 50.0, 255].min)
     set_traffic_style intensity
 
     true
@@ -141,14 +141,14 @@ class ApplicationController < ActionController::Base
     if @user
       true
     else
-      render :plain => 'not logged in', :status => :bad_request
+      render plain: 'not logged in', status: :bad_request
       false
     end
   end
 
   def tags_filtered_by_cookie
     @_tags_filtered ||= Tag.where(
-      :tag => cookies[TAG_FILTER_COOKIE].to_s.split(',')
+      tag: cookies[TAG_FILTER_COOKIE].to_s.split(',')
     )
   end
 
@@ -159,7 +159,7 @@ class ApplicationController < ActionController::Base
 
   def find_user_from_rss_token
     if !@user && request[:format] == 'rss' && params[:token].to_s.present?
-      @user = User.where(:rss_token => params[:token].to_s).first
+      @user = User.where(rss_token: params[:token].to_s).first
     end
   end
 end

@@ -22,7 +22,7 @@ class DownvotedCommenters
 
   # aggregates for all commenters; not just those receiving downvotes
   def aggregates
-    Rails.cache.fetch("aggregates_#{interval}", expires_in: CACHE_TIME) {
+    Rails.cache.fetch("aggregates_#{interval}", expires_in: CACHE_TIME) do
       ActiveRecord::Base.connection.exec_query("
         select
           stddev(sum_downvotes) as stddev,
@@ -39,7 +39,7 @@ class DownvotedCommenters
           GROUP BY comments.user_id
         ) sums;
       ").first.symbolize_keys!
-    }
+    end
   end
 
   def stddev_sum_downvotes
@@ -51,7 +51,7 @@ class DownvotedCommenters
   end
 
   def commenters
-    Rails.cache.fetch("downvoted_commenters_#{interval}", expires_in: CACHE_TIME) {
+    Rails.cache.fetch("downvoted_commenters_#{interval}", expires_in: CACHE_TIME) do
       rank = 0
       User.active.joins(:comments)
         .where('comments.downvotes > 0 and comments.created_at >= ?', period)
@@ -65,7 +65,7 @@ class DownvotedCommenters
         .having('n_comments > 2 and n_stories > 1 and n_downvotes >= 10')
         .order('sigma desc')
         .limit(30)
-        .each_with_object({}) { |u, hash|
+        .each_with_object({}) do |u, hash|
         hash[u.id] = {
           username: u.username,
           rank: rank += 1,
@@ -79,7 +79,7 @@ class DownvotedCommenters
             # TODO: fix 1 + n caused by u.comments to grab total comment count
             u.n_comments * 100.0 / u.comments.where('created_at >= ?', period).count
         }
-      }
-    }
+      end
+    end
   end
 end

@@ -4,13 +4,13 @@ class StoriesController < ApplicationController
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-                :only => %i[upvote downvote unvote hide unhide preview save unsave
-                            check_url_dupe]
+                only: %i[upvote downvote unvote hide unhide preview save unsave
+                         check_url_dupe]
   before_action :require_logged_in_user,
-                :only => %i[destroy create edit fetch_url_attributes new suggest]
-  before_action :verify_user_can_submit_stories, :only => %i[new create]
-  before_action :find_user_story, :only => %i[destroy edit undelete update]
-  before_action :find_story!, :only => %i[suggest submit_suggestions]
+                only: %i[destroy create edit fetch_url_attributes new suggest]
+  before_action :verify_user_can_submit_stories, only: %i[new create]
+  before_action :find_user_story, only: %i[destroy edit undelete update]
+  before_action :find_story!, only: %i[suggest submit_suggestions]
   around_action :track_story_reads, only: [:show], if: -> { @user.present? }
 
   def create
@@ -27,11 +27,11 @@ class StoriesController < ApplicationController
       end
     end
 
-    render :action => 'new'
+    render action: 'new'
   end
 
   def destroy
-    if !@story.is_editable_by_user?(@user)
+    unless @story.is_editable_by_user?(@user)
       flash[:error] = 'You cannot edit that story.'
       return redirect_to '/'
     end
@@ -43,13 +43,13 @@ class StoriesController < ApplicationController
       @story.moderation_reason = params[:reason]
     end
 
-    @story.save(:validate => false)
+    @story.save(validate: false)
 
     redirect_to @story.comments_path
   end
 
   def edit
-    if !@story.is_editable_by_user?(@user)
+    unless @story.is_editable_by_user?(@user)
       flash[:error] = 'You cannot edit that story.'
       return redirect_to '/'
     end
@@ -64,7 +64,7 @@ class StoriesController < ApplicationController
     s.fetching_ip = request.remote_ip
     s.url = params[:fetch_url]
 
-    render :json => s.fetched_attributes
+    render json: s.fetched_attributes
   end
 
   def new
@@ -108,14 +108,14 @@ class StoriesController < ApplicationController
     @story.user_id = @user.id
     @story.previewing = true
 
-    @story.vote = Vote.new(:vote => 1)
+    @story.vote = Vote.new(vote: 1)
     @story.upvotes = 1
 
     @story.valid?
 
     @story.seen_previous = true
 
-    render :action => 'new', :layout => false
+    render action: 'new', layout: false
   end
 
   def show
@@ -126,11 +126,11 @@ class StoriesController < ApplicationController
       return redirect_to @story.merged_into_story.comments_path
     end
 
-    raise ActionController::RoutingError.new('story gone') unless @story.can_be_seen_by_user?(@user)
+    raise ActionController::RoutingError, 'story gone' unless @story.can_be_seen_by_user?(@user)
 
     @comments = get_arranged_comments_from_cache(params[:id]) do
       @story.merged_comments
-        .includes(:user, :story, :hat, :votes => :user)
+        .includes(:user, :story, :hat, votes: :user)
         .arrange_for_user(@user)
     end
 
@@ -138,7 +138,7 @@ class StoriesController < ApplicationController
     @short_url = @story.short_id_url
 
     respond_to do |format|
-      format.html {
+      format.html do
         @comment = @story.comments.build
 
         @meta_tags = {
@@ -157,30 +157,30 @@ class StoriesController < ApplicationController
 
         load_user_votes
 
-        render :action => 'show'
-      }
-      format.json {
-        render :json => @story.as_json(:with_comments => @comments)
-      }
+        render action: 'show'
+      end
+      format.json do
+        render json: @story.as_json(with_comments: @comments)
+      end
     end
   end
 
   def suggest
-    if !@story.can_have_suggestions_from_user?(@user)
+    unless @story.can_have_suggestions_from_user?(@user)
       flash[:error] = 'You are not allowed to offer suggestions on that story.'
       return redirect_to @story.comments_path
     end
 
-    if (suggested_tags = @story.suggested_taggings.where(:user_id => @user.id)).any?
+    if (suggested_tags = @story.suggested_taggings.where(user_id: @user.id)).any?
       @story.tags_a = suggested_tags.map { |st| st.tag.tag }
     end
-    if (tt = @story.suggested_titles.where(:user_id => @user.id).first)
+    if (tt = @story.suggested_titles.where(user_id: @user.id).first)
       @story.title = tt.title
     end
   end
 
   def submit_suggestions
-    if !@story.can_have_suggestions_from_user?(@user)
+    unless @story.can_have_suggestions_from_user?(@user)
       flash[:error] = 'You are not allowed to offer suggestions on that story.'
       return redirect_to @story.comments_path
     end
@@ -207,26 +207,26 @@ class StoriesController < ApplicationController
       end
       redirect_to ostory.comments_path
     else
-      render :action => 'suggest'
+      render action: 'suggest'
     end
   end
 
   def undelete
-    if !(@story.is_editable_by_user?(@user) &&
-    @story.is_undeletable_by_user?(@user))
+    unless @story.is_editable_by_user?(@user) &&
+           @story.is_undeletable_by_user?(@user)
       flash[:error] = 'You cannot edit that story.'
       return redirect_to '/'
     end
 
     @story.is_expired = false
     @story.editor = @user
-    @story.save(:validate => false)
+    @story.save(validate: false)
 
     redirect_to @story.comments_path
   end
 
   def update
-    if !@story.is_editable_by_user?(@user)
+    unless @story.is_editable_by_user?(@user)
       flash[:error] = 'You cannot edit that story.'
       return redirect_to '/'
     end
@@ -234,110 +234,110 @@ class StoriesController < ApplicationController
     @story.is_expired = false
     @story.editor = @user
 
-    if @story.url_is_editable_by_user?(@user)
-      @story.attributes = story_params
-    else
-      @story.attributes = story_params.except(:url)
-    end
+    @story.attributes = if @story.url_is_editable_by_user?(@user)
+                          story_params
+                        else
+                          story_params.except(:url)
+                        end
 
     if @story.save
       return redirect_to @story.comments_path
     else
-      return render :action => 'edit'
+      return render action: 'edit'
     end
   end
 
   def unvote
-    if !(story = find_story)
-      return render :plain => "can't find story", :status => :bad_request
+    unless (story = find_story)
+      return render plain: "can't find story", status: :bad_request
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       0, story.id, nil, @user.id, nil
     )
 
-    render :plain => 'ok'
+    render plain: 'ok'
   end
 
   def upvote
-    if !(story = find_story)
-      return render :plain => "can't find story", :status => :bad_request
+    unless (story = find_story)
+      return render plain: "can't find story", status: :bad_request
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       1, story.id, nil, @user.id, nil
     )
 
-    render :plain => 'ok'
+    render plain: 'ok'
   end
 
   def downvote
-    if !(story = find_story)
-      return render :plain => "can't find story", :status => :bad_request
+    unless (story = find_story)
+      return render plain: "can't find story", status: :bad_request
     end
 
-    if !Vote::STORY_REASONS[params[:reason]]
-      return render :plain => 'invalid reason', :status => :bad_request
+    unless Vote::STORY_REASONS[params[:reason]]
+      return render plain: 'invalid reason', status: :bad_request
     end
 
-    if !@user.can_downvote?(story)
-      return render :plain => 'not permitted to downvote', :status => :bad_request
+    unless @user.can_downvote?(story)
+      return render plain: 'not permitted to downvote', status: :bad_request
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       -1, story.id, nil, @user.id, params[:reason]
     )
 
-    render :plain => 'ok'
+    render plain: 'ok'
   end
 
   def hide
-    if !(story = find_story)
-      return render :plain => "can't find story", :status => :bad_request
+    unless (story = find_story)
+      return render plain: "can't find story", status: :bad_request
     end
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
     ReadRibbon.hide_replies_for(story.id, @user.id)
 
-    render :plain => 'ok'
+    render plain: 'ok'
   end
 
   def unhide
-    if !(story = find_story)
-      return render :plain => "can't find story", :status => :bad_request
+    unless (story = find_story)
+      return render plain: "can't find story", status: :bad_request
     end
 
-    HiddenStory.where(:user_id => @user.id, :story_id => story.id).delete_all
+    HiddenStory.where(user_id: @user.id, story_id: story.id).delete_all
 
-    render :plain => 'ok'
+    render plain: 'ok'
   end
 
   def save
-    if !(story = find_story)
-      return render :plain => "can't find story", :status => :bad_request
+    unless (story = find_story)
+      return render plain: "can't find story", status: :bad_request
     end
 
     SavedStory.save_story_for_user(story.id, @user.id)
 
-    render :plain => 'ok'
+    render plain: 'ok'
   end
 
   def unsave
-    if !(story = find_story)
-      return render :plain => "can't find story", :status => :bad_request
+    unless (story = find_story)
+      return render plain: "can't find story", status: :bad_request
     end
 
-    SavedStory.where(:user_id => @user.id, :story_id => story.id).delete_all
+    SavedStory.where(user_id: @user.id, story_id: story.id).delete_all
 
-    render :plain => 'ok'
+    render plain: 'ok'
   end
 
   def check_url_dupe
     @story = Story.new(story_params)
     @story.check_already_posted
 
-    render :partial => 'stories/form_errors', :layout => false,
-           :content_type => 'text/html', :locals => { :story => @story }
+    render partial: 'stories/form_errors', layout: false,
+           content_type: 'text/html', locals: { story: @story }
   end
 
   private
@@ -353,7 +353,7 @@ class StoriesController < ApplicationController
   def story_params
     p = params.require(:story).permit(
       :title, :url, :description, :moderation_reason, :seen_previous,
-      :merge_story_short_id, :is_unavailable, :user_is_author, :tags_a => []
+      :merge_story_short_id, :is_unavailable, :user_is_author, tags_a: []
     )
 
     if @user.is_moderator?
@@ -364,10 +364,10 @@ class StoriesController < ApplicationController
   end
 
   def find_story
-    story = Story.where(:short_id => params[:story_id]).first
+    story = Story.where(short_id: params[:story_id]).first
     if @user && story
-      story.vote = Vote.where(:user_id => @user.id,
-                              :story_id => story.id, :comment_id => nil).first.try(:vote)
+      story.vote = Vote.where(user_id: @user.id,
+                              story_id: story.id, comment_id: nil).first.try(:vote)
     end
 
     story
@@ -379,14 +379,13 @@ class StoriesController < ApplicationController
   end
 
   def find_user_story
-    if @user.is_moderator?
-      @story = Story.where(:short_id => params[:story_id] || params[:id]).first
-    else
-      @story = Story.where(:user_id => @user.id, :short_id =>
-        (params[:story_id] || params[:id])).first
-    end
+    @story = if @user.is_moderator?
+               Story.where(short_id: params[:story_id] || params[:id]).first
+             else
+               Story.where(user_id: @user.id, short_id: (params[:story_id] || params[:id])).first
+             end
 
-    if !@story
+    unless @story
       flash[:error] = 'Could not find story or you are not authorized ' \
                       'to manage it.'
       redirect_to '/'
@@ -396,8 +395,8 @@ class StoriesController < ApplicationController
 
   def load_user_votes
     if @user
-      if (v = Vote.where(:user_id => @user.id, :story_id => @story.id, :comment_id => nil).first)
-        @story.vote = { :vote => v.vote, :reason => v.reason }
+      if (v = Vote.where(user_id: @user.id, story_id: @story.id, comment_id: nil).first)
+        @story.vote = { vote: v.vote, reason: v.reason }
       end
 
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
@@ -411,7 +410,7 @@ class StoriesController < ApplicationController
   end
 
   def verify_user_can_submit_stories
-    if !@user.can_submit_stories?
+    unless @user.can_submit_stories?
       flash[:error] = 'You are not allowed to submit new stories.'
       redirect_to '/'
     end

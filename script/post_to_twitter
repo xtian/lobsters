@@ -3,8 +3,8 @@
 
 ENV['RAILS_ENV'] ||= 'production'
 
-APP_PATH = File.expand_path('../../config/application', __FILE__)
-require File.expand_path('../../config/boot', __FILE__)
+APP_PATH = File.expand_path('../config/application', __dir__)
+require File.expand_path('../config/boot', __dir__)
 require APP_PATH
 Rails.application.require_environment!
 
@@ -49,11 +49,11 @@ Story.to_tweet.each_with_index do |s, x|
 
   left_len = -3 if left_len < -3
 
-  if title.bytesize > left_len
-    status = title[0, left_len - 3] + '...' + status
-  else
-    status = title + status
-  end
+  status = if title.bytesize > left_len
+             title[0, left_len - 3] + '...' + status
+           else
+             title + status
+           end
 
   res = Twitter.oauth_request('/1.1/statuses/update.json', :post, 'status' => status)
 
@@ -67,7 +67,7 @@ Story.to_tweet.each_with_index do |s, x|
     else
       raise
     end
-  rescue => e
+  rescue StandardError => e
     puts "failed posting story #{s.id} (#{status.inspect}): #{e.inspect}\n#{res.inspect}"
     exit
   end

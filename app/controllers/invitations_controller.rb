@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InvitationsController < ApplicationController
-  before_action :require_logged_in_user, :except => %i[build create_by_request confirm_email]
+  before_action :require_logged_in_user, except: %i[build create_by_request confirm_email]
 
   def build
     if Rails.application.allow_invitation_requests?
@@ -13,16 +13,16 @@ class InvitationsController < ApplicationController
   end
 
   def index
-    if !@user.can_see_invitation_requests?
+    unless @user.can_see_invitation_requests?
       flash[:error] = 'Your account is not permitted to view invitation requests.'
       return redirect_to '/'
     end
 
-    @invitation_requests = InvitationRequest.where(:is_verified => true)
+    @invitation_requests = InvitationRequest.where(is_verified: true)
   end
 
   def confirm_email
-    if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
+    unless (ir = InvitationRequest.where(code: params[:code].to_s).first)
       flash[:error] = 'Invalid or expired invitation request'
       return redirect_to '/invitations/request'
     end
@@ -36,7 +36,7 @@ class InvitationsController < ApplicationController
   end
 
   def create
-    if !@user.can_invite?
+    unless @user.can_invite?
       flash[:error] = 'Your account cannot send invitations'
       redirect_to '/settings'
       return
@@ -52,7 +52,7 @@ class InvitationsController < ApplicationController
       i.send_email
       flash[:success] = 'Successfully e-mailed invitation to ' +
                         params[:email].to_s << '.'
-    rescue
+    rescue StandardError
       flash[:error] = 'Could not send invitation, verify the e-mail ' \
                       'address is valid.'
     end
@@ -77,7 +77,7 @@ class InvitationsController < ApplicationController
                           params[:invitation_request][:email].to_s << '.'
         return redirect_to '/invitations/request'
       else
-        render :action => :build
+        render action: :build
       end
     else
       redirect_to '/login'
@@ -85,13 +85,13 @@ class InvitationsController < ApplicationController
   end
 
   def send_for_request
-    if !@user.can_see_invitation_requests?
+    unless @user.can_see_invitation_requests?
       flash[:error] = 'Your account is not permitted to view invitation ' \
                       'requests.'
       return redirect_to '/'
     end
 
-    if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
+    unless (ir = InvitationRequest.where(code: params[:code].to_s).first)
       flash[:error] = 'Invalid or expired invitation request'
       return redirect_to '/invitations'
     end
@@ -114,7 +114,7 @@ class InvitationsController < ApplicationController
   def delete_request
     return redirect_to '/invitations' unless @user.can_see_invitation_requests?
 
-    if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
+    unless (ir = InvitationRequest.where(code: params[:code].to_s).first)
       flash[:error] = 'Invalid or expired invitation request'
       return redirect_to '/invitations'
     end

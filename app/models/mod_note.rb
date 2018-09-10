@@ -2,9 +2,9 @@
 
 class ModNote < ApplicationRecord
   belongs_to :moderator,
-             :class_name => 'User',
-             :foreign_key => 'moderator_user_id',
-             :inverse_of => :moderations
+             class_name: 'User',
+             foreign_key: 'moderator_user_id',
+             inverse_of: :moderations
   belongs_to :user
 
   scope :recent, -> { where('created_at >= ?', 1.week.ago).order('created_at desc') }

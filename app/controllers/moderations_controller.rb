@@ -9,10 +9,10 @@ class ModerationsController < ApplicationController
 
     @moderator = params.fetch('moderator', '(All)')
     @what = {
-      :stories  => params.dig(:what, :stories),
-      :comments => params.dig(:what, :comments),
-      :tags     => params.dig(:what, :tags),
-      :users    => params.dig(:what, :users)
+      stories: params.dig(:what, :stories),
+      comments: params.dig(:what, :comments),
+      tags: params.dig(:what, :tags),
+      users: params.dig(:what, :users)
     }
     @what.transform_values! { true } if @what.values.none?
 
@@ -25,8 +25,8 @@ class ModerationsController < ApplicationController
                    when '(Users)'
                      @moderations.where('is_from_suggestions = true')
                    else
-                     @moderations.joins(:moderator).where(:users => { :username => @moderator })
-    end
+                     @moderations.joins(:moderator).where(users: { username: @moderator })
+                   end
 
     # filter based on type of thing moderated
     @what.each do |type, checked|
@@ -40,7 +40,7 @@ class ModerationsController < ApplicationController
     if @page == 0
       @page = 1
     elsif @page < 0 || @page > (2**32) || @page > @pages
-      raise ActionController::RoutingError.new('page out of bounds')
+      raise ActionController::RoutingError, 'page out of bounds'
     end
 
     @moderations = @moderations

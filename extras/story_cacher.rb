@@ -30,7 +30,7 @@ class StoryCacher
 
         return j['text']
       end
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error "error fetching #{db_url}: #{e.message}"
     end
 
@@ -38,7 +38,7 @@ class StoryCacher
       s = Sponge.new
       s.timeout = 45
       s.fetch(story.archive_url)
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error "error caching #{db_url}: #{e.message}"
     end
 

@@ -5,20 +5,22 @@ require 'rails_helper'
 describe EmailParser do
   before(:each) do
     @user = create(:user)
-    @story = create(:story, :user => @user)
+    @story = create(:story, user: @user)
 
     @commentor = create(:user)
-    @comment = create(:comment, :story => @story, :user => @commentor)
+    @comment = create(:comment, story: @story, user: @commentor)
 
-    @emailer = create(:user, :mailing_list_mode => 1)
+    @emailer = create(:user, mailing_list_mode: 1)
 
     @emails = {}
     Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml")
       .each do |f|
-      @emails[File.basename(f).gsub(/\..*/, '')] = File.read(f)
+      email = File.read(f)
         .gsub(/##SHORTNAME##/, Rails.application.shortname)
         .gsub(/##MAILING_LIST_TOKEN##/, @emailer.mailing_list_token)
         .gsub(/##COMMENT_ID##/, @comment.short_id)
+
+      @emails[File.basename(f).gsub(/\..*/, '')] = email
     end
   end
 

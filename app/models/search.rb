@@ -10,7 +10,7 @@ class Search
   attr_accessor :results, :page, :total_results, :per_page
   attr_writer :what
 
-  validates :q, length: { :minimum => 2 }
+  validates :q, length: { minimum: 2 }
 
   def initialize
     @q = ''
@@ -55,8 +55,8 @@ class Search
 
   def with_tags(base, tag_scopes)
     base
-      .joins({ :taggings => :tag }, :user)
-      .where(:tags => { :tag => tag_scopes })
+      .joins({ taggings: :tag }, :user)
+      .where(tags: { tag: tag_scopes })
       .having('COUNT(stories.id) = ?', tag_scopes.length)
       .group('stories.id')
   end
@@ -71,7 +71,7 @@ class Search
 
   def with_stories_matching_tags(base, tag_scopes)
     story_ids_matching_tags = with_tags(
-      Story.unmerged.where(:is_expired => false), tag_scopes
+      Story.unmerged.where(is_expired: false), tag_scopes
     ).select(:id).map(&:id)
     base.where(story_id: story_ids_matching_tags)
   end
@@ -83,13 +83,13 @@ class Search
     # extract domain query since it must be done separately
     domain = nil
     tag_scopes = []
-    words = q.to_s.split(' ').reject { |w|
+    words = q.to_s.split(' ').reject do |w|
       if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
       elsif (m = w.match(/^tag:(.+)$/))
         tag_scopes << m[1]
       end
-    }.join(' ')
+    end.join(' ')
 
     qwords = ActiveRecord::Base.connection.quote_string(words)
 
@@ -97,7 +97,7 @@ class Search
 
     case what
     when 'stories'
-      base = Story.unmerged.where(:is_expired => false)
+      base = Story.unmerged.where(is_expired: false)
       base = with_stories_in_domain(base, domain) if domain.present?
 
       title_match_sql = Arel.sql("MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)")
@@ -116,17 +116,17 @@ class Search
         if tag_scopes.present?
           self.results = with_tags(base, tag_scopes)
         else
-          base = base.includes({ :taggings => :tag }, :user)
+          base = base.includes({ taggings: :tag }, :user)
           self.results = base.select(
             ['stories.*', title_match_sql, description_match_sql, story_cache_match_sql].join(', ')
           )
         end
       else
-        if tag_scopes.present?
-          self.results = with_tags(base, tag_scopes)
-        else
-          self.results = base.includes({ :taggings => :tag }, :user)
-        end
+        self.results = if tag_scopes.present?
+                         with_tags(base, tag_scopes)
+                       else
+                         base.includes({ taggings: :tag }, :user)
+                       end
       end
 
       case order

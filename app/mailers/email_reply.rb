@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class EmailReply < ActionMailer::Base
-  default :from => "#{Rails.application.name} <nobody@#{Rails.application.domain}>"
+  default from: "#{Rails.application.name} <nobody@#{Rails.application.domain}>"
 
   def reply(comment, user)
     @comment = comment
     @user = user
 
     mail(
-      :to => user.email,
-      :subject => "[#{Rails.application.name}] Reply from " \
+      to: user.email,
+      subject: "[#{Rails.application.name}] Reply from " \
                   "#{comment.user.username} on #{comment.story.title}"
     )
   end
@@ -19,8 +19,8 @@ class EmailReply < ActionMailer::Base
     @user = user
 
     mail(
-      :to => user.email,
-      :subject => "[#{Rails.application.name}] Mention from " \
+      to: user.email,
+      subject: "[#{Rails.application.name}] Mention from " \
                   "#{comment.user.username} on #{comment.story.title}"
     )
   end

@@ -2,10 +2,10 @@
 
 class Hat < ApplicationRecord
   belongs_to :user
-  belongs_to :granted_by_user, :class_name => 'User', :inverse_of => false
+  belongs_to :granted_by_user, class_name: 'User', inverse_of: false
 
-  validates :user, :hat, :presence => true
-  validates :granted_by_user, :presence => true
+  validates :user, :hat, presence: true
+  validates :granted_by_user, presence: true
 
   after_create :log_moderation
 

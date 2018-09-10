@@ -50,7 +50,7 @@ class SettingsController < ApplicationController
       flash[:error] = 'Your current password was not entered correctly.'
     end
 
-    render :action => 'index'
+    render action: 'index'
   end
 
   def twofa
@@ -85,7 +85,7 @@ class SettingsController < ApplicationController
 
     session[:totp_secret] = ROTP::Base32.random_base32 unless session[:totp_secret]
 
-    totp = ROTP::TOTP.new(session[:totp_secret], :issuer => Rails.application.name)
+    totp = ROTP::TOTP.new(session[:totp_secret], issuer: Rails.application.name)
     totp_url = totp.provisioning_uri(@user.email)
 
     # no option for inline svg, so just strip off leading <?xml> tag
@@ -136,7 +136,7 @@ class SettingsController < ApplicationController
   # external services
 
   def pushover_auth
-    if !Pushover.SUBSCRIPTION_CODE
+    unless Pushover.SUBSCRIPTION_CODE
       flash[:error] = 'This site is not configured for Pushover'
       return redirect_to '/settings'
     end
@@ -144,9 +144,9 @@ class SettingsController < ApplicationController
     session[:pushover_rand] = SecureRandom.hex
 
     redirect_to Pushover.subscription_url(
-      :success => "#{Rails.application.root_url}settings/pushover_callback?" \
+      success: "#{Rails.application.root_url}settings/pushover_callback?" \
         "rand=#{session[:pushover_rand]}",
-      :failure => "#{Rails.application.root_url}settings/"
+      failure: "#{Rails.application.root_url}settings/"
     )
   end
 
@@ -168,11 +168,11 @@ class SettingsController < ApplicationController
     @user.pushover_user_key = params[:pushover_user_key].to_s
     @user.save!
 
-    if @user.pushover_user_key.present?
-      flash[:success] = 'Your account is now setup for Pushover notifications.'
-    else
-      flash[:success] = 'Your account is no longer setup for Pushover notifications.'
-    end
+    flash[:success] = if @user.pushover_user_key.present?
+                        'Your account is now setup for Pushover notifications.'
+                      else
+                        'Your account is no longer setup for Pushover notifications.'
+                      end
 
     redirect_to '/settings'
   end

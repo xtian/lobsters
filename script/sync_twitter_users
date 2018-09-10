@@ -3,8 +3,8 @@
 
 ENV['RAILS_ENV'] ||= 'production'
 
-APP_PATH = File.expand_path('../../config/application', __FILE__)
-require File.expand_path('../../config/boot', __FILE__)
+APP_PATH = File.expand_path('../config/application', __dir__)
+require File.expand_path('../config/boot', __dir__)
 require APP_PATH
 Rails.application.require_environment!
 
@@ -33,7 +33,7 @@ our_users = User.active.where("settings LIKE '%twitter_username:%'")
 # which cannot be added to a public list
 Keystore.where("`key` LIKE 'user:%:twitter_private'").each do |ks|
   our_users.reject! do |k, _v|
-    k.downcase == ks.key.scan(/:(.+):/).first.first.downcase
+    k.casecmp(ks.key.scan(/:(.+):/).first.first).zero?
   end
 end
 
@@ -48,7 +48,7 @@ to_add.each_slice(100) do |g|
     # puts "user #{u["screen_name"]} protected, ignoring"
     Keystore.put("user:#{u['screen_name']}:twitter_private", 1)
 
-    g.reject! { |tu| tu.downcase == u['screen_name'].downcase }
+    g.reject! { |tu| tu.casecmp(u['screen_name']).zero? }
   end
 
   next if g.none?

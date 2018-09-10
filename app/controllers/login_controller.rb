@@ -7,7 +7,7 @@ class LoginFailedError < StandardError; end
 
 class LoginController < ApplicationController
   before_action :authenticate_user
-  before_action :check_for_read_only_mode, :except => [:index]
+  before_action :check_for_read_only_mode, except: [:index]
 
   def logout
     reset_session if @user
@@ -18,15 +18,15 @@ class LoginController < ApplicationController
   def index
     @title = 'Login'
     @referer ||= request.referer
-    render :action => 'index'
+    render action: 'index'
   end
 
   def login
-    if params[:email].to_s.match?(/@/)
-      user = User.where(:email => params[:email]).first
-    else
-      user = User.where(:username => params[:email]).first
-    end
+    user = if params[:email].to_s.match?(/@/)
+             User.where(email: params[:email]).first
+           else
+             User.where(username: params[:email]).first
+           end
 
     fail_reason = nil
 
@@ -39,7 +39,7 @@ class LoginController < ApplicationController
 
       raise LoginDeletedError unless user.is_active?
 
-      if !user.password_digest.to_s.match?(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
+      unless user.password_digest.to_s.match?(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
         user.password = user.password_confirmation = params[:password].to_s
         user.save
       end
@@ -58,7 +58,7 @@ class LoginController < ApplicationController
         begin
           ru = URI.parse(params[:referer])
           return redirect_to ru.to_s if ru.host == Rails.application.domain
-        rescue => e
+        rescue StandardError => e
           Rails.logger.error "error parsing referer: #{e}"
         end
       end
@@ -81,13 +81,13 @@ class LoginController < ApplicationController
 
   def forgot_password
     @title = 'Reset Password'
-    render :action => 'forgot_password'
+    render action: 'forgot_password'
   end
 
   def reset_password
     @found_user = User.where('email = ? OR username = ?', params[:email], params[:email]).first
 
-    if !@found_user
+    unless @found_user
       flash.now[:error] = 'Invalid e-mail address or username.'
       return forgot_password
     end
@@ -103,7 +103,7 @@ class LoginController < ApplicationController
 
     if (m = params[:token].to_s.match(/^(\d+)-/)) &&
        (Time.current - Time.zone.at(m[1].to_i)) < 24.hours
-      @reset_user = User.where(:password_reset_token => params[:token].to_s).first
+      @reset_user = User.where(password_reset_token: params[:token].to_s).first
     end
 
     if @reset_user && !@reset_user.is_banned?
@@ -160,6 +160,6 @@ class LoginController < ApplicationController
   private
 
   def find_twofa_user
-    User.where(:session_token => session[:twofa_u]).first if session[:twofa_u].present?
+    User.where(session_token: session[:twofa_u]).first if session[:twofa_u].present?
   end
 end

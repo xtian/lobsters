@@ -14,7 +14,7 @@ class EmailParser
       Utils.silence_stream(STDERR) do
         @email = Mail.read_from_string(email_text)
       end
-    rescue
+    rescue StandardError
     end
 
     @sending_user = nil
@@ -46,9 +46,9 @@ class EmailParser
     irt = email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, '')
 
     if (m = irt.match(/^comment\.([^\.]+)\.\d+@/))
-      @parent = Comment.where(:short_id => m[1]).first
+      @parent = Comment.where(short_id: m[1]).first
     elsif (m = irt.match(/^story\.([^\.]+)\.\d+@/))
-      @parent = Story.where(:short_id => m[1]).first
+      @parent = Story.where(short_id: m[1]).first
     end
 
     @parent
@@ -69,7 +69,7 @@ class EmailParser
 
         begin
           @possible_charset = parts.first.content_type_parameters['charset']
-        rescue
+        rescue StandardError
         end
 
       # parts[0] - text/plain
@@ -78,7 +78,7 @@ class EmailParser
 
         begin
           @possible_charset = p.first.content_type_parameters['charset']
-        rescue
+        rescue StandardError
         end
       end
 
@@ -88,7 +88,7 @@ class EmailParser
 
       begin
         @possible_charset = email.content_type_parameters['charset']
-      rescue
+      rescue StandardError
       end
 
     elsif email.content_type.to_s.blank?

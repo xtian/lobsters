@@ -3,8 +3,8 @@
 
 ENV['RAILS_ENV'] ||= 'production'
 
-APP_PATH = File.expand_path('../../config/application', __FILE__)
-require File.expand_path('../../config/boot', __FILE__)
+APP_PATH = File.expand_path('../config/application', __dir__)
+require File.expand_path('../config/boot', __dir__)
 require APP_PATH
 Rails.application.require_environment!
 
@@ -13,7 +13,10 @@ class String
     s = [self].pack('M')
 
     if encoded_word
-      s.split(/\r?\n/).map { |l| '=?UTF-8?Q?' + l.gsub(/=*$/, '').tr(' ', '_') << '?=' }.join("\n\t")
+      s
+        .split(/\r?\n/)
+        .map { |l| '=?UTF-8?Q?' + l.gsub(/=*$/, '').tr(' ', '_') << '?=' }
+        .join("\n\t")
     else
       s
     end
@@ -175,7 +178,7 @@ Comment.where(
 
         thread = []
         indent_level = 0
-        Comment.where(:thread_id => c.thread_id).arrange_for_user(nil).reverse_each do |cc|
+        Comment.where(thread_id: c.thread_id).arrange_for_user(nil).reverse_each do |cc|
           if indent_level > 0 && cc.indent_level < indent_level
             thread.unshift cc
             indent_level = cc.indent_level

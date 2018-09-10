@@ -62,7 +62,7 @@ class RepliesController < ApplicationController
     if @page == 0
       @page = 1
     elsif @page < 0 || @page > (2**32)
-      raise ActionController::RoutingError.new('page out of bounds')
+      raise ActionController::RoutingError, 'page out of bounds'
     end
   end
 

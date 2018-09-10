@@ -3,24 +3,24 @@
 class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
-             :inverse_of => :comments
+             inverse_of: :comments
   has_many :votes,
-           :dependent => :delete_all
+           dependent: :delete_all
   belongs_to :parent_comment,
-             :class_name => 'Comment',
-             :inverse_of => false,
-             :required => false
+             class_name: 'Comment',
+             inverse_of: false,
+             required: false
   has_one :moderation,
-          :class_name => 'Moderation',
-          :inverse_of => :comment,
-          :dependent => :destroy
+          class_name: 'Moderation',
+          inverse_of: :comment,
+          dependent: :destroy
   belongs_to :hat,
-             :required => false
+             required: false
   has_many :taggings, through: :story
 
   attr_accessor :current_vote, :previewing, :indent_level
 
-  before_validation :on => :create do
+  before_validation on: :create do
     assign_short_id_and_upvote
     assign_initial_confidence
     assign_thread_id
@@ -29,7 +29,7 @@ class Comment < ApplicationRecord
                :deliver_mention_notifications, :log_hat_use
   after_destroy :unassign_votes
 
-  scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
+  scope :active, -> { where(is_deleted: false, is_moderated: false) }
 
   DOWNVOTABLE_DAYS = 7
   DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2
@@ -115,7 +115,7 @@ class Comment < ApplicationRecord
 
     Comment.all.find_each do |c|
       c.markeddown_comment = c.generated_markeddown_comment
-      c.save(:validate => false)
+      c.save(validate: false)
     end
 
     Comment.record_timestamps = true
@@ -139,10 +139,10 @@ class Comment < ApplicationRecord
       :score,
       :upvotes,
       :downvotes,
-      { :comment => (is_gone? ? "<em>#{gone_text}</em>" : :markeddown_comment) },
+      { comment: (is_gone? ? "<em>#{gone_text}</em>" : :markeddown_comment) },
       :url,
       :indent_level,
-      { :commenting_user => :user }
+      { commenting_user: :user }
     ]
 
     js = {}
@@ -150,11 +150,11 @@ class Comment < ApplicationRecord
       if k.is_a?(Symbol)
         js[k] = send(k)
       elsif k.is_a?(Hash)
-        if k.values.first.is_a?(Symbol)
-          js[k.keys.first] = send(k.values.first)
-        else
-          js[k.keys.first] = k.values.first
-        end
+        js[k.keys.first] = if k.values.first.is_a?(Symbol)
+                             send(k.values.first)
+                           else
+                             k.values.first
+                           end
       end
     end
 
@@ -171,11 +171,11 @@ class Comment < ApplicationRecord
   end
 
   def assign_thread_id
-    if parent_comment_id.present?
-      self.thread_id = parent_comment.thread_id
-    else
-      self.thread_id = Keystore.incremented_value_for('thread_id')
-    end
+    self.thread_id = if parent_comment_id.present?
+                       parent_comment.thread_id
+                     else
+                       Keystore.incremented_value_for('thread_id')
+                     end
   end
 
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
@@ -217,7 +217,7 @@ class Comment < ApplicationRecord
       m.save
     end
 
-    save(:validate => false)
+    save(validate: false)
     Comment.record_timestamps = true
 
     story.update_comments_count!
@@ -226,24 +226,24 @@ class Comment < ApplicationRecord
 
   def deliver_mention_notifications
     plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
-      next unless (u = User.find_by(:username => mention))
+      next unless (u = User.find_by(username: mention))
       next if u.id == user.id
 
       if u.email_mentions?
         begin
           EmailReply.mention(self, u).deliver_now
-        rescue => e
+        rescue StandardError => e
           Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
       end
 
       next unless u.pushover_mentions?
       u.pushover!(
-        :title => "#{Rails.application.name} mention by " \
+        title: "#{Rails.application.name} mention by " \
           "#{user.username} on #{story.title}",
-        :message => plaintext_comment,
-        :url => url,
-        :url_title => "Reply to #{user.username}"
+        message: plaintext_comment,
+        url: url,
+        url_title: "Reply to #{user.username}"
       )
     end
   end
@@ -255,18 +255,18 @@ class Comment < ApplicationRecord
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver_now
-        rescue => e
+        rescue StandardError => e
           Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
       end
 
       if u.pushover_replies?
         u.pushover!(
-          :title => "#{Rails.application.name} reply from " \
+          title: "#{Rails.application.name} reply from " \
             "#{user.username} on #{story.title}",
-          :message => plaintext_comment,
-          :url => url,
-          :url_title => "Reply to #{user.username}"
+          message: plaintext_comment,
+          url: url,
+          url_title: "Reply to #{user.username}"
         )
       end
     end
@@ -290,9 +290,11 @@ class Comment < ApplicationRecord
 
   def gone_text
     if is_moderated?
+      reason = moderation.try(:reason) || 'No reason given'
+
       'Comment removed by moderator ' +
-        moderation.try(:moderator).try(:username).to_s << ': ' +
-                                                          (moderation.try(:reason) || 'No reason given')
+        moderation.try(:moderator).try(:username).to_s << ': ' + reason
+
     elsif user.is_banned?
       'Comment from banned user removed'
     else
@@ -456,7 +458,7 @@ class Comment < ApplicationRecord
       r_users[v.reason.to_s].push v.user.username
     end
 
-    r_counts.keys.sort.map { |k|
+    r_counts.keys.sort.map do |k|
       if k == ''
         "+#{r_counts[k]}"
       else
@@ -464,7 +466,7 @@ class Comment < ApplicationRecord
         o << " (#{r_users[k].join(', ')})" if u&.is_moderator? && user_id != u.id
         o
       end
-    }.join(', ')
+    end.join(', ')
   end
 
   def undelete_for_user(user)
@@ -484,7 +486,7 @@ class Comment < ApplicationRecord
       end
     end
 
-    save(:validate => false)
+    save(validate: false)
     Comment.record_timestamps = true
 
     story.update_comments_count!

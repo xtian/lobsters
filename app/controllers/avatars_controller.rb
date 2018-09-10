@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AvatarsController < ApplicationController
-  before_action :require_logged_in_user, :only => [:expire]
+  before_action :require_logged_in_user, only: [:expire]
 
   ALLOWED_SIZES = [16, 32, 100, 200].freeze
 
@@ -10,14 +10,14 @@ class AvatarsController < ApplicationController
   def expire
     expired = 0
 
-    Dir.entries(CACHE_DIR).select { |f|
+    Dir.entries(CACHE_DIR).select do |f|
       f.match(/\A#{@user.username}-(\d+)\.png\z/)
-    }.each do |f|
+    end.each do |f|
 
       Rails.logger.debug "Expiring #{f}"
       File.unlink("#{CACHE_DIR}/#{f}")
       expired += 1
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error "Failed expiring #{f}: #{e}"
     end
 
@@ -29,16 +29,16 @@ class AvatarsController < ApplicationController
     username, size = params[:username_size].to_s.scan(/\A(.+)-(\d+)\z/).first
     size = size.to_i
 
-    raise ActionController::RoutingError.new('invalid size') unless ALLOWED_SIZES.include?(size)
+    raise ActionController::RoutingError, 'invalid size' unless ALLOWED_SIZES.include?(size)
 
-    if !username.match?(User::VALID_USERNAME)
-      raise ActionController::RoutingError.new('invalid user name')
+    unless username.match?(User::VALID_USERNAME)
+      raise ActionController::RoutingError, 'invalid user name'
     end
 
-    u = User.where(:username => username).first!
+    u = User.where(username: username).first!
 
-    if !(av = u.fetched_avatar(size))
-      raise ActionController::RoutingError.new('failed fetching avatar')
+    unless (av = u.fetched_avatar(size))
+      raise ActionController::RoutingError, 'failed fetching avatar'
     end
 
     Dir.mkdir(CACHE_DIR) unless Dir.exist?(CACHE_DIR)
@@ -50,6 +50,6 @@ class AvatarsController < ApplicationController
     File.rename("#{CACHE_DIR}/.#{u.username}-#{size}.png", "#{CACHE_DIR}/#{u.username}-#{size}.png")
 
     response.headers['Expires'] = 1.hour.from_now.httpdate
-    send_data av, :type => 'image/png', :disposition => 'inline'
+    send_data av, type: 'image/png', disposition: 'inline'
   end
 end
