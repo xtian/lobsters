@@ -6,11 +6,11 @@ class Keystore < ApplicationRecord
   validates :key, presence: true
 
   def self.get(key)
-    self.find_by(:key => key)
+    find_by(:key => key)
   end
 
   def self.value_for(key)
-    self.find_by(:key => key).try(:value)
+    find_by(:key => key).try(:value)
   end
 
   def self.put(key, value)
@@ -23,7 +23,7 @@ class Keystore < ApplicationRecord
         "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " +
         "UPDATE `value` = #{q(value)}")
     else
-      kv = self.find_or_create_key_for_update(key, value)
+      kv = find_or_create_key_for_update(key, value)
       kv.value = value
       kv.save!
     end
@@ -32,7 +32,7 @@ class Keystore < ApplicationRecord
   end
 
   def self.increment_value_for(key, amount = 1)
-    self.incremented_value_for(key, amount)
+    incremented_value_for(key, amount)
   end
 
   def self.incremented_value_for(key, amount = 1)
@@ -48,23 +48,23 @@ class Keystore < ApplicationRecord
           "`key`, `value`) VALUES (#{q(key)}, #{q(amount)}) ON DUPLICATE KEY " +
           "UPDATE `value` = `value` + #{q(amount)}")
       else
-        kv = self.find_or_create_key_for_update(key, 0)
+        kv = find_or_create_key_for_update(key, 0)
         kv.value = kv.value.to_i + amount
         kv.save!
         return kv.value
       end
 
-      self.value_for(key)
+      value_for(key)
     end
   end
 
   def self.find_or_create_key_for_update(key, init = nil)
     loop do
-      found = self.lock(true).find_by(:key => key)
+      found = lock(true).find_by(:key => key)
       return found if found
 
       begin
-        self.create! do |kv|
+        create! do |kv|
           kv.key = key
           kv.value = init
           kv.save!
@@ -76,10 +76,10 @@ class Keystore < ApplicationRecord
   end
 
   def self.decrement_value_for(key, amount = -1)
-    self.increment_value_for(key, amount)
+    increment_value_for(key, amount)
   end
 
   def self.decremented_value_for(key, amount = -1)
-    self.incremented_value_for(key, amount)
+    incremented_value_for(key, amount)
   end
 end

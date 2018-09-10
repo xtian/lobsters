@@ -56,7 +56,7 @@ module Lobsters
 
     config.cache_store = :file_store, "#{config.root}/tmp/cache/"
 
-    config.exceptions_app = self.routes
+    config.exceptions_app = routes
 
     config.skip_yarn = true
 

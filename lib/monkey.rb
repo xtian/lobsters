@@ -15,11 +15,11 @@ end
 class String
   def forcibly_convert_to_utf8
     begin
-      if self.encoding.to_s == 'UTF-8' && self.valid_encoding?
+      if encoding.to_s == 'UTF-8' && valid_encoding?
         return self
       end
 
-      str = self.dup.force_encoding('binary').encode(
+      str = dup.force_encoding('binary').encode(
         'utf-8',
         :invalid => :replace,
         :undef => :replace,
@@ -31,7 +31,7 @@ class String
       end
 
     rescue Encoding::UndefinedConversionError
-      str = self.chars.map {|c|
+      str = chars.map {|c|
         begin
           c.encode('UTF-8', :invalid => :replace, :undef => :replace)
         rescue

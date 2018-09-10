@@ -19,14 +19,14 @@ class InvitationRequest < ApplicationRecord
       end
 
       self.code = Utils.random_str(15)
-      unless InvitationRequest.exists?(:code => self.code)
+      unless InvitationRequest.exists?(:code => code)
         break
       end
     end
   end
 
   def markeddown_memo
-    Markdowner.to_html(self.memo)
+    Markdowner.to_html(memo)
   end
 
   def send_email

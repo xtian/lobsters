@@ -25,8 +25,8 @@ module Net
   private
 
     def conn_address
-      if self.custom_conn_address.to_s != ''
-        self.custom_conn_address
+      if custom_conn_address.to_s != ''
+        custom_conn_address
       else
         address
       end
@@ -143,8 +143,8 @@ class Sponge
     end
 
     host = Net::HTTP.new(ip.to_s, uri.port)
-    host.read_timeout = self.timeout
-    if self.debug
+    host.read_timeout = timeout
+    if debug
       host.set_debug_output $stdout
     end
 
@@ -196,7 +196,7 @@ class Sponge
 
     res = nil
     begin
-      Timeout.timeout(self.timeout) do
+      Timeout.timeout(timeout) do
         if method == :post
           res = host.post(path, post_data, send_headers)
         else
@@ -249,7 +249,7 @@ class Sponge
 private
 
   def dputs(string)
-    if self.debug
+    if debug
       puts string
     end
   end

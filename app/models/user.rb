@@ -98,8 +98,8 @@ class User < ApplicationRecord
 
   before_save :check_session_token
   before_validation :on => :create do
-    self.create_rss_token
-    self.create_mailing_list_token
+    create_rss_token
+    create_mailing_list_token
   end
 
   BANNED_USERNAMES = ['admin', 'administrator', 'contact', 'fraud', 'guest',
@@ -147,7 +147,7 @@ class User < ApplicationRecord
       :is_moderator,
     ]
 
-    if !self.is_admin?
+    if !is_admin?
       attrs.push :karma
     end
 
@@ -155,44 +155,44 @@ class User < ApplicationRecord
 
     h = super(:only => attrs)
 
-    h[:avatar_url] = self.avatar_url
+    h[:avatar_url] = avatar_url
     h[:invited_by_user] = User.where(id: invited_by_user_id).pluck(:username).first
 
-    if self.github_username.present?
-      h[:github_username] = self.github_username
+    if github_username.present?
+      h[:github_username] = github_username
     end
 
-    if self.twitter_username.present?
-      h[:twitter_username] = self.twitter_username
+    if twitter_username.present?
+      h[:twitter_username] = twitter_username
     end
 
     h
   end
 
   def authenticate_totp(code)
-    totp = ROTP::TOTP.new(self.totp_secret)
+    totp = ROTP::TOTP.new(totp_secret)
     totp.verify(code)
   end
 
   def avatar_path(size = 100)
     ActionController::Base.helpers.image_path(
-      "/avatars/#{self.username}-#{size}.png",
+      "/avatars/#{username}-#{size}.png",
       skip_pipeline: true
     )
   end
 
   def avatar_url(size = 100)
     ActionController::Base.helpers.image_url(
-      "/avatars/#{self.username}-#{size}.png",
+      "/avatars/#{username}-#{size}.png",
       skip_pipeline: true
     )
   end
 
   def average_karma
-    if (k = self.karma) == 0
+    if (k = karma) == 0
       0
     else
-      k.to_f / (self.stories_submitted_count + self.comments_posted_count)
+      k.to_f / (stories_submitted_count + comments_posted_count)
     end
   end
 
@@ -201,12 +201,12 @@ class User < ApplicationRecord
       self.disabled_invite_at = Time.current
       self.disabled_invite_by_user_id = disabler.id
       self.disabled_invite_reason = reason
-      self.save!
+      save!
 
       msg = Message.new
       msg.deleted_by_author = true
       msg.author_user_id = disabler.id
-      msg.recipient_user_id = self.id
+      msg.recipient_user_id = id
       msg.subject = 'Your invite privileges have been revoked'
       msg.body = "The reason given:\n" +
                  "\n" +
@@ -217,7 +217,7 @@ class User < ApplicationRecord
 
       m = Moderation.new
       m.moderator_user_id = disabler.id
-      m.user_id = self.id
+      m.user_id = id
       m.action = 'Disabled invitations'
       m.reason = reason
       m.save!
@@ -232,13 +232,13 @@ class User < ApplicationRecord
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
-      self.delete!
+      delete!
 
       BanNotification.notify(self, banner, reason)
 
       m = Moderation.new
       m.moderator_user_id = banner.id
-      m.user_id = self.id
+      m.user_id = id
       m.action = 'Banned'
       m.reason = reason
       m.save!
@@ -262,54 +262,54 @@ class User < ApplicationRecord
         return true
       end
     elsif obj.is_a?(Comment) && obj.is_downvotable?
-      return !self.is_new? && (self.karma >= MIN_KARMA_TO_DOWNVOTE)
+      return !is_new? && (karma >= MIN_KARMA_TO_DOWNVOTE)
     end
 
     false
   end
 
   def can_invite?
-    !banned_from_inviting? && self.can_submit_stories?
+    !banned_from_inviting? && can_submit_stories?
   end
 
   def can_offer_suggestions?
-    !self.is_new? && (self.karma >= MIN_KARMA_TO_SUGGEST)
+    !is_new? && (karma >= MIN_KARMA_TO_SUGGEST)
   end
 
   def can_see_invitation_requests?
-    can_invite? && (self.is_moderator? ||
-      (self.karma >= MIN_KARMA_FOR_INVITATION_REQUESTS))
+    can_invite? && (is_moderator? ||
+      (karma >= MIN_KARMA_FOR_INVITATION_REQUESTS))
   end
 
   def can_submit_stories?
-    self.karma >= MIN_KARMA_TO_SUBMIT_STORIES
+    karma >= MIN_KARMA_TO_SUBMIT_STORIES
   end
 
   def check_session_token
-    if self.session_token.blank?
+    if session_token.blank?
       self.session_token = Utils.random_str(60)
     end
   end
 
   def create_mailing_list_token
-    if self.mailing_list_token.blank?
+    if mailing_list_token.blank?
       self.mailing_list_token = Utils.random_str(10)
     end
   end
 
   def create_rss_token
-    if self.rss_token.blank?
+    if rss_token.blank?
       self.rss_token = Utils.random_str(60)
     end
   end
 
   def comments_posted_count
-    Keystore.value_for("user:#{self.id}:comments_posted").to_i
+    Keystore.value_for("user:#{id}:comments_posted").to_i
   end
 
   def fetched_avatar(size = 100)
     gravatar_url = 'https://www.gravatar.com/avatar/' +
-                   Digest::MD5.hexdigest(self.email.strip.downcase) <<
+                   Digest::MD5.hexdigest(email.strip.downcase) <<
                    "?r=pg&d=identicon&s=#{size}"
 
     begin
@@ -327,68 +327,68 @@ class User < ApplicationRecord
   end
 
   def update_comments_posted_count!
-    Keystore.put("user:#{self.id}:comments_posted", self.comments.active.count)
+    Keystore.put("user:#{id}:comments_posted", comments.active.count)
   end
 
   def delete!
     User.transaction do
-      self.comments
+      comments
         .where('upvotes - downvotes < 0')
         .find_each {|c| c.delete_for_user(self) }
 
-      self.sent_messages.each do |m|
+      sent_messages.each do |m|
         m.deleted_by_author = true
         m.save
       end
-      self.received_messages.each do |m|
+      received_messages.each do |m|
         m.deleted_by_recipient = true
         m.save
       end
 
-      self.invitations.destroy_all
+      invitations.destroy_all
 
       self.session_token = nil
-      self.check_session_token
+      check_session_token
 
       self.deleted_at = Time.current
-      self.save!
+      save!
     end
   end
 
   def undelete!
     User.transaction do
-      self.sent_messages.each do |m|
+      sent_messages.each do |m|
         m.deleted_by_author = false
         m.save
       end
-      self.received_messages.each do |m|
+      received_messages.each do |m|
         m.deleted_by_recipient = false
         m.save
       end
 
       self.deleted_at = nil
-      self.save!
+      save!
     end
   end
 
   def disable_2fa!
     self.totp_secret = nil
-    self.save!
+    save!
   end
 
   def grant_moderatorship_by_user!(user)
     User.transaction do
       self.is_moderator = true
-      self.save!
+      save!
 
       m = Moderation.new
       m.moderator_user_id = user.id
-      m.user_id = self.id
+      m.user_id = id
       m.action = 'Granted moderator status'
       m.save!
 
       h = Hat.new
-      h.user_id = self.id
+      h.user_id = id
       h.granted_by_user_id = user.id
       h.hat = 'Sysop'
       h.save!
@@ -399,13 +399,13 @@ class User < ApplicationRecord
 
   def initiate_password_reset_for_ip(ip)
     self.password_reset_token = "#{Time.current.to_i}-#{Utils.random_str(30)}"
-    self.save!
+    save!
 
     PasswordReset.password_reset_link(self, ip).deliver_now
   end
 
   def has_2fa?
-    self.totp_secret.present?
+    totp_secret.present?
   end
 
   def is_active?
@@ -417,29 +417,29 @@ class User < ApplicationRecord
   end
 
   def is_new?
-    Time.current - self.created_at <= NEW_USER_DAYS.days
+    Time.current - created_at <= NEW_USER_DAYS.days
   end
 
   def is_heavy_self_promoter?
-    total_count = self.stories_submitted_count
+    total_count = stories_submitted_count
 
     if total_count < MIN_STORIES_CHECK_SELF_PROMOTION
       false
     else
-      authored = self.stories.where(:user_is_author => true).count
+      authored = stories.where(:user_is_author => true).count
       authored.to_f / total_count >= HEAVY_SELF_PROMOTER_PROPORTION
     end
   end
 
   def linkified_about
-    Markdowner.to_html(self.about)
+    Markdowner.to_html(about)
   end
 
   def most_common_story_tag
     Tag.active.joins(
       :stories
     ).where(
-      :stories => { :user_id => self.id }
+      :stories => { :user_id => id }
     ).group(
       Tag.arel_table[:id]
     ).order(
@@ -448,18 +448,18 @@ class User < ApplicationRecord
   end
 
   def pushover!(params)
-    if self.pushover_user_key.present?
-      Pushover.push(self.pushover_user_key, params)
+    if pushover_user_key.present?
+      Pushover.push(pushover_user_key, params)
     end
   end
 
   def recent_threads(amount, include_submitted_stories = false)
-    thread_ids = self.comments.active.group(:thread_id)
+    thread_ids = comments.active.group(:thread_id)
       .order('MAX(created_at) DESC').limit(amount).pluck(:thread_id)
 
-    if include_submitted_stories && self.show_submitted_story_threads
+    if include_submitted_stories && show_submitted_story_threads
       thread_ids += Comment.joins(:story)
-        .where(:stories => { :user_id => self.id }).group(:thread_id)
+        .where(:stories => { :user_id => id }).group(:thread_id)
         .order('MAX(comments.created_at) DESC').limit(amount).pluck(:thread_id)
 
       thread_ids = thread_ids.uniq.sort.reverse[0, amount]
@@ -469,7 +469,7 @@ class User < ApplicationRecord
   end
 
   def stories_submitted_count
-    Keystore.value_for("user:#{self.id}:stories_submitted").to_i
+    Keystore.value_for("user:#{id}:stories_submitted").to_i
   end
 
   def to_param
@@ -481,11 +481,11 @@ class User < ApplicationRecord
     self.banned_by_user_id = nil
     self.banned_reason = nil
     self.deleted_at = nil
-    self.save!
+    save!
 
     m = Moderation.new
     m.moderator_user_id = unbanner.id
-    m.user_id = self.id
+    m.user_id = id
     m.action = 'Unbanned'
     m.save!
 
@@ -497,11 +497,11 @@ class User < ApplicationRecord
       self.disabled_invite_at = nil
       self.disabled_invite_by_user_id = nil
       self.disabled_invite_reason = nil
-      self.save!
+      save!
 
       m = Moderation.new
       m.moderator_user_id = mod.id
-      m.user_id = self.id
+      m.user_id = id
       m.action = 'Enabled invitations'
       m.save!
     end
@@ -518,20 +518,20 @@ class User < ApplicationRecord
   end
 
   def unread_message_count
-    @unread_message_count ||= Keystore.value_for("user:#{self.id}:unread_messages").to_i
+    @unread_message_count ||= Keystore.value_for("user:#{id}:unread_messages").to_i
   end
 
   def update_unread_message_count!
-    @unread_message_count = self.received_messages.unread.count
-    Keystore.put("user:#{self.id}:unread_messages", @unread_message_count)
+    @unread_message_count = received_messages.unread.count
+    Keystore.put("user:#{id}:unread_messages", @unread_message_count)
   end
 
   def unread_replies_count
-    @unread_replies_count ||= ReplyingComment.where(user_id: self.id, is_unread: true).count
+    @unread_replies_count ||= ReplyingComment.where(user_id: id, is_unread: true).count
   end
 
   def votes_for_others
-    self.votes.left_outer_joins(:story, :comment)
+    votes.left_outer_joins(:story, :comment)
       .where('(votes.comment_id is not null and comments.user_id <> votes.user_id) OR ' +
              '(votes.comment_id is null and stories.user_id <> votes.user_id)')
       .order('id DESC')

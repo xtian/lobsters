@@ -22,7 +22,7 @@ class Tag < ApplicationRecord
   scope :active, -> { where(:inactive => false) }
 
   def to_param
-    self.tag
+    tag
   end
 
   def self.all_with_filtered_counts_for(user)
@@ -44,11 +44,11 @@ class Tag < ApplicationRecord
   end
 
   def css_class
-    "tag tag_#{self.tag}" + (self.is_media?? ' tag_is_media' : '')
+    "tag tag_#{tag}" + (is_media?? ' tag_is_media' : '')
   end
 
   def valid_for?(user)
-    if self.privileged?
+    if privileged?
       !!user.try(:is_moderator?)
     else
       true
@@ -56,19 +56,19 @@ class Tag < ApplicationRecord
   end
 
   def filtered_count
-    @filtered_count ||= TagFilter.where(:tag_id => self.id).count
+    @filtered_count ||= TagFilter.where(:tag_id => id).count
   end
 
   def log_modifications
     Moderation.create do |m|
-      if self.new_record?
-        m.action = 'Created new tag ' + self.changes.map {|f, c| "with #{f} '#{c[1]}'" }.join(', ')
+      if new_record?
+        m.action = 'Created new tag ' + changes.map {|f, c| "with #{f} '#{c[1]}'" }.join(', ')
       else
-        m.action = "Updating tag #{self.tag}, " + self.saved_changes
+        m.action = "Updating tag #{tag}, " + saved_changes
           .map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
       end
       m.moderator_user_id = @edit_user_id
-      m.tag_id = self.id
+      m.tag_id = id
     end
   end
 end

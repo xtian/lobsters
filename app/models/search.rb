@@ -33,17 +33,17 @@ class Search
   end
 
   def to_url_params
-    [:q, :what, :order].map {|p| "#{p}=#{CGI.escape(self.send(p).to_s)}" }.join('&amp;')
+    [:q, :what, :order].map {|p| "#{p}=#{CGI.escape(send(p).to_s)}" }.join('&amp;')
   end
 
   def page_count
-    total = self.total_results.to_i
+    total = total_results.to_i
 
-    if total == -1 || total > self.max_matches
-      total = self.max_matches
+    if total == -1 || total > max_matches
+      total = max_matches
     end
 
-    ((total - 1) / self.per_page.to_i) + 1
+    ((total - 1) / per_page.to_i) + 1
   end
 
   def what
@@ -87,7 +87,7 @@ class Search
     # extract domain query since it must be done separately
     domain = nil
     tag_scopes = []
-    words = self.q.to_s.split(' ').reject {|w|
+    words = q.to_s.split(' ').reject {|w|
       if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
       elsif (m = w.match(/^tag:(.+)$/))
@@ -99,7 +99,7 @@ class Search
 
     base = nil
 
-    case self.what
+    case what
     when 'stories'
       base = Story.unmerged.where(:is_expired => false)
       if domain.present?
@@ -135,19 +135,19 @@ class Search
         end
       end
 
-      case self.order
+      case order
       when 'relevance'
         if qwords.present?
-          self.results.order!(Arel.sql("((#{title_match_sql}) * 2) DESC, " +
+          results.order!(Arel.sql("((#{title_match_sql}) * 2) DESC, " +
                                        "((#{description_match_sql}) * 1.5) DESC, " +
                                        "(#{story_cache_match_sql}) DESC"))
         else
-          self.results.order!('stories.created_at DESC')
+          results.order!('stories.created_at DESC')
         end
       when 'newest'
-        self.results.order!('stories.created_at DESC')
+        results.order!('stories.created_at DESC')
       when 'points'
-        self.results.order!("#{Story.score_sql} DESC")
+        results.order!("#{Story.score_sql} DESC")
       end
 
     when 'comments'
@@ -166,45 +166,45 @@ class Search
         "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
       ).includes(:user, :story)
 
-      case self.order
+      case order
       when 'relevance'
-        self.results.order!('rel_comment DESC')
+        results.order!('rel_comment DESC')
       when 'newest'
-        self.results.order!('created_at DESC')
+        results.order!('created_at DESC')
       when 'points'
-        self.results.order!("#{Comment.score_sql} DESC")
+        results.order!("#{Comment.score_sql} DESC")
       end
     end
 
-    self.total_results = self.results.length
+    self.total_results = results.length
 
-    if self.page > self.page_count
-      self.page = self.page_count
+    if page > page_count
+      self.page = page_count
     end
-    if self.page < 1
+    if page < 1
       self.page = 1
     end
 
-    self.results = self.results
-      .limit(self.per_page)
-      .offset((self.page - 1) * self.per_page)
+    self.results = results
+      .limit(per_page)
+      .offset((page - 1) * per_page)
 
     # if a user is logged in, fetch their votes for what's on the page
     if user
       case what
       when 'stories'
-        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, self.results.map(&:id))
+        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, results.map(&:id))
 
-        self.results.each do |r|
+        results.each do |r|
           if votes[r.id]
             r.vote = votes[r.id]
           end
         end
 
       when 'comments'
-        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, self.results.map(&:id))
+        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, results.map(&:id))
 
-        self.results.each do |r|
+        results.each do |r|
           if votes[r.id]
             r.current_vote = votes[r.id]
           end

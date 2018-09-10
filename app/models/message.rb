@@ -46,8 +46,8 @@ class Message < ApplicationRecord
 
     h = super(:only => attrs)
 
-    h[:author_username] = self.author.try(:username)
-    h[:recipient_username] = self.recipient.try(:username)
+    h[:author_username] = author.try(:username)
+    h[:recipient_username] = recipient.try(:username)
 
     h
   end
@@ -57,41 +57,41 @@ class Message < ApplicationRecord
   end
 
   def author_username
-    if self.author
-      self.author.username
+    if author
+      author.username
     else
       'System'
     end
   end
 
   def check_for_both_deleted
-    if self.deleted_by_author? && self.deleted_by_recipient?
-      self.destroy
+    if deleted_by_author? && deleted_by_recipient?
+      destroy
     end
   end
 
   def update_unread_counts
-    self.recipient.update_unread_message_count!
+    recipient.update_unread_message_count!
   end
 
   def deliver_email_notifications
     return if Rails.env.development?
 
-    if self.recipient.email_messages?
+    if recipient.email_messages?
       begin
-        EmailMessage.notify(self, self.recipient).deliver_now
+        EmailMessage.notify(self, recipient).deliver_now
       rescue => e
-        Rails.logger.error "error e-mailing #{self.recipient.email}: #{e}"
+        Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
       end
     end
 
-    if self.recipient.pushover_messages?
-      self.recipient.pushover!(
+    if recipient.pushover_messages?
+      recipient.pushover!(
         :title => "#{Rails.application.name} message from " +
-          "#{self.author_username}: #{self.subject}",
-        :message => self.plaintext_body,
-        :url => self.url,
-        :url_title => (self.author ? "Reply to #{self.author_username}" :
+          "#{author_username}: #{subject}",
+        :message => plaintext_body,
+        :url => url,
+        :url_title => (author ? "Reply to #{author_username}" :
           'View message')
       )
     end
@@ -109,15 +109,15 @@ class Message < ApplicationRecord
   end
 
   def linkified_body
-    Markdowner.to_html(self.body)
+    Markdowner.to_html(body)
   end
 
   def plaintext_body
     # TODO: linkify then strip tags and convert entities back
-    self.body.to_s
+    body.to_s
   end
 
   def url
-    Rails.application.root_url + "messages/#{self.short_id}"
+    Rails.application.root_url + "messages/#{short_id}"
   end
 end

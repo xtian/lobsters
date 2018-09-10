@@ -10,7 +10,7 @@ class Pushover
   end
 
   def self.push(user, params)
-    if !self.enabled?
+    if !enabled?
       return
     end
 

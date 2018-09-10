@@ -23,7 +23,7 @@ class Invitation < ApplicationRecord
       end
 
       self.code = Utils.random_str(15)
-      unless Invitation.exists?(:code => self.code)
+      unless Invitation.exists?(:code => code)
         break
       end
     end

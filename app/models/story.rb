@@ -140,23 +140,23 @@ class Story < ApplicationRecord
   after_save :update_merged_into_story_comments, :recalculate_hotness!
 
   validate do
-    if self.url.present?
+    if url.present?
       check_already_posted
       check_not_tracking_domain
       errors.add(:url, 'is not valid') unless url.match?(URL_RE)
-    elsif self.description.to_s.strip == ''
+    elsif description.to_s.strip == ''
       errors.add(:description, 'must contain text if no URL posted')
     end
 
-    if self.title.starts_with?('Ask') && self.tags_a.include?('ask')
+    if title.starts_with?('Ask') && tags_a.include?('ask')
       errors.add(:title, " starting 'Ask #{Rails.application.name}' or similar is redundant " +
                           'with the ask tag.')
     end
-    if self.title.match?(GRAPHICS_RE)
+    if title.match?(GRAPHICS_RE)
       errors.add(:title, ' may not contain graphic codepoints')
     end
 
-    if !errors.any? && self.url.blank?
+    if !errors.any? && url.blank?
       self.user_is_author = true
     end
 
@@ -164,19 +164,19 @@ class Story < ApplicationRecord
   end
 
   def check_already_posted
-    return unless self.url.present? && self.new_record?
+    return unless url.present? && new_record?
 
-    self.already_posted_story = Story.find_similar_by_url(self.url)
-    return unless self.already_posted_story
+    self.already_posted_story = Story.find_similar_by_url(url)
+    return unless already_posted_story
 
-    if self.already_posted_story.is_recent?
+    if already_posted_story.is_recent?
       errors.add(:url, 'has already been submitted within the past ' +
         "#{RECENT_DAYS} days")
     end
   end
 
   def check_not_tracking_domain
-    return unless self.url.present? && self.new_record?
+    return unless url.present? && new_record?
 
     if TRACKING_DOMAINS.include?(domain)
       errors.add(:url, 'is a link shortening or ad tracking domain')
@@ -234,7 +234,7 @@ class Story < ApplicationRecord
   end
 
   def archive_url
-    "https://archive.is/#{CGI.escape(self.url)}"
+    "https://archive.is/#{CGI.escape(url)}"
   end
 
   def as_json(options = {})
@@ -251,7 +251,7 @@ class Story < ApplicationRecord
       { :description => :markeddown_description },
       :comments_url,
       { :submitter_user => :user },
-      { :tags => self.tags.map(&:tag).sort },
+      { :tags => tags.map(&:tag).sort },
     ]
 
     if options && options[:with_comments]
@@ -261,10 +261,10 @@ class Story < ApplicationRecord
     js = {}
     h.each do |k|
       if k.is_a?(Symbol)
-        js[k] = self.send(k)
+        js[k] = send(k)
       elsif k.is_a?(Hash)
         if k.values.first.is_a?(Symbol)
-          js[k.keys.first] = self.send(k.values.first)
+          js[k.keys.first] = send(k.values.first)
         else
           js[k.keys.first] = k.values.first
         end
@@ -275,7 +275,7 @@ class Story < ApplicationRecord
   end
 
   def assign_initial_hotness
-    self.hotness = self.calculated_hotness
+    self.hotness = calculated_hotness
   end
 
   def assign_short_id_and_upvote
@@ -286,11 +286,11 @@ class Story < ApplicationRecord
   def calculated_hotness
     # take each tag's hotness modifier into effect, and give a slight bump to
     # stories submitted by the author
-    base = self.tags.sum(:hotness_mod) + (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
+    base = tags.sum(:hotness_mod) + (user_is_author? && url.present? ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    cpoints = self.merged_comments
-      .where('user_id <> ?', self.user_id)
+    cpoints = merged_comments
+      .where('user_id <> ?', user_id)
       .select(:upvotes, :downvotes)
       .map {|c|
         if base < 0
@@ -304,12 +304,12 @@ class Story < ApplicationRecord
       .inject(&:+).to_f * 0.5
 
     # mix in any stories this one cannibalized
-    cpoints += self.merged_stories.map(&:score).inject(&:+).to_f
+    cpoints += merged_stories.map(&:score).inject(&:+).to_f
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
-    if cpoints > self.upvotes
-      cpoints = self.upvotes
+    if cpoints > upvotes
+      cpoints = upvotes
     end
 
     # don't immediately kill stories at 0 by bumping up score by one
@@ -323,11 +323,11 @@ class Story < ApplicationRecord
     end
 
     return -((order * sign) + base +
-      ((self.created_at || Time.current).to_f / HOTNESS_WINDOW)).round(7)
+      ((created_at || Time.current).to_f / HOTNESS_WINDOW)).round(7)
   end
 
   def can_be_seen_by_user?(user)
-    if is_gone? && !(user && (user.is_moderator? || user.id == self.user_id))
+    if is_gone? && !(user && (user.is_moderator? || user.id == user_id))
       return false
     end
 
@@ -335,11 +335,11 @@ class Story < ApplicationRecord
   end
 
   def can_have_suggestions_from_user?(user)
-    if !user || (user.id == self.user_id) || !user.can_offer_suggestions?
+    if !user || (user.id == user_id) || !user.can_offer_suggestions?
       return false
     end
 
-    if self.taggings.select {|t| t.tag&.privileged? }.any?
+    if taggings.select {|t| t.tag&.privileged? }.any?
       return false
     end
 
@@ -349,9 +349,9 @@ class Story < ApplicationRecord
   # this has to happen just before save rather than in tags_a= because we need
   # to have a valid user_id
   def check_tags
-    u = self.editor || self.user
+    u = editor || user
 
-    self.taggings.each do |t|
+    taggings.each do |t|
       if !t.tag.valid_for?(u)
         raise "#{u.username} does not have permission to use privileged tag #{t.tag.tag}"
       elsif t.tag.inactive? && t.new_record? && !t.marked_for_destruction?
@@ -360,7 +360,7 @@ class Story < ApplicationRecord
       end
     end
 
-    if self.taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media? }.empty?
+    if taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media? }.empty?
       errors.add(:base, 'Must have at least one non-media (PDF, video) ' +
         "tag.  If no tags apply to your content, it probably doesn't " +
         'belong here.')
@@ -368,23 +368,23 @@ class Story < ApplicationRecord
   end
 
   def comments_path
-    "#{short_id_path}/#{self.title_as_url}"
+    "#{short_id_path}/#{title_as_url}"
   end
 
   def comments_url
-    "#{short_id_url}/#{self.title_as_url}"
+    "#{short_id_url}/#{title_as_url}"
   end
 
   def description=(desc)
     self[:description] = desc.to_s.rstrip
-    self.markeddown_description = self.generated_markeddown_description
+    self.markeddown_description = generated_markeddown_description
   end
 
   def description_or_story_cache(chars = 0)
-    s = if self.description.present?
-      self.markeddown_description.gsub(/<[^>]*>/, '')
+    s = if description.present?
+      markeddown_description.gsub(/<[^>]*>/, '')
     else
-      self.story_cache
+      story_cache
     end
 
     if chars > 0 && s.to_s.length > chars
@@ -396,11 +396,11 @@ class Story < ApplicationRecord
   end
 
   def domain_search_url
-    "/search?order=newest&q=domain:#{self.domain}"
+    "/search?order=newest&q=domain:#{domain}"
   end
 
   def fetch_story_cache!
-    if self.url.present?
+    if url.present?
       self.story_cache = StoryCacher.get_story_text(self)
     end
   end
@@ -408,7 +408,7 @@ class Story < ApplicationRecord
   def fix_bogus_chars
     # this is needlessly complicated to work around character encoding issues
     # that arise when doing just self.title.to_s.gsub(160.chr, "")
-    self.title = self.title.to_s.split('').map {|chr|
+    self.title = title.to_s.split('').map {|chr|
       if chr.ord == 160
         ' '
       else
@@ -420,7 +420,7 @@ class Story < ApplicationRecord
   end
 
   def generated_markeddown_description
-    Markdowner.to_html(self.description, :allow_images => true)
+    Markdowner.to_html(description, :allow_images => true)
   end
 
   def give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)
@@ -430,24 +430,24 @@ class Story < ApplicationRecord
     Story.connection.execute("UPDATE #{Story.table_name} SET " +
       "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " +
       "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " +
-      "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
+      "hotness = '#{calculated_hotness}' WHERE id = #{id.to_i}")
   end
 
   def has_suggestions?
-    self.suggested_taggings.any? || self.suggested_titles.any?
+    suggested_taggings.any? || suggested_titles.any?
   end
 
   def hider_count
-    @hider_count ||= HiddenStory.where(:story_id => self.id).count
+    @hider_count ||= HiddenStory.where(:story_id => id).count
   end
 
   def html_class_for_user
     c = []
-    if !self.user.is_active?
+    if !user.is_active?
       c.push 'inactive_user'
-    elsif self.user.is_new?
+    elsif user.is_new?
       c.push 'new_user'
-    elsif self.user_is_author?
+    elsif user_is_author?
       c.push 'user_is_author'
     end
 
@@ -455,8 +455,8 @@ class Story < ApplicationRecord
   end
 
   def is_downvotable?
-    if self.created_at && self.score >= DOWNVOTABLE_MIN_SCORE
-      Time.current - self.created_at <= DOWNVOTABLE_DAYS.days
+    if created_at && score >= DOWNVOTABLE_MIN_SCORE
+      Time.current - created_at <= DOWNVOTABLE_DAYS.days
     else
       false
     end
@@ -465,11 +465,11 @@ class Story < ApplicationRecord
   def is_editable_by_user?(user)
     if user&.is_moderator?
       return true
-    elsif user && user.id == self.user_id
-      if self.is_moderated?
+    elsif user && user.id == user_id
+      if is_moderated?
         return false
       else
-        return (Time.current.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+        return (Time.current.to_i - created_at.to_i < (60 * MAX_EDIT_MINS))
       end
     else
       return false
@@ -477,33 +477,33 @@ class Story < ApplicationRecord
   end
 
   def is_gone?
-    is_expired? || (self.user.is_banned? && score < 0)
+    is_expired? || (user.is_banned? && score < 0)
   end
 
   def is_hidden_by_user?(user)
-    !!HiddenStory.find_by(:user_id => user.id, :story_id => self.id)
+    !!HiddenStory.find_by(:user_id => user.id, :story_id => id)
   end
 
   def is_recent?
-    self.created_at >= RECENT_DAYS.days.ago
+    created_at >= RECENT_DAYS.days.ago
   end
 
   def is_saved_by_user?(user)
-    !!SavedStory.find_by(:user_id => user.id, :story_id => self.id)
+    !!SavedStory.find_by(:user_id => user.id, :story_id => id)
   end
 
   def is_unavailable
-    self.unavailable_at != nil
+    unavailable_at != nil
   end
 
   def is_unavailable=(what)
-    self.unavailable_at = (what.to_i == 1 && !self.is_unavailable ? Time.current : nil)
+    self.unavailable_at = (what.to_i == 1 && !is_unavailable ? Time.current : nil)
   end
 
   def is_undeletable_by_user?(user)
     if user&.is_moderator?
       return true
-    elsif user && user.id == self.user_id && !self.is_moderated?
+    elsif user && user.id == user_id && !is_moderated?
       return true
     else
       return false
@@ -511,12 +511,12 @@ class Story < ApplicationRecord
   end
 
   def log_moderation
-    if self.new_record? ||
-       (!self.editing_from_suggestions && (!self.editor || self.editor.id == self.user_id))
+    if new_record? ||
+       (!editing_from_suggestions && (!editor || editor.id == user_id))
       return
     end
 
-    all_changes = self.changes.merge(self.tagging_changes)
+    all_changes = changes.merge(tagging_changes)
     all_changes.delete('unavailable_at')
 
     if !all_changes.any?
@@ -524,23 +524,23 @@ class Story < ApplicationRecord
     end
 
     m = Moderation.new
-    if self.editing_from_suggestions
+    if editing_from_suggestions
       m.is_from_suggestions = true
     else
-      m.moderator_user_id = self.editor.try(:id)
+      m.moderator_user_id = editor.try(:id)
     end
-    m.story_id = self.id
+    m.story_id = id
 
-    if all_changes['is_expired'] && self.is_expired?
+    if all_changes['is_expired'] && is_expired?
       m.action = 'deleted story'
-    elsif all_changes['is_expired'] && !self.is_expired?
+    elsif all_changes['is_expired'] && !is_expired?
       m.action = 'undeleted story'
     else
       m.action = all_changes.map {|k, v|
         if k == 'merged_story_id'
           if v[1]
-            "merged into #{self.merged_into_story.short_id} " +
-              "(#{self.merged_into_story.title})"
+            "merged into #{merged_into_story.short_id} " +
+              "(#{merged_into_story.title})"
           else
             'unmerged from another story'
           end
@@ -550,7 +550,7 @@ class Story < ApplicationRecord
       }.join(', ')
     end
 
-    m.reason = self.moderation_reason
+    m.reason = moderation_reason
     m.save
 
     self.is_moderated = true
@@ -561,13 +561,13 @@ class Story < ApplicationRecord
   end
 
   def mark_submitter
-    Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
+    Keystore.increment_value_for("user:#{user_id}:stories_submitted")
   end
 
   def merged_comments
     # TODO: make this a normal has_many?
     Comment.where(:story_id => Story.select(:id)
-      .where(:merged_story_id => self.id) + [self.id])
+      .where(:merged_story_id => id) + [id])
   end
 
   def merge_story_short_id=(sid)
@@ -575,7 +575,7 @@ class Story < ApplicationRecord
   end
 
   def merge_story_short_id
-    self.merged_story_id ? self.merged_into_story.try(:short_id) : nil
+    merged_story_id ? merged_into_story.try(:short_id) : nil
   end
 
   def recalculate_hotness!
@@ -583,7 +583,7 @@ class Story < ApplicationRecord
   end
 
   def record_initial_upvote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.id, nil, self.user_id, nil, false)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, id, nil, user_id, nil, false)
   end
 
   def score
@@ -591,16 +591,16 @@ class Story < ApplicationRecord
   end
 
   def short_id_path
-    Rails.application.routes.url_helpers.root_path + "s/#{self.short_id}"
+    Rails.application.routes.url_helpers.root_path + "s/#{short_id}"
   end
 
   def short_id_url
-    Rails.application.root_url + "s/#{self.short_id}"
+    Rails.application.root_url + "s/#{short_id}"
   end
 
   def tagging_changes
-    old_tags_a = self.taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(' ')
-    new_tags_a = self.taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(' ')
+    old_tags_a = taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(' ')
+    new_tags_a = taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(' ')
 
     if old_tags_a == new_tags_a
       {}
@@ -610,30 +610,30 @@ class Story < ApplicationRecord
   end
 
   def tags_a
-    @_tags_a ||= self.taggings.reject(&:marked_for_destruction?).map {|t| t.tag.tag }
+    @_tags_a ||= taggings.reject(&:marked_for_destruction?).map {|t| t.tag.tag }
   end
 
   def tags_a=(new_tag_names_a)
-    self.taggings.each do |tagging|
+    taggings.each do |tagging|
       if !new_tag_names_a.include?(tagging.tag.tag)
         tagging.mark_for_destruction
       end
     end
 
     new_tag_names_a.uniq.each do |tag_name|
-      if tag_name.to_s != '' && !self.tags.exists?(:tag => tag_name)
+      if tag_name.to_s != '' && !tags.exists?(:tag => tag_name)
         if (t = Tag.active.find_by(:tag => tag_name))
           # we can't lookup whether the user is allowed to use this tag yet
           # because we aren't assured to have a user_id by now; we'll do it in
           # the validation with check_tags
-          self.tags << t
+          tags << t
         end
       end
     end
   end
 
   def save_suggested_tags_a_for_user!(new_tag_names_a, user)
-    st = self.suggested_taggings.where(:user_id => user.id)
+    st = suggested_taggings.where(:user_id => user.id)
 
     st.each do |tagging|
       if !new_tag_names_a.include?(tagging.tag.tag)
@@ -648,7 +648,7 @@ class Story < ApplicationRecord
       if tag_name.to_s != '' && !st.map {|x| x.tag.tag }.include?(tag_name)
         if (t = Tag.active.find_by(:tag => tag_name)) &&
            t.valid_for?(user)
-          tg = self.suggested_taggings.build
+          tg = suggested_taggings.build
           tg.user_id = user.id
           tg.tag_id = t.id
           tg.save!
@@ -662,7 +662,7 @@ class Story < ApplicationRecord
 
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}
-    self.suggested_taggings.group_by(&:user_id).each do |_u, stg|
+    suggested_taggings.group_by(&:user_id).each do |_u, stg|
       stg.each do |s|
         tag_votes[s.tag.tag] ||= 0
         tag_votes[s.tag.tag] += 1
@@ -676,24 +676,24 @@ class Story < ApplicationRecord
       end
     end
 
-    if final_tags.any? && (final_tags.sort != self.tags_a.sort)
-      Rails.logger.info "[s#{self.id}] promoting suggested tags " +
-                        "#{final_tags.inspect} instead of #{self.tags_a.inspect}"
+    if final_tags.any? && (final_tags.sort != tags_a.sort)
+      Rails.logger.info "[s#{id}] promoting suggested tags " +
+                        "#{final_tags.inspect} instead of #{tags_a.inspect}"
       self.editor = nil
       self.editing_from_suggestions = true
       self.moderation_reason = 'Automatically changed from user suggestions'
       self.tags_a = final_tags.sort
-      if !self.save
-        Rails.logger.error "[s#{self.id}] failed auto promoting: " +
-                           self.errors.inspect
+      if !save
+        Rails.logger.error "[s#{id}] failed auto promoting: " +
+                           errors.inspect
       end
     end
   end
 
   def save_suggested_title_for_user!(title, user)
-    st = self.suggested_titles.find_by(:user_id => user.id)
+    st = suggested_titles.find_by(:user_id => user.id)
     if !st
-      st = self.suggested_titles.build
+      st = suggested_titles.build
       st.user_id = user.id
     end
     st.title = title
@@ -701,22 +701,22 @@ class Story < ApplicationRecord
 
     # if enough users voted on the same exact title, save it
     title_votes = {}
-    self.suggested_titles.each do |s|
+    suggested_titles.each do |s|
       title_votes[s.title] ||= 0
       title_votes[s.title] += 1
     end
 
     title_votes.sort_by {|_k, v| v }.reverse_each do |kv|
       if kv[1] >= SUGGESTION_QUORUM
-        Rails.logger.info "[s#{self.id}] promoting suggested title " +
+        Rails.logger.info "[s#{id}] promoting suggested title " +
                           "#{kv[0].inspect} instead of #{self.title.inspect}"
         self.editor = nil
         self.editing_from_suggestions = true
         self.moderation_reason = 'Automatically changed from user suggestions'
         self.title = kv[0]
-        if !self.save
-          Rails.logger.error "[s#{self.id}] failed auto promoting: " +
-                             self.errors.inspect
+        if !save
+          Rails.logger.error "[s#{id}] failed auto promoting: " +
+                             errors.inspect
         end
 
         break
@@ -734,7 +734,7 @@ class Story < ApplicationRecord
     wl = 0
     words = []
 
-    self.title
+    title
          .parameterize
          .gsub(/[^a-z0-9]/, '_')
          .split('_')
@@ -759,33 +759,33 @@ class Story < ApplicationRecord
   end
 
   def to_param
-    self.short_id
+    short_id
   end
 
   def update_availability
-    if self.is_unavailable && !self.unavailable_at
+    if is_unavailable && !unavailable_at
       self.unavailable_at = Time.current
-    elsif self.unavailable_at && !self.is_unavailable
+    elsif unavailable_at && !is_unavailable
       self.unavailable_at = nil
     end
   end
 
   def update_comments_count!
-    comments = self.merged_comments.arrange_for_user(nil)
+    comments = merged_comments.arrange_for_user(nil)
 
     # calculate count after removing deleted comments and threads
-    self.update_column :comments_count, (self.comments_count = comments.count {|c| !c.is_gone? })
+    update_column :comments_count, (self.comments_count = comments.count {|c| !c.is_gone? })
 
-    self.recalculate_hotness!
+    recalculate_hotness!
   end
 
   def update_merged_into_story_comments
-    self.merged_into_story&.update_comments_count!
+    merged_into_story&.update_comments_count!
   end
 
   def domain
     return @domain if @domain
-    set_domain self.url.match(URL_RE) if self.url
+    set_domain url.match(URL_RE) if url
   end
 
   def set_domain match
@@ -817,9 +817,9 @@ class Story < ApplicationRecord
   end
 
   def url_is_editable_by_user?(user)
-    if self.new_record?
+    if new_record?
       true
-    elsif user&.is_moderator? && self.url.present?
+    elsif user&.is_moderator? && url.present?
       true
     else
       false
@@ -827,11 +827,11 @@ class Story < ApplicationRecord
   end
 
   def url_or_comments_path
-    self.url.presence || self.comments_path
+    url.presence || comments_path
   end
 
   def url_or_comments_url
-    self.url.presence || self.comments_url
+    url.presence || comments_url
   end
 
   def vote_summary_for(user)
@@ -862,7 +862,7 @@ class Story < ApplicationRecord
     return @fetched_attributes if @fetched_attributes
 
     @fetched_attributes = {
-      :url => self.url,
+      :url => url,
       :title => '',
     }
 
@@ -873,8 +873,8 @@ class Story < ApplicationRecord
       begin
         s = Sponge.new
         s.timeout = 3
-        @fetched_content = s.fetch(self.url, :get, nil, nil, {
-          'User-agent' => "#{Rails.application.domain} for #{self.fetching_ip}",
+        @fetched_content = s.fetch(url, :get, nil, nil, {
+          'User-agent' => "#{Rails.application.domain} for #{fetching_ip}",
         }, 3)
       rescue
         return @fetched_attributes

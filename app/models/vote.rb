@@ -53,7 +53,7 @@ class Vote < ApplicationRecord
     if story_ids.empty?
       {}
     else
-      votes = self.where(
+      votes = where(
         :user_id    => user_id,
         :comment_id => nil,
         :story_id   => story_ids
@@ -69,7 +69,7 @@ class Vote < ApplicationRecord
     if comment_ids.empty?
       {}
     else
-      votes = self.where(
+      votes = where(
         :user_id    => user_id,
         :comment_id => comment_ids
       )

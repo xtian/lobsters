@@ -36,7 +36,7 @@ class Twitter
 
     begin
       Timeout.timeout(120) do
-        at = OAuth::AccessToken.new(self.oauth_consumer, self.AUTH_TOKEN, self.AUTH_SECRET)
+        at = OAuth::AccessToken.new(oauth_consumer, self.AUTH_TOKEN, self.AUTH_SECRET)
 
         if method == :get
           res = at.get(req)
@@ -60,7 +60,7 @@ class Twitter
   end
 
   def self.token_secret_and_user_from_token_and_verifier(tok, verifier)
-    rt = OAuth::RequestToken.from_hash(self.oauth_consumer, :oauth_token => tok)
+    rt = OAuth::RequestToken.from_hash(oauth_consumer, :oauth_token => tok)
     at = rt.get_access_token(:oauth_verifier => verifier)
 
     res = at.get('/1.1/account/verify_credentials.json')
@@ -74,11 +74,11 @@ class Twitter
   end
 
   def self.oauth_request_token(state)
-    self.oauth_consumer.get_request_token(:oauth_callback =>
+    oauth_consumer.get_request_token(:oauth_callback =>
       Rails.application.root_url + "settings/twitter_callback?state=#{state}")
   end
 
   def self.oauth_auth_url(state)
-    self.oauth_request_token(state).authorize_url
+    oauth_request_token(state).authorize_url
   end
 end

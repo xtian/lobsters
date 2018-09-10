@@ -27,11 +27,11 @@ class ModNote < ApplicationRecord
 
   def note=(n)
     self[:note] = n.to_s.strip
-    self.markeddown_note = self.generated_markeddown
+    self.markeddown_note = generated_markeddown
   end
 
   def generated_markeddown
-    Markdowner.to_html(self.note)
+    Markdowner.to_html(note)
   end
 
   def self.create_from_message(message, moderator)

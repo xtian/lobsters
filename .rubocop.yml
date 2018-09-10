@@ -173,8 +173,6 @@ Style/RedundantParentheses:
   Enabled: false
 Style/RedundantReturn:
   Enabled: false
-Style/RedundantSelf:
-  Enabled: false
 Style/RescueStandardError:
   EnforcedStyle: implicit
 Style/RegexpLiteral:
