@@ -41,7 +41,7 @@ class Message < ApplicationRecord
       :subject,
       :body,
       :deleted_by_author,
-      :deleted_by_recipient,
+      :deleted_by_recipient
     ]
 
     h = super(:only => attrs)

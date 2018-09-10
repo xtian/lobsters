@@ -105,7 +105,7 @@ class User < ApplicationRecord
   BANNED_USERNAMES = ['admin', 'administrator', 'contact', 'fraud', 'guest',
     'help', 'hostmaster', 'inactive-user', 'lobster', 'lobsters', 'mailer-daemon', 'moderator',
     'moderators', 'nobody', 'postmaster', 'root', 'security', 'support',
-    'sysop', 'webmaster', 'enable', 'new', 'signup',].freeze
+    'sysop', 'webmaster', 'enable', 'new', 'signup'].freeze
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7
@@ -144,7 +144,7 @@ class User < ApplicationRecord
       :username,
       :created_at,
       :is_admin,
-      :is_moderator,
+      :is_moderator
     ]
 
     attrs.push :karma unless is_admin?

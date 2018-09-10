@@ -153,5 +153,3 @@ Style/RegexpLiteral:
   AllowInnerSlashes: true
 Style/SymbolArray:
   EnforcedStyle: brackets
-Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: consistent_comma

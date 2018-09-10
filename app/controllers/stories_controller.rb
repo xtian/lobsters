@@ -5,7 +5,7 @@ class StoriesController < ApplicationController
 
   before_action :require_logged_in_user_or_400,
                 :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave,
-                          :check_url_dupe,]
+                          :check_url_dupe]
   before_action :require_logged_in_user,
                 :only => [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest]
   before_action :verify_user_can_submit_stories, :only => [:new, :create]

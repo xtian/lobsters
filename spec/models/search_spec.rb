@@ -31,7 +31,7 @@ describe Search do
       create(:story, :title => 'term1 domain2',
                   :url => 'https://lobste.rs/1',
                   :user_id => @user.id,
-                  :tags_a => ['tag1']),
+                  :tags_a => ['tag1'])
     ]
     @comments = [
       create(:comment, :comment => 'comment0',
@@ -48,7 +48,7 @@ describe Search do
                     :user_id => @user.id),
       create(:comment, :comment => 'comment4',
                     :story_id => @stories[4].id,
-                    :user_id => @user.id),
+                    :user_id => @user.id)
     ]
   end
 

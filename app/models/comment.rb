@@ -142,7 +142,7 @@ class Comment < ApplicationRecord
       { :comment => (is_gone? ? "<em>#{gone_text}</em>" : :markeddown_comment) },
       :url,
       :indent_level,
-      { :commenting_user => :user },
+      { :commenting_user => :user }
     ]
 
     js = {}
@@ -387,7 +387,7 @@ class Comment < ApplicationRecord
       'comment',
       short_id,
       is_from_email ? 'email' : nil,
-      created_at.to_i,
+      created_at.to_i
     ].reject(&:!).join('.') << '@' + Rails.application.domain
   end
 

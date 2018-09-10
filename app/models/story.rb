@@ -245,7 +245,7 @@ class Story < ApplicationRecord
       { :description => :markeddown_description },
       :comments_url,
       { :submitter_user => :user },
-      { :tags => tags.map(&:tag).sort },
+      { :tags => tags.map(&:tag).sort }
     ]
 
     h.push(:comments => options[:with_comments]) if options && options[:with_comments]
