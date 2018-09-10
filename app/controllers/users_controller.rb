@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :require_logged_in_moderator,
-                :only => [:enable_invitation, :disable_invitation, :ban, :unban]
+                :only => %i[enable_invitation disable_invitation ban unban]
 
   def show
     @showing_user = User.where(:username => params[:username]).first!

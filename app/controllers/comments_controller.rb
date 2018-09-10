@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   caches_page :index, :threads, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-                :only => [:create, :preview, :upvote, :downvote, :unvote]
+                :only => %i[create preview upvote downvote unvote]
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]

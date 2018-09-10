@@ -6,7 +6,7 @@ class Markdowner
   def self.to_html(text, opts = {})
     return '' if text.blank?
 
-    exts = [:tagfilter, :autolink, :strikethrough]
+    exts = %i[tagfilter autolink strikethrough]
     root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
 
     walk_text_nodes(root) {|n| postprocess_text_node(n) }

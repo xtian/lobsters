@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   post '/login/reset_password' => 'login#reset_password',
     :as => 'reset_password'
   match '/login/set_new_password' => 'login#set_new_password',
-    :as => 'set_new_password', :via => [:get, :post]
+    :as => 'set_new_password', :via => %i[get post]
 
   get '/t/:tag' => 'home#tagged', :as => 'tag'
   get '/t/:tag/page/:page' => 'home#tagged'

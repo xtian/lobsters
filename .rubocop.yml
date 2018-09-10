@@ -151,5 +151,3 @@ Style/RescueStandardError:
   EnforcedStyle: implicit
 Style/RegexpLiteral:
   AllowInnerSlashes: true
-Style/SymbolArray:
-  EnforcedStyle: brackets

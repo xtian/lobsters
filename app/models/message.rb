@@ -34,14 +34,14 @@ class Message < ApplicationRecord
   after_save :check_for_both_deleted
 
   def as_json(_options = {})
-    attrs = [
-      :short_id,
-      :created_at,
-      :has_been_read,
-      :subject,
-      :body,
-      :deleted_by_author,
-      :deleted_by_recipient
+    attrs = %i[
+      short_id
+      created_at
+      has_been_read
+      subject
+      body
+      deleted_by_author
+      deleted_by_recipient
     ]
 
     h = super(:only => attrs)

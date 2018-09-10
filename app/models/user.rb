@@ -140,11 +140,11 @@ class User < ApplicationRecord
   end
 
   def as_json(_options = {})
-    attrs = [
-      :username,
-      :created_at,
-      :is_admin,
-      :is_moderator
+    attrs = %i[
+      username
+      created_at
+      is_admin
+      is_moderator
     ]
 
     attrs.push :karma unless is_admin?
