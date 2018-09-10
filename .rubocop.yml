@@ -135,8 +135,6 @@ Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
 Style/IfInsideElse:
   Enabled: false
-Style/IfUnlessModifier:
-  Enabled: false
 Style/Lambda:
   Enabled: false
 Style/MultilineBlockChain:

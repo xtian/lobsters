@@ -257,18 +257,14 @@ class CommentsController < ApplicationController
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
 
       @comments.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
+        c.current_vote = @votes[c.id] if @votes[c.id]
       end
     end
 
     respond_to do |format|
       format.html { render :action => 'index' }
       format.rss {
-        if @user && params[:token].present?
-          @title = "Private comments feed for #{@user.username}"
-        end
+        @title = "Private comments feed for #{@user.username}" if @user && params[:token].present?
 
         render :action => 'index.rss', :layout => false
       }
@@ -306,9 +302,7 @@ class CommentsController < ApplicationController
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, comments.map(&:story_id).uniq)
 
       comments.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
+        c.current_vote = @votes[c.id] if @votes[c.id]
       end
     end
   end

@@ -9,9 +9,7 @@ require APP_PATH
 Rails.application.require_environment!
 
 Story.to_tweet.each_with_index do |s, x|
-  if x > 0
-    sleep 2
-  end
+  sleep 2 if x > 0
 
   tags = s.tags.pluck(:tag).map {|t| ' #' + t }.join('')
 
@@ -49,9 +47,7 @@ Story.to_tweet.each_with_index do |s, x|
                    .inject(:+)
                    .to_i
 
-  if left_len < -3
-    left_len = -3
-  end
+  left_len = -3 if left_len < -3
 
   if title.bytesize > left_len
     status = title[0, left_len - 3] + '...' + status

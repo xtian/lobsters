@@ -69,9 +69,7 @@ class Sponge
   def set_cookie(host, name, val)
     dputs "setting cookie #{name} on domain #{host} to #{val}"
 
-    if !@cookies[host]
-      @cookies[host] = {}
-    end
+    @cookies[host] = {} unless @cookies[host]
 
     if val.to_s == ''
       @cookies[host][name] ? @cookies[host][name].delete : nil
@@ -112,9 +110,7 @@ class Sponge
       Timeout.timeout(MAX_DNS_TIME) do
         ips = Resolv.getaddresses(uri.host)
 
-        if ips.none?
-          raise
-        end
+        raise if ips.none?
 
         # reject ipv6 addresses
         ips.reject! {|address| address.match?(/:/) }
@@ -134,19 +130,13 @@ class Sponge
       raise "couldn't resolve #{uri.host} (#{e.inspect})"
     end
 
-    if !ip
-      raise "couldn't resolve #{uri.host}"
-    end
+    raise "couldn't resolve #{uri.host}" unless ip
 
-    if BAD_NETS.select {|n| IPAddr.new(n).include?(ip) }.any?
-      raise "refusing to talk to IP #{ip}"
-    end
+    raise "refusing to talk to IP #{ip}" if BAD_NETS.select {|n| IPAddr.new(n).include?(ip) }.any?
 
     host = Net::HTTP.new(ip.to_s, uri.port)
     host.read_timeout = timeout
-    if debug
-      host.set_debug_output $stdout
-    end
+    host.set_debug_output $stdout if debug
 
     if uri.scheme == 'https'
       host.use_ssl = true
@@ -249,8 +239,6 @@ class Sponge
 private
 
   def dputs(string)
-    if debug
-      puts string
-    end
+    puts string if debug
   end
 end

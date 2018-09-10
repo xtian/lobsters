@@ -19,9 +19,7 @@ class ApplicationController < ActionController::Base
     # eagerly evaluate, in case this triggers an IpSpoofAttackError
     request.remote_ip
 
-    if Rails.application.read_only?
-      return true
-    end
+    return true if Rails.application.read_only?
 
     if session[:u] &&
        (user = User.find_by(:session_token => session[:u].to_s)) &&
@@ -43,9 +41,7 @@ class ApplicationController < ActionController::Base
   end
 
   def increase_traffic_counter
-    if Rails.application.read_only?
-      return true
-    end
+    return true if Rails.application.read_only?
 
     @traffic = 1.0
 
@@ -57,9 +53,7 @@ class ApplicationController < ActionController::Base
       traffic = traffic_kv.value.to_i
 
       # don't increase traffic counter for bots or api requests
-      unless agent_is_spider? || %w[json rss].include?(params[:format])
-        traffic += 100
-      end
+      traffic += 100 unless agent_is_spider? || %w[json rss].include?(params[:format])
 
       # every second, decrement traffic by some amount
       traffic -= (100.0 * (now_i - date_kv.value) * TRAFFIC_DECREMENTER).to_i
@@ -104,18 +98,14 @@ class ApplicationController < ActionController::Base
       color = name
       @traffic_style = style
     end
-    if color != :red
-      Rails.logger.info "  Lucky user #{@user.username} saw #{color} logo"
-    end
+    Rails.logger.info "  Lucky user #{@user.username} saw #{color} logo" if color != :red
   end
 
   def require_logged_in_user
     if @user
       true
     else
-      if request.get?
-        session[:redirect_to] = request.original_fullpath
-      end
+      session[:redirect_to] = request.original_fullpath if request.get?
 
       redirect_to '/login'
     end

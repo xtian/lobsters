@@ -10,19 +10,11 @@ class SearchController < ApplicationController
     if params[:q].to_s.present?
       @search.q = params[:q].to_s
 
-      if params[:what].present?
-        @search.what = params[:what]
-      end
-      if params[:order].present?
-        @search.order = params[:order]
-      end
-      if params[:page].present?
-        @search.page = params[:page].to_i
-      end
+      @search.what = params[:what] if params[:what].present?
+      @search.order = params[:order] if params[:order].present?
+      @search.page = params[:page].to_i if params[:page].present?
 
-      if @search.valid?
-        @search.search_for_user!(@user)
-      end
+      @search.search_for_user!(@user) if @search.valid?
     end
 
     render :action => 'index'

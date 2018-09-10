@@ -88,9 +88,7 @@ class Story < ApplicationRecord
   validates :user_id, presence: true
 
   validates_each :merged_story_id do |record, _attr, value|
-    if value.to_i == record.id
-      record.errors.add(:merge_story_short_id, 'id cannot be itself.')
-    end
+    record.errors.add(:merge_story_short_id, 'id cannot be itself.') if value.to_i == record.id
   end
 
   DOWNVOTABLE_DAYS = 14
@@ -152,13 +150,9 @@ class Story < ApplicationRecord
       errors.add(:title, " starting 'Ask #{Rails.application.name}' or similar is redundant " \
                           'with the ask tag.')
     end
-    if title.match?(GRAPHICS_RE)
-      errors.add(:title, ' may not contain graphic codepoints')
-    end
+    errors.add(:title, ' may not contain graphic codepoints') if title.match?(GRAPHICS_RE)
 
-    if errors.none? && url.blank?
-      self.user_is_author = true
-    end
+    self.user_is_author = true if errors.none? && url.blank?
 
     check_tags
   end
@@ -254,9 +248,7 @@ class Story < ApplicationRecord
       { :tags => tags.map(&:tag).sort },
     ]
 
-    if options && options[:with_comments]
-      h.push(:comments => options[:with_comments])
-    end
+    h.push(:comments => options[:with_comments]) if options && options[:with_comments]
 
     js = {}
     h.each do |k|
@@ -308,9 +300,7 @@ class Story < ApplicationRecord
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
-    if cpoints > upvotes
-      cpoints = upvotes
-    end
+    cpoints = upvotes if cpoints > upvotes
 
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([(score + 1).abs + cpoints, 1].max, 10)
@@ -327,21 +317,15 @@ class Story < ApplicationRecord
   end
 
   def can_be_seen_by_user?(user)
-    if is_gone? && !(user && (user.is_moderator? || user.id == user_id))
-      return false
-    end
+    return false if is_gone? && !(user && (user.is_moderator? || user.id == user_id))
 
     true
   end
 
   def can_have_suggestions_from_user?(user)
-    if !user || (user.id == user_id) || !user.can_offer_suggestions?
-      return false
-    end
+    return false if !user || (user.id == user_id) || !user.can_offer_suggestions?
 
-    if taggings.select {|t| t.tag&.privileged? }.any?
-      return false
-    end
+    return false if taggings.select {|t| t.tag&.privileged? }.any?
 
     true
   end
@@ -400,9 +384,7 @@ class Story < ApplicationRecord
   end
 
   def fetch_story_cache!
-    if url.present?
-      self.story_cache = StoryCacher.get_story_text(self)
-    end
+    self.story_cache = StoryCacher.get_story_text(self) if url.present?
   end
 
   def fix_bogus_chars
@@ -519,9 +501,7 @@ class Story < ApplicationRecord
     all_changes = changes.merge(tagging_changes)
     all_changes.delete('unavailable_at')
 
-    if all_changes.none?
-      return
-    end
+    return if all_changes.none?
 
     m = Moderation.new
     if editing_from_suggestions
@@ -615,9 +595,7 @@ class Story < ApplicationRecord
 
   def tags_a=(new_tag_names_a)
     taggings.each do |tagging|
-      if !new_tag_names_a.include?(tagging.tag.tag)
-        tagging.mark_for_destruction
-      end
+      tagging.mark_for_destruction unless new_tag_names_a.include?(tagging.tag.tag)
     end
 
     new_tag_names_a.uniq.each do |tag_name|
@@ -634,9 +612,7 @@ class Story < ApplicationRecord
     st = suggested_taggings.where(:user_id => user.id)
 
     st.each do |tagging|
-      if !new_tag_names_a.include?(tagging.tag.tag)
-        tagging.destroy
-      end
+      tagging.destroy unless new_tag_names_a.include?(tagging.tag.tag)
     end
 
     st.reload
@@ -669,9 +645,7 @@ class Story < ApplicationRecord
 
     final_tags = []
     tag_votes.each do |k, v|
-      if v >= SUGGESTION_QUORUM
-        final_tags.push k
-      end
+      final_tags.push k if v >= SUGGESTION_QUORUM
     end
 
     if final_tags.any? && (final_tags.sort != tags_a.sort)
@@ -741,16 +715,12 @@ class Story < ApplicationRecord
         words.push w
         wl += w.length
       else
-        if wl == 0
-          words.push w[0, max_len]
-        end
+        words.push w[0, max_len] if wl == 0
         break
       end
     end
 
-    if words.empty?
-      words.push '_'
-    end
+    words.push '_' if words.empty?
 
     words.join('_').gsub(/_-_/, '-')
   end
@@ -899,9 +869,7 @@ class Story < ApplicationRecord
     end
 
     # then try plain old <title>
-    if title.to_s == ''
-      title = parsed.at_css('title').try(:text).to_s
-    end
+    title = parsed.at_css('title').try(:text).to_s if title.to_s == ''
 
     # see if the site name is available, so we can strip it out in case it was
     # present in the fetched title
@@ -915,9 +883,7 @@ class Story < ApplicationRecord
         title = title[0, title.length - site_name.length]
 
         # remove title/site name separator
-        if title.match?(/ [ \-\|\u2013] $/)
-          title = title[0, title.length - 3]
-        end
+        title = title[0, title.length - 3] if title.match?(/ [ \-\|\u2013] $/)
       end
     rescue
     end

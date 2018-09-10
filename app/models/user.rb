@@ -147,9 +147,7 @@ class User < ApplicationRecord
       :is_moderator,
     ]
 
-    if !is_admin?
-      attrs.push :karma
-    end
+    attrs.push :karma unless is_admin?
 
     attrs.push :about
 
@@ -158,13 +156,9 @@ class User < ApplicationRecord
     h[:avatar_url] = avatar_url
     h[:invited_by_user] = User.where(id: invited_by_user_id).pluck(:username).first
 
-    if github_username.present?
-      h[:github_username] = github_username
-    end
+    h[:github_username] = github_username if github_username.present?
 
-    if twitter_username.present?
-      h[:twitter_username] = twitter_username
-    end
+    h[:twitter_username] = twitter_username if twitter_username.present?
 
     h
   end
@@ -286,21 +280,15 @@ class User < ApplicationRecord
   end
 
   def check_session_token
-    if session_token.blank?
-      self.session_token = Utils.random_str(60)
-    end
+    self.session_token = Utils.random_str(60) if session_token.blank?
   end
 
   def create_mailing_list_token
-    if mailing_list_token.blank?
-      self.mailing_list_token = Utils.random_str(10)
-    end
+    self.mailing_list_token = Utils.random_str(10) if mailing_list_token.blank?
   end
 
   def create_rss_token
-    if rss_token.blank?
-      self.rss_token = Utils.random_str(60)
-    end
+    self.rss_token = Utils.random_str(60) if rss_token.blank?
   end
 
   def comments_posted_count
@@ -316,9 +304,7 @@ class User < ApplicationRecord
       s = Sponge.new
       s.timeout = 3
       res = s.fetch(gravatar_url)
-      if res.present?
-        return res
-      end
+      return res if res.present?
     rescue => e
       Rails.logger.error "error fetching #{gravatar_url}: #{e.message}"
     end
@@ -448,9 +434,7 @@ class User < ApplicationRecord
   end
 
   def pushover!(params)
-    if pushover_user_key.present?
-      Pushover.push(pushover_user_key, params)
-    end
+    Pushover.push(pushover_user_key, params) if pushover_user_key.present?
   end
 
   def recent_threads(amount, include_submitted_stories = false)

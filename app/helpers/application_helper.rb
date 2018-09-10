@@ -45,26 +45,18 @@ module ApplicationHelper
       comments_path => { :title => 'Comments' },
     }
 
-    if @user
-      @header_links[threads_path] = { :title => 'Your Threads' }
-    end
+    @header_links[threads_path] = { :title => 'Your Threads' } if @user
 
-    if @user&.can_submit_stories?
-      @header_links[new_story_path] = { :title => 'Submit Story' }
-    end
+    @header_links[new_story_path] = { :title => 'Submit Story' } if @user&.can_submit_stories?
 
-    if @user
-      @header_links[saved_path] = { :title => 'Saved' }
-    end
+    @header_links[saved_path] = { :title => 'Saved' } if @user
 
     @header_links[search_path] = { :title => 'Search' }
 
     @header_links.each do |k, v|
       v[:class] ||= []
 
-      if k == @cur_url
-        v[:class].push 'cur_url'
-      end
+      v[:class].push 'cur_url' if k == @cur_url
     end
 
     @header_links
@@ -102,9 +94,7 @@ module ApplicationHelper
     @right_header_links.each do |k, v|
       v[:class] ||= []
 
-      if k == @cur_url
-        v[:class].push 'cur_url'
-      end
+      v[:class].push 'cur_url' if k == @cur_url
     end
 
     @right_header_links
@@ -119,9 +109,7 @@ module ApplicationHelper
   end
 
   def page_numbers_for_pagination(max, cur)
-    if max <= MAX_PAGES
-      return (1 .. max).to_a
-    end
+    return (1 .. max).to_a if max <= MAX_PAGES
 
     pages = (cur - (MAX_PAGES / 2) + 1 .. cur + (MAX_PAGES / 2) - 1).to_a
 
@@ -131,23 +119,17 @@ module ApplicationHelper
     end
 
     while pages.last > max
-      if pages[0] > 1
-        pages.unshift pages[0] - 1
-      end
+      pages.unshift pages[0] - 1 if pages[0] > 1
       pages.pop
     end
 
     if pages[0] != 1
-      if pages[0] != 2
-        pages.unshift '...'
-      end
+      pages.unshift '...' if pages[0] != 2
       pages.unshift 1
     end
 
     if pages.last != max
-      if pages.last != max - 1
-        pages.push '...'
-      end
+      pages.push '...' if pages.last != max - 1
       pages.push max
     end
 
@@ -180,9 +162,7 @@ module ApplicationHelper
 
     span_class = ''
 
-    if options[:mark_unread]
-      span_class += 'comment_unread'
-    end
+    span_class += 'comment_unread' if options[:mark_unread]
 
     raw(content_tag(:span, ago, title: time.strftime('%F %T %z'), class: span_class))
   end

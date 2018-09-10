@@ -109,9 +109,7 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html { render :action => 'index' }
       format.rss {
-        if @user && params[:token].present?
-          @title += " - Private feed for #{@user.username}"
-        end
+        @title += " - Private feed for #{@user.username}" if @user && params[:token].present?
 
         render :action => 'rss', :layout => false
       }
@@ -171,9 +169,7 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html { render :action => 'index' }
       format.rss {
-        if @user
-          @title = "Private feed of saved stories for #{@user.username}"
-        end
+        @title = "Private feed of saved stories for #{@user.username}" if @user
         render :action => 'rss', :layout => false
       }
       format.json { render :json => @stories }
@@ -238,9 +234,7 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html { render :action => 'index' }
       format.rss {
-        if @user && params[:token].present?
-          @title += " - Private feed for #{@user.username}"
-        end
+        @title += " - Private feed for #{@user.username}" if @user && params[:token].present?
 
         render :action => 'rss', :layout => false
       }

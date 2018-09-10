@@ -65,9 +65,7 @@ class Message < ApplicationRecord
   end
 
   def check_for_both_deleted
-    if deleted_by_author? && deleted_by_recipient?
-      destroy
-    end
+    destroy if deleted_by_author? && deleted_by_recipient?
   end
 
   def update_unread_counts

@@ -15,9 +15,7 @@ end
 class String
   def forcibly_convert_to_utf8
     begin
-      if encoding.to_s == 'UTF-8' && valid_encoding?
-        return self
-      end
+      return self if encoding.to_s == 'UTF-8' && valid_encoding?
 
       str = dup.force_encoding('binary').encode(
         'utf-8',
@@ -39,9 +37,7 @@ class String
         end
       }.join
 
-      if !str.valid_encoding?
-        raise 'still bogus encoding'
-      end
+      raise 'still bogus encoding' unless str.valid_encoding?
     end
 
     str

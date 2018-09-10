@@ -30,9 +30,7 @@ class Twitter
   end
 
   def self.oauth_request(req, method = :get, post_data = nil)
-    if !self.AUTH_TOKEN
-      raise 'no auth token configured'
-    end
+    raise 'no auth token configured' unless self.AUTH_TOKEN
 
     begin
       Timeout.timeout(120) do
@@ -46,9 +44,7 @@ class Twitter
           raise "what kind of method is #{method}?"
         end
 
-        if res.class == Net::HTTPUnauthorized
-          raise 'not authorized'
-        end
+        raise 'not authorized' if res.class == Net::HTTPUnauthorized
 
         if res.body.to_s == ''
           raise res.inspect
@@ -66,9 +62,7 @@ class Twitter
     res = at.get('/1.1/account/verify_credentials.json')
     js = JSON.parse(res.body)
 
-    if js['screen_name'].blank?
-      return nil
-    end
+    return nil if js['screen_name'].blank?
 
     [at.token, at.secret, js['screen_name']]
   end

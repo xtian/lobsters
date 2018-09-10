@@ -111,9 +111,7 @@ class InvitationsController < ApplicationController
   end
 
   def delete_request
-    if !@user.can_see_invitation_requests?
-      return redirect_to '/invitations'
-    end
+    return redirect_to '/invitations' unless @user.can_see_invitation_requests?
 
     if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
       flash[:error] = 'Invalid or expired invitation request'

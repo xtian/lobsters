@@ -30,9 +30,7 @@ class Github
     if tok.present?
       res = s.fetch("https://api.github.com/user?access_token=#{tok}")
       js = JSON.parse(res)
-      if js && js['login'].present?
-        return [tok, js['login']]
-      end
+      return [tok, js['login']] if js && js['login'].present?
     end
 
     [nil, nil]

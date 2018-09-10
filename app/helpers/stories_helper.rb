@@ -2,13 +2,9 @@
 
 module StoriesHelper
   def show_guidelines?
-    if !@user
-      return true
-    end
+    return true unless @user
 
-    if @user.stories_submitted_count <= 5
-      return true
-    end
+    return true if @user.stories_submitted_count <= 5
 
     if Moderation.joins(:story)
                  .where(
@@ -23,9 +19,7 @@ module StoriesHelper
   end
 
   def is_unread?(comment)
-    if !@user || !@ribbon
-      return false
-    end
+    return false if !@user || !@ribbon
 
     (comment.created_at > @ribbon.updated_at) && (comment.user_id != @user.id)
   end

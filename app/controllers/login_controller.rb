@@ -10,9 +10,7 @@ class LoginController < ApplicationController
   before_action :check_for_read_only_mode, :except => [:index]
 
   def logout
-    if @user
-      reset_session
-    end
+    reset_session if @user
 
     redirect_to '/'
   end
@@ -33,21 +31,13 @@ class LoginController < ApplicationController
     fail_reason = nil
 
     begin
-      if !user
-        raise LoginFailedError
-      end
+      raise LoginFailedError unless user
 
-      if !user.authenticate(params[:password].to_s)
-        raise LoginFailedError
-      end
+      raise LoginFailedError unless user.authenticate(params[:password].to_s)
 
-      if user.is_banned?
-        raise LoginBannedError
-      end
+      raise LoginBannedError if user.is_banned?
 
-      if !user.is_active?
-        raise LoginDeletedError
-      end
+      raise LoginDeletedError unless user.is_active?
 
       if !user.password_digest.to_s.match?(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
         user.password = user.password_confirmation = params[:password].to_s
@@ -67,9 +57,7 @@ class LoginController < ApplicationController
       elsif params[:referer].present?
         begin
           ru = URI.parse(params[:referer])
-          if ru.host == Rails.application.domain
-            return redirect_to ru.to_s
-          end
+          return redirect_to ru.to_s if ru.host == Rails.application.domain
         rescue => e
           Rails.logger.error "error parsing referer: #{e}"
         end
@@ -127,9 +115,7 @@ class LoginController < ApplicationController
         # this will get reset upon save
         @reset_user.session_token = nil
 
-        if !@reset_user.is_active? && !@reset_user.is_banned?
-          @reset_user.deleted_at = nil
-        end
+        @reset_user.deleted_at = nil if !@reset_user.is_active? && !@reset_user.is_banned?
 
         if @reset_user.save && @reset_user.is_active?
           if @reset_user.has_2fa?
@@ -174,8 +160,6 @@ class LoginController < ApplicationController
 private
 
   def find_twofa_user
-    if session[:twofa_u].present?
-      User.where(:session_token => session[:twofa_u]).first
-    end
+    User.where(:session_token => session[:twofa_u]).first if session[:twofa_u].present?
   end
 end

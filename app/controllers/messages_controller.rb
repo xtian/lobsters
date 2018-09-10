@@ -17,9 +17,7 @@ class MessagesController < ApplicationController
 
         @direction = :in
 
-        if params[:to]
-          @new_message.recipient_username = params[:to]
-        end
+        @new_message.recipient_username = params[:to] if params[:to]
       }
       format.json {
         render :json => @messages
@@ -92,13 +90,9 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    if @message.author_user_id == @user.id
-      @message.deleted_by_author = true
-    end
+    @message.deleted_by_author = true if @message.author_user_id == @user.id
 
-    if @message.recipient_user_id == @user.id
-      @message.deleted_by_recipient = true
-    end
+    @message.deleted_by_recipient = true if @message.recipient_user_id == @user.id
 
     @message.save!
 
@@ -164,9 +158,7 @@ private
 
   def find_message
     if (@message = Message.where(:short_id => params[:message_id] || params[:id]).first)
-      if @message.author_user_id == @user.id || @message.recipient_user_id == @user.id
-        return true
-      end
+      return true if @message.author_user_id == @user.id || @message.recipient_user_id == @user.id
     end
 
     flash[:error] = 'Could not find message.'

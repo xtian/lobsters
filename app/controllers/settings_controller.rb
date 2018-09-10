@@ -22,9 +22,7 @@ class SettingsController < ApplicationController
     end
 
     @user.delete!
-    if params[:disown].present?
-      InactiveUser.disown_all_by_author! @user
-    end
+    InactiveUser.disown_all_by_author! @user if params[:disown].present?
     reset_session
     flash[:success] = 'Your account has been deleted.'
     redirect_to '/'
@@ -85,9 +83,7 @@ class SettingsController < ApplicationController
       return redirect_to twofa_url
     end
 
-    if !session[:totp_secret]
-      session[:totp_secret] = ROTP::Base32.random_base32
-    end
+    session[:totp_secret] = ROTP::Base32.random_base32 unless session[:totp_secret]
 
     totp = ROTP::TOTP.new(session[:totp_secret], :issuer => Rails.application.name)
     totp_url = totp.provisioning_uri(@user.email)

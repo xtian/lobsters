@@ -4,9 +4,7 @@ class Markdowner
   # opts[:allow_images] allows <img> tags
 
   def self.to_html(text, opts = {})
-    if text.blank?
-      return ''
-    end
+    return '' if text.blank?
 
     exts = [:tagfilter, :autolink, :strikethrough]
     root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
@@ -20,9 +18,7 @@ class Markdowner
       h.name = 'strong'
     end
 
-    if !opts[:allow_images]
-      ng.css('img').remove
-    end
+    ng.css('img').remove unless opts[:allow_images]
 
     # make links have rel=nofollow
     ng.css('a').each do |h|

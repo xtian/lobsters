@@ -29,9 +29,7 @@ class AvatarsController < ApplicationController
     username, size = params[:username_size].to_s.scan(/\A(.+)-(\d+)\z/).first
     size = size.to_i
 
-    if !ALLOWED_SIZES.include?(size)
-      raise ActionController::RoutingError.new('invalid size')
-    end
+    raise ActionController::RoutingError.new('invalid size') unless ALLOWED_SIZES.include?(size)
 
     if !username.match?(User::VALID_USERNAME)
       raise ActionController::RoutingError.new('invalid user name')
@@ -43,9 +41,7 @@ class AvatarsController < ApplicationController
       raise ActionController::RoutingError.new('failed fetching avatar')
     end
 
-    if !Dir.exist?(CACHE_DIR)
-      Dir.mkdir(CACHE_DIR)
-    end
+    Dir.mkdir(CACHE_DIR) unless Dir.exist?(CACHE_DIR)
 
     File.open("#{CACHE_DIR}/.#{u.username}-#{size}.png", 'wb+') do |f|
       f.write av

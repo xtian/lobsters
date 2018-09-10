@@ -56,9 +56,7 @@ class StoriesController < ApplicationController
 
     @title = 'Edit Story'
 
-    if @story.merged_into_story
-      @story.merge_story_short_id = @story.merged_into_story.short_id
-    end
+    @story.merge_story_short_id = @story.merged_into_story.short_id if @story.merged_into_story
   end
 
   def fetch_url_attributes
@@ -101,9 +99,7 @@ class StoriesController < ApplicationController
 
       # ignore what the user brought unless we need it as a fallback
       @story.title = sattrs[:title]
-      if @story.title.blank? && params[:title].present?
-        @story.title = params[:title]
-      end
+      @story.title = params[:title] if @story.title.blank? && params[:title].present?
     end
   end
 
@@ -130,9 +126,7 @@ class StoriesController < ApplicationController
       return redirect_to @story.merged_into_story.comments_path
     end
 
-    if !@story.can_be_seen_by_user?(@user)
-      raise ActionController::RoutingError.new('story gone')
-    end
+    raise ActionController::RoutingError.new('story gone') unless @story.can_be_seen_by_user?(@user)
 
     @comments = get_arranged_comments_from_cache(params[:id]) do
       @story.merged_comments
@@ -381,9 +375,7 @@ private
 
   def find_story!
     @story = find_story
-    if !@story
-      raise ActiveRecord::RecordNotFound
-    end
+    raise ActiveRecord::RecordNotFound unless @story
   end
 
   def find_user_story
@@ -413,9 +405,7 @@ private
 
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
       @comments.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
+        c.current_vote = @votes[c.id] if @votes[c.id]
       end
     end
   end

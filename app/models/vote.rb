@@ -86,9 +86,7 @@ class Vote < ApplicationRecord
     v = Vote.where(:user_id => user_id, :story_id => story_id,
       :comment_id => comment_id).first_or_initialize
 
-    if !v.new_record? && v.vote == vote
-      return
-    end
+    return if !v.new_record? && v.vote == vote
 
     upvote = 0
     downvote = 0
@@ -119,16 +117,12 @@ class Vote < ApplicationRecord
       if update_counters && (downvote != 0 || upvote != 0)
         if v.comment_id
           c = Comment.find(v.comment_id)
-          if c.user_id != user_id
-            User.update_counters c.user_id, :karma => upvote - downvote
-          end
+          User.update_counters c.user_id, :karma => upvote - downvote if c.user_id != user_id
 
           c.give_upvote_or_downvote_and_recalculate_confidence!(upvote, downvote)
         else
           s = Story.find(v.story_id)
-          if s.user_id != user_id
-            User.update_counters s.user_id, :karma => upvote - downvote
-          end
+          User.update_counters s.user_id, :karma => upvote - downvote if s.user_id != user_id
 
           s.give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)
         end

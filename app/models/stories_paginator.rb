@@ -38,15 +38,9 @@ private
         scope.map(&:id)).map(&:story_id)
 
       scope.each do |s|
-        if votes[s.id]
-          s.vote = votes[s.id]
-        end
-        if hs.include?(s.id)
-          s.is_hidden_by_cur_user = true
-        end
-        if ss.include?(s.id)
-          s.is_saved_by_cur_user = true
-        end
+        s.vote = votes[s.id] if votes[s.id]
+        s.is_hidden_by_cur_user = true if hs.include?(s.id)
+        s.is_saved_by_cur_user = true if ss.include?(s.id)
       end
     end
     scope

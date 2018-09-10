@@ -13,9 +13,7 @@ TWITTER_LIST = 'users'
 # find the id of our list name
 res = Twitter.oauth_request('/1.1/lists/list.json', :get)
 our_list = res.select {|l| l['name'] == TWITTER_LIST }.first
-if our_list.blank?
-  raise "can't find list #{TWITTER_LIST.inspect} in #{res.inspect}"
-end
+raise "can't find list #{TWITTER_LIST.inspect} in #{res.inspect}" if our_list.blank?
 list_id = our_list['id_str']
 
 # fetch its member list
@@ -23,12 +21,8 @@ res = Twitter.oauth_request("/1.1/lists/members.json?list_id=#{list_id}" \
   '&count=5000&skip_status=true', :get)
 their_users = res['users'].map {|u| [u['screen_name'].downcase, true] }.to_h
 
-if their_users.empty?
-  raise "Intemittent Twitter bug: they said the list is empty when it's not"
-end
-if their_users.count >= 5000
-  STDERR.puts 'need to implement paging for list members'
-end
+raise "Intemittent Twitter bug: they said the list is empty when it's not" if their_users.empty?
+STDERR.puts 'need to implement paging for list members' if their_users.count >= 5000
 
 # fetch our active users that have a linked twitter account
 our_users = User.active.where("settings LIKE '%twitter_username:%'")
@@ -57,9 +51,7 @@ to_add.each_slice(100) do |g|
     g.reject! {|tu| tu.downcase == u['screen_name'].downcase }
   end
 
-  if g.none?
-    next
-  end
+  next if g.none?
 
   # puts "adding: #{g.inspect}"
 

@@ -9,23 +9,17 @@ class Invitation < ApplicationRecord
 
   validates :user, presence: true
   validate do
-    unless email.to_s.match?(/\A[^@ ]+@[^ @]+\.[^ @]+\z/)
-      errors.add(:email, 'is not valid')
-    end
+    errors.add(:email, 'is not valid') unless email.to_s.match?(/\A[^@ ]+@[^ @]+\.[^ @]+\z/)
   end
 
   before_validation :create_code, :on => :create
 
   def create_code
     (1...10).each do |tries|
-      if tries == 10
-        raise 'too many hash collisions'
-      end
+      raise 'too many hash collisions' if tries == 10
 
       self.code = Utils.random_str(15)
-      unless Invitation.exists?(:code => code)
-        break
-      end
+      break unless Invitation.exists?(:code => code)
     end
   end
 

@@ -9,14 +9,10 @@ class StoryCacher
   DIFFBOT_API_URL = 'http://www.diffbot.com/api/article'
 
   def self.get_story_text(story)
-    if !@@DIFFBOT_API_KEY
-      return
-    end
+    return unless @@DIFFBOT_API_KEY
 
     # XXX: diffbot tries to read pdfs as text, so disable for now
-    if story.url.to_s.match?(/\.pdf$/i)
-      return nil
-    end
+    return nil if story.url.to_s.match?(/\.pdf$/i)
 
     db_url = "#{DIFFBOT_API_URL}?token=#{@@DIFFBOT_API_KEY}&url=#{CGI.escape(story.url)}"
 

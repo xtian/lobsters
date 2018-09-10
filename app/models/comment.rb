@@ -182,9 +182,7 @@ class Comment < ApplicationRecord
   # https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
   def calculated_confidence
     n = (upvotes + downvotes).to_f
-    if n == 0.0
-      return 0
-    end
+    return 0 if n == 0.0
 
     z = 1.281551565545 # 80% confidence
     p = upvotes.to_f / n
@@ -214,9 +212,7 @@ class Comment < ApplicationRecord
       m.moderator_user_id = user.id
       m.action = 'deleted comment'
 
-      if reason.present?
-        m.reason = reason
-      end
+      m.reason = reason if reason.present?
 
       m.save
     end
@@ -231,9 +227,7 @@ class Comment < ApplicationRecord
   def deliver_mention_notifications
     plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
       next unless (u = User.find_by(:username => mention))
-      if u.id == user.id
-        next
-      end
+      next if u.id == user.id
 
       if u.email_mentions?
         begin
@@ -467,9 +461,7 @@ class Comment < ApplicationRecord
         "+#{r_counts[k]}"
       else
         o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
-        if u&.is_moderator? && user_id != u.id
-          o << " (#{r_users[k].join(', ')})"
-        end
+        o << " (#{r_users[k].join(', ')})" if u&.is_moderator? && user_id != u.id
         o
       end
     }.join(', ')

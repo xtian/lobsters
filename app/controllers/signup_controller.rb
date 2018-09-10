@@ -36,9 +36,7 @@ class SignupController < ApplicationController
 
     @new_user = User.new
 
-    if !Rails.application.open_signups?
-      @new_user.email = @invitation.email
-    end
+    @new_user.email = @invitation.email unless Rails.application.open_signups?
 
     render :action => 'invited'
   end
@@ -55,9 +53,7 @@ class SignupController < ApplicationController
 
     @new_user = User.new(user_params)
 
-    if !Rails.application.open_signups?
-      @new_user.invited_by_user_id = @invitation.user_id
-    end
+    @new_user.invited_by_user_id = @invitation.user_id unless Rails.application.open_signups?
 
     if @new_user.save
       @invitation&.update(used_at: Time.current, new_user: @new_user)

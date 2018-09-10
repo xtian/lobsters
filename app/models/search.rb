@@ -39,9 +39,7 @@ class Search
   def page_count
     total = total_results.to_i
 
-    if total == -1 || total > max_matches
-      total = max_matches
-    end
+    total = max_matches if total == -1 || total > max_matches
 
     ((total - 1) / per_page.to_i) + 1
   end
@@ -100,9 +98,7 @@ class Search
     case what
     when 'stories'
       base = Story.unmerged.where(:is_expired => false)
-      if domain.present?
-        base = with_stories_in_domain(base, domain)
-      end
+      base = with_stories_in_domain(base, domain) if domain.present?
 
       title_match_sql = Arel.sql("MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)")
       description_match_sql =
@@ -150,12 +146,8 @@ class Search
 
     when 'comments'
       base = Comment.active
-      if domain.present?
-        base = with_stories_in_domain(base.joins(:story), domain)
-      end
-      if tag_scopes.present?
-        base = with_stories_matching_tags(base, tag_scopes)
-      end
+      base = with_stories_in_domain(base.joins(:story), domain) if domain.present?
+      base = with_stories_matching_tags(base, tag_scopes) if tag_scopes.present?
       if qwords.present?
         base = base.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
       end
@@ -176,12 +168,8 @@ class Search
 
     self.total_results = results.length
 
-    if page > page_count
-      self.page = page_count
-    end
-    if page < 1
-      self.page = 1
-    end
+    self.page = page_count if page > page_count
+    self.page = 1 if page < 1
 
     self.results = results
       .limit(per_page)
@@ -194,18 +182,14 @@ class Search
         votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, results.map(&:id))
 
         results.each do |r|
-          if votes[r.id]
-            r.vote = votes[r.id]
-          end
+          r.vote = votes[r.id] if votes[r.id]
         end
 
       when 'comments'
         votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, results.map(&:id))
 
         results.each do |r|
-          if votes[r.id]
-            r.current_vote = votes[r.id]
-          end
+          r.current_vote = votes[r.id] if votes[r.id]
         end
       end
     end
