@@ -203,5 +203,3 @@ Style/WordArray:
   Enabled: false
 Style/YodaCondition:
   Enabled: false
-Style/ZeroLengthPredicate:
-  Enabled: false

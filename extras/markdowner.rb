@@ -66,7 +66,7 @@ class Markdowner
         node.string_content += user
       end
 
-      if after.length > 0
+      if after.empty?
         remainder = CommonMarker::Node.new(:text)
         remainder.string_content = after
         node.insert_after(remainder)
