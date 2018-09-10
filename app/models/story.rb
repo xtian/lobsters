@@ -830,7 +830,7 @@ class Story < ApplicationRecord
 
     @fetched_attributes = {
       :url => url,
-      :title => '',
+      :title => ''
     }
 
     # security: do not connect to arbitrary user-submitted ports
@@ -841,7 +841,7 @@ class Story < ApplicationRecord
         s = Sponge.new
         s.timeout = 3
         @fetched_content = s.fetch(url, :get, nil, nil, {
-          'User-agent' => "#{Rails.application.domain} for #{fetching_ip}",
+          'User-agent' => "#{Rails.application.domain} for #{fetching_ip}"
         }, 3)
       rescue
         return @fetched_attributes

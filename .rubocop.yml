@@ -155,5 +155,3 @@ Style/SymbolArray:
   EnforcedStyle: brackets
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: consistent_comma

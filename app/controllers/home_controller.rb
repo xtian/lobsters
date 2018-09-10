@@ -66,11 +66,11 @@ class HomeController < ApplicationController
 
     @rss_link ||= {
       :title => 'RSS 2.0',
-      :href => user_token_link('/rss'),
+      :href => user_token_link('/rss')
     }
     @comments_rss_link ||= {
       :title => 'Comments - RSS 2.0',
-      :href => user_token_link('/comments.rss'),
+      :href => user_token_link('/comments.rss')
     }
 
     @heading = @title = ''
@@ -103,7 +103,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       :title => 'RSS 2.0 - Newest Items',
-      :href => user_token_link('/newest.rss'),
+      :href => user_token_link('/newest.rss')
     }
 
     respond_to do |format|
@@ -160,7 +160,7 @@ class HomeController < ApplicationController
 
     @rss_link ||= {
       :title => 'RSS 2.0',
-      :href => user_token_link('/saved.rss'),
+      :href => user_token_link('/saved.rss')
     }
 
     @heading = @title = 'Saved Stories'
@@ -189,7 +189,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       :title => "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",
-      :href => "/t/#{@tag.tag}.rss",
+      :href => "/t/#{@tag.tag}.rss"
     }
 
     respond_to do |format|
@@ -228,7 +228,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       :title => 'RSS 2.0 - Your Upvoted Stories',
-      :href => user_token_link('/upvoted.rss'),
+      :href => user_token_link('/upvoted.rss')
     }
 
     respond_to do |format|

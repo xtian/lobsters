@@ -29,8 +29,8 @@ describe TagsController do
         is_media: true,
         hotness_mod: 1.5,
         privileged: true,
-        inactive: true,
-      }, }
+        inactive: true
+      } }
       tag = Tag.find_by(tag: 'mytag')
       expect(tag.description).to eq 'desc'
       expect(tag.is_media).to be true
@@ -73,8 +73,8 @@ describe TagsController do
         description: 'desc',
         hotness_mod: 1.5,
         privileged: true,
-        inactive: true,
-      }, }
+        inactive: true
+      } }
       new_tag = Tag.find(tag.id)
       expect(new_tag.tag).to eq 'mytag'
       expect(new_tag.description).to eq 'desc'

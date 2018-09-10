@@ -52,7 +52,7 @@ private
       next if r.current_vote_vote.blank?
       r.comment.current_vote = {
         vote: r.current_vote_vote,
-        reason: r.current_vote_reason.to_s,
+        reason: r.current_vote_reason.to_s
       }
     end
   end

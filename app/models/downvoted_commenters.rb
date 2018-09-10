@@ -77,7 +77,7 @@ class DownvotedCommenters
             stddev: 0,
             percent_downvoted:
               # TODO: fix 1 + n caused by u.comments to grab total comment count
-              u.n_comments * 100.0 / u.comments.where('created_at >= ?', period).count,
+              u.n_comments * 100.0 / u.comments.where('created_at >= ?', period).count
           }
         }
     }

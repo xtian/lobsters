@@ -12,7 +12,7 @@ class ModerationsController < ApplicationController
       :stories  => params.dig(:what, :stories),
       :comments => params.dig(:what, :comments),
       :tags     => params.dig(:what, :tags),
-      :users    => params.dig(:what, :users),
+      :users    => params.dig(:what, :users)
     }
     @what.transform_values! { true } if @what.values.none?
 

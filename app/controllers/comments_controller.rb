@@ -75,7 +75,7 @@ class CommentsController < ApplicationController
            :content_type => 'text/html',
            :locals => {
              :comment => comment,
-             :show_tree_lines => params[:show_tree_lines],
+             :show_tree_lines => params[:show_tree_lines]
            }
   end
 
@@ -224,7 +224,7 @@ class CommentsController < ApplicationController
   def index
     @rss_link ||= {
       :title => 'RSS 2.0 - Newest Comments',
-      :href => '/comments.rss' + (@user ? "?token=#{@user.rss_token}" : ''),
+      :href => '/comments.rss' + (@user ? "?token=#{@user.rss_token}" : '')
     }
 
     @heading = @title = 'Newest Comments'
@@ -319,7 +319,7 @@ private
            :locals => {
              :comment => comment,
              :show_comment => comment,
-             :show_tree_lines => params[:show_tree_lines],
+             :show_tree_lines => params[:show_tree_lines]
            }
   end
 

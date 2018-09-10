@@ -42,7 +42,7 @@ module ApplicationHelper
     @header_links = {
       root_path => { :title => @cur_url == '/' ? Rails.application.name : 'Home' },
       recent_path => { :title => 'Recent' },
-      comments_path => { :title => 'Comments' },
+      comments_path => { :title => 'Comments' }
     }
 
     @header_links[threads_path] = { :title => 'Your Threads' } if @user
@@ -71,7 +71,7 @@ module ApplicationHelper
       if (count = @user.unread_replies_count) > 0
         @right_header_links[replies_unread_path] = {
           :class => ['new_messages'],
-          :title => "#{@user.unread_replies_count} Reply".pluralize(count),
+          :title => "#{@user.unread_replies_count} Reply".pluralize(count)
         }
       else
         @right_header_links[replies_path] = { :title => 'Replies' }
@@ -80,7 +80,7 @@ module ApplicationHelper
       if (count = @user.unread_message_count) > 0
         @right_header_links[messages_path] = {
           :class => ['new_messages'],
-          :title => "#{@user.unread_message_count} Message".pluralize(count),
+          :title => "#{@user.unread_message_count} Message".pluralize(count)
         }
       else
         @right_header_links[messages_path] = { :title => 'Messages' }
