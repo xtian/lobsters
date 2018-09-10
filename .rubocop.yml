@@ -159,8 +159,6 @@ Style/NonNilCheck:
   Enabled: false
 Style/NumericPredicate:
   Enabled: false
-Style/ParallelAssignment:
-  Enabled: false
 Style/RaiseArgs:
   EnforcedStyle: compact
 Style/RescueStandardError:
