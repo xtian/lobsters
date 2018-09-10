@@ -199,5 +199,3 @@ Style/WhileUntilDo:
   Enabled: false
 Style/WhileUntilModifier:
   Enabled: false
-Style/WordArray:
-  Enabled: false

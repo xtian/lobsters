@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
       traffic = traffic_kv.value.to_i
 
       # don't increase traffic counter for bots or api requests
-      unless agent_is_spider? || ["json", "rss"].include?(params[:format])
+      unless agent_is_spider? || %w[json rss].include?(params[:format])
         traffic += 100
       end
 

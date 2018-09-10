@@ -149,7 +149,7 @@ describe Story do
   end
 
   it "calculates tag changes properly" do
-    s = create(:story, :title => "blah", :tags_a => ["tag1", "tag2"])
+    s = create(:story, :title => "blah", :tags_a => %w[tag1 tag2])
 
     s.tags_a = ["tag2"]
     expect(s.tagging_changes).to eq("tags" => ["tag1 tag2", "tag2"])
@@ -158,7 +158,7 @@ describe Story do
   it "logs moderations properly" do
     mod = create(:user, :moderator)
 
-    s = create(:story, :title => "blah", :tags_a => ["tag1", "tag2"],
+    s = create(:story, :title => "blah", :tags_a => %w[tag1 tag2],
       :description => "desc")
 
     s.title = "changed title"

@@ -13,7 +13,7 @@ describe Search do
     @multi_tag = create(:story, :title => "multitag term1 t1 t2",
                              :url => "https://example.com/3",
                              :user_id => @user.id,
-                             :tags_a => ["tag1", "tag2"])
+                             :tags_a => %w[tag1 tag2])
     @stories = [
       create(:story, :title => "unique",
                   :url => "https://example.com/unique",
