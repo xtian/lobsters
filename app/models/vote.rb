@@ -56,7 +56,7 @@ class Vote < ApplicationRecord
         :comment_id => nil,
         :story_id   => story_ids,
       )
-      votes.inject({}) do |memo, v|
+      votes.each_with_object({}) do |v, memo|
         memo[v.story_id] = { :vote => v.vote, :reason => v.reason }
         memo
       end
@@ -71,7 +71,7 @@ class Vote < ApplicationRecord
         :user_id    => user_id,
         :comment_id => comment_ids,
       )
-      votes.inject({}) do |memo, v|
+      votes.each_with_object({}) do |v, memo|
         memo[v.comment_id] = { :vote => v.vote, :reason => v.reason }
         memo
       end
