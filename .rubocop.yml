@@ -197,5 +197,3 @@ Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
 Style/WhileUntilDo:
   Enabled: false
-Style/WhileUntilModifier:
-  Enabled: false

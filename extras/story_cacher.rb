@@ -30,10 +30,7 @@ class StoryCacher
 
         # turn newlines into double newlines, so they become paragraphs
         j["text"] = j["text"].to_s.gsub("\n", "\n\n")
-
-        while j["text"].match?("\n\n\n")
-          j["text"].gsub!("\n\n\n", "\n\n")
-        end
+        j["text"].gsub!("\n\n\n", "\n\n") while j["text"].match?("\n\n\n")
 
         return j["text"]
       end
