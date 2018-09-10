@@ -50,7 +50,7 @@ class HatsController < ApplicationController
 
     flash[:success] = 'Successfully approved hat request.'
 
-    return redirect_to '/hats/requests'
+    redirect_to '/hats/requests'
   end
 
   def reject_request
@@ -59,6 +59,6 @@ class HatsController < ApplicationController
 
     flash[:success] = 'Successfully rejected hat request.'
 
-    return redirect_to '/hats/requests'
+    redirect_to '/hats/requests'
   end
 end

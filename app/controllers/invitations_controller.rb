@@ -8,7 +8,7 @@ class InvitationsController < ApplicationController
       @invitation_request = InvitationRequest.new
     else
       flash[:error] = 'Public invitation requests are not allowed.'
-      return redirect_to '/login'
+      redirect_to '/login'
     end
   end
 
@@ -32,7 +32,7 @@ class InvitationsController < ApplicationController
 
     flash[:success] = 'Your invitation request has been validated and ' +
                       'will now be shown to other logged-in users.'
-    return redirect_to '/invitations/request'
+    redirect_to '/invitations/request'
   end
 
   def create
@@ -79,7 +79,7 @@ class InvitationsController < ApplicationController
         render :action => :build
       end
     else
-      return redirect_to '/login'
+      redirect_to '/login'
     end
   end
 
@@ -107,7 +107,7 @@ class InvitationsController < ApplicationController
     Rails.logger.info "[u#{@user.id}] sent invitiation for request " +
                       ir.inspect
 
-    return redirect_to '/invitations'
+    redirect_to '/invitations'
   end
 
   def delete_request
@@ -127,6 +127,6 @@ class InvitationsController < ApplicationController
     Rails.logger.info "[u#{@user.id}] deleted invitation request " +
                       "from #{ir.inspect}"
 
-    return redirect_to '/invitations'
+    redirect_to '/invitations'
   end
 end

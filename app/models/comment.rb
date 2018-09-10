@@ -193,7 +193,7 @@ class Comment < ApplicationRecord
     right = z * Math.sqrt((p * ((1.0 - p) / n)) + (z * (z / (4.0 * n * n))))
     under = 1.0 + ((1.0 / n) * z * z)
 
-    return (left - right) / under
+    (left - right) / under
   end
 
   def comment=(com)
@@ -328,11 +328,11 @@ class Comment < ApplicationRecord
 
   def is_deletable_by_user?(user)
     if user&.is_moderator?
-      return true
+      true
     elsif user && user.id == user_id
-      return created_at >= DELETEABLE_DAYS.days.ago
+      created_at >= DELETEABLE_DAYS.days.ago
     else
-      return false
+      false
     end
   end
 
@@ -351,13 +351,13 @@ class Comment < ApplicationRecord
   def is_editable_by_user?(user)
     if user && user.id == user_id
       if is_moderated?
-        return false
+        false
       else
-        return (Time.current.to_i - (updated_at ? updated_at.to_i :
+        (Time.current.to_i - (updated_at ? updated_at.to_i :
           created_at.to_i) < (60 * MAX_EDIT_MINS))
       end
     else
-      return false
+      false
     end
   end
 
@@ -367,11 +367,11 @@ class Comment < ApplicationRecord
 
   def is_undeletable_by_user?(user)
     if user&.is_moderator?
-      return true
+      true
     elsif user && user.id == user_id && !is_moderated?
-      return true
+      true
     else
-      return false
+      false
     end
   end
 
@@ -435,7 +435,7 @@ class Comment < ApplicationRecord
   end
 
   def showing_downvotes_for_user?(u)
-    return (u&.is_moderator?) ||
+    (u&.is_moderator?) ||
            (created_at && created_at < 36.hours.ago) ||
            !SCORE_RANGE_TO_HIDE.include?(score)
   end

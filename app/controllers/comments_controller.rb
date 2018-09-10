@@ -89,9 +89,9 @@ class CommentsController < ApplicationController
 
   def redirect_from_short_id
     if (comment = find_comment)
-      return redirect_to comment.path
+      redirect_to comment.path
     else
-      return render :plain => "can't find comment", :status => :bad_request
+      render :plain => "can't find comment", :status => :bad_request
     end
   end
 

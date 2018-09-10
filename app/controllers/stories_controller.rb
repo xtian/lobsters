@@ -27,7 +27,7 @@ class StoriesController < ApplicationController
       end
     end
 
-    return render :action => 'new'
+    render :action => 'new'
   end
 
   def destroy
@@ -66,7 +66,7 @@ class StoriesController < ApplicationController
     s.fetching_ip = request.remote_ip
     s.url = params[:fetch_url]
 
-    return render :json => s.fetched_attributes
+    render :json => s.fetched_attributes
   end
 
   def new
@@ -119,7 +119,7 @@ class StoriesController < ApplicationController
 
     @story.seen_previous = true
 
-    return render :action => 'new', :layout => false
+    render :action => 'new', :layout => false
   end
 
   def show
@@ -342,7 +342,7 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.check_already_posted
 
-    return render :partial => 'stories/form_errors', :layout => false,
+    render :partial => 'stories/form_errors', :layout => false,
       :content_type => 'text/html', :locals => { :story => @story }
   end
 
@@ -423,7 +423,7 @@ private
   def verify_user_can_submit_stories
     if !@user.can_submit_stories?
       flash[:error] = 'You are not allowed to submit new stories.'
-      return redirect_to '/'
+      redirect_to '/'
     end
   end
 

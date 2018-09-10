@@ -35,7 +35,7 @@ class Github
       end
     end
 
-    return [nil, nil]
+    [nil, nil]
   end
 
   def self.oauth_auth_url(state)

@@ -107,7 +107,7 @@ class LoginController < ApplicationController
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
     flash.now[:success] = 'Password reset instructions have been e-mailed to you.'
-    return index
+    index
   end
 
   def set_new_password
@@ -156,7 +156,7 @@ class LoginController < ApplicationController
                         "(#{tmpu.username}), verifying TOTP"
     else
       reset_session
-      return redirect_to '/login'
+      redirect_to '/login'
     end
   end
 
@@ -164,10 +164,10 @@ class LoginController < ApplicationController
     if (tmpu = find_twofa_user) && tmpu.authenticate_totp(params[:totp_code])
       session[:u] = tmpu.session_token
       session.delete(:twofa_u)
-      return redirect_to '/'
+      redirect_to '/'
     else
       flash[:error] = 'Your TOTP code did not match.  Please try again.'
-      return redirect_to '/login/2fa'
+      redirect_to '/login/2fa'
     end
   end
 
@@ -175,7 +175,7 @@ private
 
   def find_twofa_user
     if session[:twofa_u].present?
-      return User.where(:session_token => session[:twofa_u]).first
+      User.where(:session_token => session[:twofa_u]).first
     end
   end
 end

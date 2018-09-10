@@ -139,20 +139,20 @@ class MessagesController < ApplicationController
 
     @user.update_unread_message_count!
 
-    return redirect_to '/messages'
+    redirect_to '/messages'
   end
 
   def keep_as_new
     @message.has_been_read = false
     @message.save
 
-    return redirect_to '/messages'
+    redirect_to '/messages'
   end
 
   def mod_note
     ModNote.create_from_message(@message, @user)
 
-    return redirect_to messages_path, notice: 'ModNote created'
+    redirect_to messages_path, notice: 'ModNote created'
   end
 
 private
@@ -173,6 +173,6 @@ private
 
     flash[:error] = 'Could not find message.'
     redirect_to '/messages'
-    return false
+    false
   end
 end

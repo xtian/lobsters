@@ -23,7 +23,7 @@ class AvatarsController < ApplicationController
     end
 
     flash[:success] = "Your avatar cache has been purged of #{'file'.pluralize(expired)}"
-    return redirect_to '/settings'
+    redirect_to '/settings'
   end
 
   def show

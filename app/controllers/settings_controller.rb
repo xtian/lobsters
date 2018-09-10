@@ -27,7 +27,7 @@ class SettingsController < ApplicationController
     end
     reset_session
     flash[:success] = 'Your account has been deleted.'
-    return redirect_to '/'
+    redirect_to '/'
   end
 
   def update
@@ -73,7 +73,7 @@ class SettingsController < ApplicationController
       end
     else
       flash[:error] = 'Your password was not correct.'
-      return redirect_to twofa_url
+      redirect_to twofa_url
     end
   end
 
@@ -147,7 +147,7 @@ class SettingsController < ApplicationController
 
     session[:pushover_rand] = SecureRandom.hex
 
-    return redirect_to Pushover.subscription_url(
+    redirect_to Pushover.subscription_url(
       :success => "#{Rails.application.root_url}settings/pushover_callback?" +
         "rand=#{session[:pushover_rand]}",
       :failure => "#{Rails.application.root_url}settings/"
@@ -178,12 +178,12 @@ class SettingsController < ApplicationController
       flash[:success] = 'Your account is no longer setup for Pushover notifications.'
     end
 
-    return redirect_to '/settings'
+    redirect_to '/settings'
   end
 
   def github_auth
     session[:github_state] = SecureRandom.hex
-    return redirect_to Github.oauth_auth_url(session[:github_state])
+    redirect_to Github.oauth_auth_url(session[:github_state])
   end
 
   def github_callback
@@ -206,7 +206,7 @@ class SettingsController < ApplicationController
       return github_disconnect
     end
 
-    return redirect_to '/settings'
+    redirect_to '/settings'
   end
 
   def github_disconnect
@@ -214,15 +214,15 @@ class SettingsController < ApplicationController
     @user.github_username = nil
     @user.save!
     flash[:success] = 'Your GitHub association has been removed.'
-    return redirect_to '/settings'
+    redirect_to '/settings'
   end
 
   def twitter_auth
     session[:twitter_state] = SecureRandom.hex
-    return redirect_to Twitter.oauth_auth_url(session[:twitter_state])
+    redirect_to Twitter.oauth_auth_url(session[:twitter_state])
   rescue OAuth::Unauthorized
     flash[:error] = "Twitter says we're not authenticating properly, please message the admin"
-    return redirect_to '/settings'
+    redirect_to '/settings'
   end
 
   def twitter_callback
@@ -246,7 +246,7 @@ class SettingsController < ApplicationController
       return twitter_disconnect
     end
 
-    return redirect_to '/settings'
+    redirect_to '/settings'
   end
 
   def twitter_disconnect
@@ -255,7 +255,7 @@ class SettingsController < ApplicationController
     @user.twitter_oauth_token_secret = nil
     @user.save!
     flash[:success] = 'Your Twitter association has been removed.'
-    return redirect_to '/settings'
+    redirect_to '/settings'
   end
 
 private

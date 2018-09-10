@@ -322,7 +322,7 @@ class Story < ApplicationRecord
       sign = 0
     end
 
-    return -((order * sign) + base +
+    -((order * sign) + base +
       ((created_at || Time.current).to_f / HOTNESS_WINDOW)).round(7)
   end
 
@@ -343,7 +343,7 @@ class Story < ApplicationRecord
       return false
     end
 
-    return true
+    true
   end
 
   # this has to happen just before save rather than in tags_a= because we need
@@ -464,15 +464,15 @@ class Story < ApplicationRecord
 
   def is_editable_by_user?(user)
     if user&.is_moderator?
-      return true
+      true
     elsif user && user.id == user_id
       if is_moderated?
-        return false
+        false
       else
-        return (Time.current.to_i - created_at.to_i < (60 * MAX_EDIT_MINS))
+        (Time.current.to_i - created_at.to_i < (60 * MAX_EDIT_MINS))
       end
     else
-      return false
+      false
     end
   end
 
@@ -502,11 +502,11 @@ class Story < ApplicationRecord
 
   def is_undeletable_by_user?(user)
     if user&.is_moderator?
-      return true
+      true
     elsif user && user.id == user_id && !is_moderated?
-      return true
+      true
     else
-      return false
+      false
     end
   end
 

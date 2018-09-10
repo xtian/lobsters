@@ -13,7 +13,7 @@ class Utils
       end
     end
 
-    return str
+    str
   end
 
   def self.silence_stream(*streams)
