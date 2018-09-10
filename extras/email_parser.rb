@@ -25,7 +25,7 @@ class EmailParser
   end
 
   def been_here?
-    !!@email_text.match(/^X-BeenThere: #{Rails.application.shortname}-/i)
+    !!@email_text.match?(/^X-BeenThere: #{Rails.application.shortname}-/i)
   end
 
   def sending_user
@@ -81,7 +81,7 @@ class EmailParser
       end
 
     # simple one-part
-    elsif self.email.content_type.to_s.match(/text\/plain/)
+    elsif self.email.content_type.to_s.match?(/text\/plain/)
       @body = self.email.body.to_s
 
       begin

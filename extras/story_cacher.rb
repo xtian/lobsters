@@ -12,7 +12,7 @@ class StoryCacher
     end
 
     # XXX: diffbot tries to read pdfs as text, so disable for now
-    if story.url.to_s.match(/\.pdf$/i)
+    if story.url.to_s.match?(/\.pdf$/i)
       return nil
     end
 
@@ -29,7 +29,7 @@ class StoryCacher
         # turn newlines into double newlines, so they become paragraphs
         j["text"] = j["text"].to_s.gsub("\n", "\n\n")
 
-        while j["text"].match("\n\n\n")
+        while j["text"].match?("\n\n\n")
           j["text"].gsub!("\n\n\n", "\n\n")
         end
 

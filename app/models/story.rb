@@ -141,7 +141,7 @@ class Story < ApplicationRecord
     if self.url.present?
       check_already_posted
       check_not_tracking_domain
-      errors.add(:url, "is not valid") unless url.match(URL_RE)
+      errors.add(:url, "is not valid") unless url.match?(URL_RE)
     elsif self.description.to_s.strip == ""
       errors.add(:description, "must contain text if no URL posted")
     end
@@ -150,7 +150,7 @@ class Story < ApplicationRecord
       errors.add(:title, " starting 'Ask #{Rails.application.name}' or similar is redundant " <<
                           "with the ask tag.")
     end
-    if self.title.match(GRAPHICS_RE)
+    if self.title.match?(GRAPHICS_RE)
       errors.add(:title, " may not contain graphic codepoints")
     end
 
@@ -228,7 +228,7 @@ class Story < ApplicationRecord
   end
 
   def self.votes_cast_type
-    Story.connection.adapter_name.match(/mysql/i) ? "signed" : "integer"
+    Story.connection.adapter_name.match?(/mysql/i) ? "signed" : "integer"
   end
 
   def archive_url
@@ -918,7 +918,7 @@ class Story < ApplicationRecord
         title = title[0, title.length - site_name.length]
 
         # remove title/site name separator
-        if title.match(/ [ \-\|\u2013] $/)
+        if title.match?(/ [ \-\|\u2013] $/)
           title = title[0, title.length - 3]
         end
       end

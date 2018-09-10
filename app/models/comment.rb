@@ -56,10 +56,10 @@ class Comment < ApplicationRecord
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
 
-    self.comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
+    self.comment.to_s.strip.match?(/\Atl;?dr.?$\z/i) &&
       errors.add(:base, "Wow!  A blue car!")
 
-    self.comment.to_s.strip.match(/\Ame too.?\z/i) &&
+    self.comment.to_s.strip.match?(/\Ame too.?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
 
     self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&

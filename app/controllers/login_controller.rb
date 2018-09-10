@@ -22,7 +22,7 @@ class LoginController < ApplicationController
   end
 
   def login
-    if params[:email].to_s.match(/@/)
+    if params[:email].to_s.match?(/@/)
       user = User.where(:email => params[:email]).first
     else
       user = User.where(:username => params[:email]).first
@@ -47,7 +47,7 @@ class LoginController < ApplicationController
         raise LoginDeletedError
       end
 
-      if !user.password_digest.to_s.match(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
+      if !user.password_digest.to_s.match?(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
         user.password = user.password_confirmation = params[:password].to_s
         user.save
       end

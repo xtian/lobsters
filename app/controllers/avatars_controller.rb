@@ -32,7 +32,7 @@ class AvatarsController < ApplicationController
       raise ActionController::RoutingError.new("invalid size")
     end
 
-    if !username.match(User::VALID_USERNAME)
+    if !username.match?(User::VALID_USERNAME)
       raise ActionController::RoutingError.new("invalid user name")
     end
 
