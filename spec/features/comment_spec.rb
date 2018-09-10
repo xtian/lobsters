@@ -25,7 +25,7 @@ RSpec.feature "Commenting" do
       comment = create(:comment,
                        user_id: user.id,
                        story_id: story.id,
-                       created_at: 1.day.ago,
+                       created_at: 1.day.ago
                       )
       visit "/s/#{story.short_id}"
       expect(page).to have_link('delete')

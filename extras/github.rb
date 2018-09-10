@@ -22,7 +22,7 @@ class Github
       :post,
       :client_id => self.CLIENT_ID,
       :client_secret => self.CLIENT_SECRET,
-      :code => code,
+      :code => code
     )
     ps = CGI.parse(res)
     tok = ps["access_token"].first

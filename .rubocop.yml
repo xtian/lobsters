@@ -189,8 +189,6 @@ Style/StringLiterals:
   Enabled: false
 Style/SymbolArray:
   EnforcedStyle: brackets
-Style/TrailingCommaInArguments:
-  Enabled: false
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
 Style/TrailingCommaInHashLiteral:

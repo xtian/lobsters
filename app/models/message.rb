@@ -92,7 +92,7 @@ class Message < ApplicationRecord
         :message => self.plaintext_body,
         :url => self.url,
         :url_title => (self.author ? "Reply to #{self.author_username}" :
-          "View message"),
+          "View message")
       )
     end
   end

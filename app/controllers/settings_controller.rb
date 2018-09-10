@@ -42,7 +42,7 @@ class SettingsController < ApplicationController
             is_from_suggestions: true,
             user: @edit_user,
             action: "changed own username from \"#{previous_username}\" " +
-                    "to \"#{@edit_user.username}\"",
+                    "to \"#{@edit_user.username}\""
           )
         end
         flash.now[:success] = "Successfully updated settings."
@@ -150,7 +150,7 @@ class SettingsController < ApplicationController
     return redirect_to Pushover.subscription_url(
       :success => "#{Rails.application.root_url}settings/pushover_callback?" +
         "rand=#{session[:pushover_rand]}",
-      :failure => "#{Rails.application.root_url}settings/",
+      :failure => "#{Rails.application.root_url}settings/"
     )
   end
 

@@ -56,7 +56,7 @@ class Vote < ApplicationRecord
       votes = self.where(
         :user_id    => user_id,
         :comment_id => nil,
-        :story_id   => story_ids,
+        :story_id   => story_ids
       )
       votes.each_with_object({}) do |v, memo|
         memo[v.story_id] = { :vote => v.vote, :reason => v.reason }
@@ -71,7 +71,7 @@ class Vote < ApplicationRecord
     else
       votes = self.where(
         :user_id    => user_id,
-        :comment_id => comment_ids,
+        :comment_id => comment_ids
       )
       votes.each_with_object({}) do |v, memo|
         memo[v.comment_id] = { :vote => v.vote, :reason => v.reason }

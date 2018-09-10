@@ -249,7 +249,7 @@ class Comment < ApplicationRecord
               "#{self.user.username} on #{self.story.title}",
             :message => self.plaintext_comment,
             :url => self.url,
-            :url_title => "Reply to #{self.user.username}",
+            :url_title => "Reply to #{self.user.username}"
           )
         end
       end
@@ -274,7 +274,7 @@ class Comment < ApplicationRecord
             "#{self.user.username} on #{self.story.title}",
           :message => self.plaintext_comment,
           :url => self.url,
-          :url_title => "Reply to #{self.user.username}",
+          :url_title => "Reply to #{self.user.username}"
         )
       end
     end

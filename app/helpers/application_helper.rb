@@ -9,7 +9,7 @@ module ApplicationHelper
       :srcset => "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
       :class => "avatar",
       :size => "#{size}x#{size}",
-      :alt => "#{user.username} avatar",
+      :alt => "#{user.username} avatar"
     )
   end
 
