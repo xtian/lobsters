@@ -204,8 +204,8 @@ class Story < ApplicationRecord
 
     # www prefix
     urls.each do |u|
-      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| $1 }
-      urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{$1}www." }
+      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| Regexp.last_match(1) }
+      urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{Regexp.last_match(1)}www." }
     end
     urls = urls2.clone
 
