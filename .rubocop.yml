@@ -58,10 +58,6 @@ Naming/VariableName:
   Enabled: false
 
 # Performance
-Performance/Casecmp:
-  Enabled: false
-Performance/RedundantMatch:
-  Enabled: false
 
 # Rails
 Rails/FilePath:
