@@ -6,7 +6,7 @@ class StoryCacher
   # this needs to be overridden in config/initializers/production.rb
   @@DIFFBOT_API_KEY = nil
 
-  DIFFBOT_API_URL = "http://www.diffbot.com/api/article"
+  DIFFBOT_API_URL = 'http://www.diffbot.com/api/article'
 
   def self.get_story_text(story)
     if !@@DIFFBOT_API_KEY
@@ -29,10 +29,10 @@ class StoryCacher
         j = JSON.parse(res)
 
         # turn newlines into double newlines, so they become paragraphs
-        j["text"] = j["text"].to_s.gsub("\n", "\n\n")
-        j["text"].gsub!("\n\n\n", "\n\n") while j["text"].match?("\n\n\n")
+        j['text'] = j['text'].to_s.gsub("\n", "\n\n")
+        j['text'].gsub!("\n\n\n", "\n\n") while j['text'].match?("\n\n\n")
 
-        return j["text"]
+        return j['text']
       end
 
     rescue => e

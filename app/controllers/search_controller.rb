@@ -2,8 +2,8 @@
 
 class SearchController < ApplicationController
   def index
-    @title = "Search"
-    @cur_url = "/search"
+    @title = 'Search'
+    @cur_url = '/search'
 
     @search = Search.new
 
@@ -25,6 +25,6 @@ class SearchController < ApplicationController
       end
     end
 
-    render :action => "index"
+    render :action => 'index'
   end
 end

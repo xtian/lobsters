@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require 'rails_helper'
 
 describe EmailParser do
   before(:each) do
@@ -15,19 +15,19 @@ describe EmailParser do
     @emails = {}
     Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml")
     .each do |f|
-      @emails[File.basename(f).gsub(/\..*/, "")] = File.read(f)
+      @emails[File.basename(f).gsub(/\..*/, '')] = File.read(f)
         .gsub(/##SHORTNAME##/, Rails.application.shortname)
         .gsub(/##MAILING_LIST_TOKEN##/, @emailer.mailing_list_token)
         .gsub(/##COMMENT_ID##/, @comment.short_id)
     end
   end
 
-  it "can parse a valid e-mail" do
+  it 'can parse a valid e-mail' do
     parser = EmailParser.new(
-      "user@example.com",
+      'user@example.com',
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails["1"])
+      @emails['1'])
 
     expect(parser).to_not be_nil
     expect(parser.email).to_not be_nil
@@ -39,23 +39,23 @@ describe EmailParser do
     expect(parser.parent.class).to be Comment
   end
 
-  it "rejects mailing loops" do
+  it 'rejects mailing loops' do
     parser = EmailParser.new(
-      "user@example.com",
+      'user@example.com',
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails["2"])
+      @emails['2'])
 
     expect(parser.email).to_not be_nil
     expect(parser.been_here?).to be true
   end
 
-  it "strips signatures" do
+  it 'strips signatures' do
     parser = EmailParser.new(
-      "user@example.com",
+      'user@example.com',
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails["3"])
+      @emails['3'])
 
     expect(parser.email).to_not be_nil
     expect(parser.body)
@@ -63,12 +63,12 @@ describe EmailParser do
              "the site is increasing a bit each week, it's hard to tell.")
   end
 
-  it "strips quoted lines with attribution" do
+  it 'strips quoted lines with attribution' do
     parser = EmailParser.new(
-      "user@example.com",
+      'user@example.com',
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails["4"])
+      @emails['4'])
 
     expect(parser.email).to_not be_nil
     expect(parser.body)

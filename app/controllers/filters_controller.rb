@@ -4,8 +4,8 @@ class FiltersController < ApplicationController
   before_action :authenticate_user
 
   def index
-    @cur_url = "/filters"
-    @title = "Tag Filters"
+    @cur_url = '/filters'
+    @title = 'Tag Filters'
 
     @tags = Tag.active.all_with_story_counts_for(@user)
 
@@ -25,10 +25,10 @@ class FiltersController < ApplicationController
     if @user
       @user.tag_filter_tags = new_tags
     else
-      cookies.permanent[TAG_FILTER_COOKIE] = new_tags.map(&:tag).join(",")
+      cookies.permanent[TAG_FILTER_COOKIE] = new_tags.map(&:tag).join(',')
     end
 
-    flash[:success] = "Your filters have been updated."
+    flash[:success] = 'Your filters have been updated.'
 
     redirect_to filters_path
   end

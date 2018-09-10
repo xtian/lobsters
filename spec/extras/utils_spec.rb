@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require 'rails_helper'
 
 describe Utils do
-  describe ".silence_streams" do
-    it "is defined" do
+  describe '.silence_streams' do
+    it 'is defined' do
       expect(Utils.methods).to include(:silence_stream)
     end
   end

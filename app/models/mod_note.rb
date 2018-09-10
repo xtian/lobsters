@@ -2,8 +2,8 @@
 
 class ModNote < ApplicationRecord
   belongs_to :moderator,
-             :class_name => "User",
-             :foreign_key => "moderator_user_id",
+             :class_name => 'User',
+             :foreign_key => 'moderator_user_id',
              :inverse_of => :moderations
   belongs_to :user
 
@@ -21,7 +21,7 @@ class ModNote < ApplicationRecord
       self.user_id = u.id
       @username = u.username
     else
-      errors.add(:username, "is not a valid user")
+      errors.add(:username, 'is not a valid user')
     end
   end
 

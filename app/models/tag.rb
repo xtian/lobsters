@@ -5,7 +5,7 @@ class Tag < ApplicationRecord
   has_many :stories, :through => :taggings
   has_many :tag_filters, :dependent => :destroy
   has_many :filtering_users,
-           :class_name => "User",
+           :class_name => 'User',
            :through => :tag_filters,
            :source => :user,
            :dependent => :delete_all
@@ -44,7 +44,7 @@ class Tag < ApplicationRecord
   end
 
   def css_class
-    "tag tag_#{self.tag}" + (self.is_media?? " tag_is_media" : "")
+    "tag tag_#{self.tag}" + (self.is_media?? ' tag_is_media' : '')
   end
 
   def valid_for?(user)

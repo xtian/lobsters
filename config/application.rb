@@ -39,7 +39,7 @@ module Lobsters
     # config.autoload_paths += %W(#{config.root}/extras)
 
     # Eager load everything in extras/
-    config.eager_load_paths << Rails.root.join("extras").to_s
+    config.eager_load_paths << Rails.root.join('extras').to_s
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -83,15 +83,15 @@ class << Rails.application
   end
 
   def open_signups?
-    ENV["OPEN_SIGNUPS"] == "true"
+    ENV['OPEN_SIGNUPS'] == 'true'
   end
 
   def domain
-    "example.com"
+    'example.com'
   end
 
   def name
-    "Lobsters"
+    'Lobsters'
   end
 
   # to force everyone to be considered logged-out (without destroying
@@ -103,13 +103,13 @@ class << Rails.application
   def root_url
     Rails.application.routes.url_helpers.root_url(
       :host => Rails.application.domain,
-      :protocol => Rails.application.ssl? ? "https" : "http"
+      :protocol => Rails.application.ssl? ? 'https' : 'http'
     )
   end
 
   # used as mailing list prefix, cannot have spaces
   def shortname
-    name.downcase.gsub(/[^a-z]/, "")
+    name.downcase.gsub(/[^a-z]/, '')
   end
 
   # whether absolute URLs should include https (does not require that

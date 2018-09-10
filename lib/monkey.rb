@@ -15,32 +15,32 @@ end
 class String
   def forcibly_convert_to_utf8
     begin
-      if self.encoding.to_s == "UTF-8" && self.valid_encoding?
+      if self.encoding.to_s == 'UTF-8' && self.valid_encoding?
         return self
       end
 
-      str = self.dup.force_encoding("binary").encode(
-        "utf-8",
+      str = self.dup.force_encoding('binary').encode(
+        'utf-8',
         :invalid => :replace,
         :undef => :replace,
-        :replace => "?"
+        :replace => '?'
       )
 
-      if !str.valid_encoding? || str.encoding.to_s != "UTF-8"
+      if !str.valid_encoding? || str.encoding.to_s != 'UTF-8'
         raise Encoding::UndefinedConversionError
       end
 
     rescue Encoding::UndefinedConversionError
       str = self.chars.map {|c|
         begin
-          c.encode("UTF-8", :invalid => :replace, :undef => :replace)
+          c.encode('UTF-8', :invalid => :replace, :undef => :replace)
         rescue
-          "?".encode("UTF-8")
+          '?'.encode('UTF-8')
         end
       }.join
 
       if !str.valid_encoding?
-        raise "still bogus encoding"
+        raise 'still bogus encoding'
       end
     end
 

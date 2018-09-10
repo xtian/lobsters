@@ -14,21 +14,21 @@ class StoryRepository
 
   def hidden
     hidden = Story.base.hidden_by(@user).filter_tags(@params[:exclude_tags] || [])
-    hidden.order("hotness")
+    hidden.order('hotness')
   end
 
   def newest
     newest = Story.base.filter_tags(@params[:exclude_tags] || [])
-    newest.order("stories.id DESC")
+    newest.order('stories.id DESC')
   end
 
   def newest_by_user(user)
-    Story.base.where(user_id: user.id).order("stories.id DESC")
+    Story.base.where(user_id: user.id).order('stories.id DESC')
   end
 
   def saved
     saved = Story.base.saved_by(@user).filter_tags(@params[:exclude_tags] || [])
-    saved.order("hotness")
+    saved.order('hotness')
   end
 
   def tagged(tag)
@@ -41,11 +41,11 @@ class StoryRepository
         )
       )
     )
-    tagged.order("stories.created_at DESC")
+    tagged.order('stories.created_at DESC')
   end
 
   def top(length)
-    top = Story.base.where("created_at >= (NOW() - INTERVAL " +
+    top = Story.base.where('created_at >= (NOW() - INTERVAL ' +
       "#{length[:dur]} #{length[:intv].upcase})")
     top.order("#{Story.score_sql} DESC")
   end

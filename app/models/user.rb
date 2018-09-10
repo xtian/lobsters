@@ -6,31 +6,31 @@ class User < ApplicationRecord
            :inverse_of => :user,
            :dependent => :restrict_with_exception
   has_many :sent_messages,
-           :class_name => "Message",
-           :foreign_key => "author_user_id",
+           :class_name => 'Message',
+           :foreign_key => 'author_user_id',
            :inverse_of => :author,
            :dependent => :restrict_with_exception
   has_many :received_messages,
-           :class_name => "Message",
-           :foreign_key => "recipient_user_id",
+           :class_name => 'Message',
+           :foreign_key => 'recipient_user_id',
            :inverse_of => :recipient,
            :dependent => :restrict_with_exception
   has_many :tag_filters, :dependent => :destroy
   has_many :tag_filter_tags,
-           :class_name => "Tag",
+           :class_name => 'Tag',
            :through => :tag_filters,
            :source => :tag,
            :dependent => :delete_all
   belongs_to :invited_by_user,
-             :class_name => "User",
+             :class_name => 'User',
              :inverse_of => false,
              :required => false
   belongs_to :banned_by_user,
-             :class_name => "User",
+             :class_name => 'User',
              :inverse_of => false,
              :required => false
   belongs_to :disabled_invite_by_user,
-             :class_name => "User",
+             :class_name => 'User',
              :inverse_of => false,
              :required => false
   has_many :invitations, :dependent => :destroy
@@ -47,7 +47,7 @@ class User < ApplicationRecord
     :source => :story
   has_many :hats, :dependent => :destroy
   has_many :wearable_hats, -> { where('doffed_at is null') },
-           :class_name => "Hat",
+           :class_name => 'Hat',
            :inverse_of => :user
 
   has_secure_password
@@ -84,7 +84,7 @@ class User < ApplicationRecord
 
   validates_each :username do |record, attr, value|
     if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?('tag-')
-      record.errors.add(attr, "is not permitted")
+      record.errors.add(attr, 'is not permitted')
     end
   end
 
@@ -102,10 +102,10 @@ class User < ApplicationRecord
     self.create_mailing_list_token
   end
 
-  BANNED_USERNAMES = ["admin", "administrator", "contact", "fraud", "guest",
-    "help", "hostmaster", "inactive-user", "lobster", "lobsters", "mailer-daemon", "moderator",
-    "moderators", "nobody", "postmaster", "root", "security", "support",
-    "sysop", "webmaster", "enable", "new", "signup",].freeze
+  BANNED_USERNAMES = ['admin', 'administrator', 'contact', 'fraud', 'guest',
+    'help', 'hostmaster', 'inactive-user', 'lobster', 'lobsters', 'mailer-daemon', 'moderator',
+    'moderators', 'nobody', 'postmaster', 'root', 'security', 'support',
+    'sysop', 'webmaster', 'enable', 'new', 'signup',].freeze
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7
@@ -136,7 +136,7 @@ class User < ApplicationRecord
   end
 
   def self.username_regex_s
-    "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
+    '/^' + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, '') + '$/'
   end
 
   def as_json(_options = {})
@@ -207,18 +207,18 @@ class User < ApplicationRecord
       msg.deleted_by_author = true
       msg.author_user_id = disabler.id
       msg.recipient_user_id = self.id
-      msg.subject = "Your invite privileges have been revoked"
+      msg.subject = 'Your invite privileges have been revoked'
       msg.body = "The reason given:\n" +
                  "\n" +
                  "> *#{reason}*\n" +
                  "\n" +
-                 "*This is an automated message.*"
+                 '*This is an automated message.*'
       msg.save!
 
       m = Moderation.new
       m.moderator_user_id = disabler.id
       m.user_id = self.id
-      m.action = "Disabled invitations"
+      m.action = 'Disabled invitations'
       m.reason = reason
       m.save!
     end
@@ -239,7 +239,7 @@ class User < ApplicationRecord
       m = Moderation.new
       m.moderator_user_id = banner.id
       m.user_id = self.id
-      m.action = "Banned"
+      m.action = 'Banned'
       m.reason = reason
       m.save!
     end
@@ -308,7 +308,7 @@ class User < ApplicationRecord
   end
 
   def fetched_avatar(size = 100)
-    gravatar_url = "https://www.gravatar.com/avatar/" +
+    gravatar_url = 'https://www.gravatar.com/avatar/' +
                    Digest::MD5.hexdigest(self.email.strip.downcase) <<
                    "?r=pg&d=identicon&s=#{size}"
 
@@ -333,7 +333,7 @@ class User < ApplicationRecord
   def delete!
     User.transaction do
       self.comments
-        .where("upvotes - downvotes < 0")
+        .where('upvotes - downvotes < 0')
         .find_each {|c| c.delete_for_user(self) }
 
       self.sent_messages.each do |m|
@@ -384,13 +384,13 @@ class User < ApplicationRecord
       m = Moderation.new
       m.moderator_user_id = user.id
       m.user_id = self.id
-      m.action = "Granted moderator status"
+      m.action = 'Granted moderator status'
       m.save!
 
       h = Hat.new
       h.user_id = self.id
       h.granted_by_user_id = user.id
-      h.hat = "Sysop"
+      h.hat = 'Sysop'
       h.save!
     end
 
@@ -460,7 +460,7 @@ class User < ApplicationRecord
     if include_submitted_stories && self.show_submitted_story_threads
       thread_ids += Comment.joins(:story)
         .where(:stories => { :user_id => self.id }).group(:thread_id)
-        .order("MAX(comments.created_at) DESC").limit(amount).pluck(:thread_id)
+        .order('MAX(comments.created_at) DESC').limit(amount).pluck(:thread_id)
 
       thread_ids = thread_ids.uniq.sort.reverse[0, amount]
     end
@@ -486,7 +486,7 @@ class User < ApplicationRecord
     m = Moderation.new
     m.moderator_user_id = unbanner.id
     m.user_id = self.id
-    m.action = "Unbanned"
+    m.action = 'Unbanned'
     m.save!
 
     true
@@ -502,7 +502,7 @@ class User < ApplicationRecord
       m = Moderation.new
       m.moderator_user_id = mod.id
       m.user_id = self.id
-      m.action = "Enabled invitations"
+      m.action = 'Enabled invitations'
       m.save!
     end
 
@@ -532,8 +532,8 @@ class User < ApplicationRecord
 
   def votes_for_others
     self.votes.left_outer_joins(:story, :comment)
-      .where("(votes.comment_id is not null and comments.user_id <> votes.user_id) OR " +
-             "(votes.comment_id is null and stories.user_id <> votes.user_id)")
-      .order("id DESC")
+      .where('(votes.comment_id is not null and comments.user_id <> votes.user_id) OR ' +
+             '(votes.comment_id is null and stories.user_id <> votes.user_id)')
+      .order('id DESC')
   end
 end

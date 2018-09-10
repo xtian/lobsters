@@ -7,11 +7,11 @@ class Comment < ApplicationRecord
   has_many :votes,
            :dependent => :delete_all
   belongs_to :parent_comment,
-             :class_name => "Comment",
+             :class_name => 'Comment',
              :inverse_of => false,
              :required => false
   has_one :moderation,
-          :class_name => "Moderation",
+          :class_name => 'Moderation',
           :inverse_of => :comment,
           :dependent => :destroy
   belongs_to :hat,
@@ -46,30 +46,30 @@ class Comment < ApplicationRecord
   SCORE_RANGE_TO_HIDE = (-2 .. 4)
 
   validate do
-    self.comment.to_s.strip == "" &&
-      errors.add(:comment, "cannot be blank.")
+    self.comment.to_s.strip == '' &&
+      errors.add(:comment, 'cannot be blank.')
 
     self.user_id.blank? &&
-      errors.add(:user_id, "cannot be blank.")
+      errors.add(:user_id, 'cannot be blank.')
 
     self.story_id.blank? &&
-      errors.add(:story_id, "cannot be blank.")
+      errors.add(:story_id, 'cannot be blank.')
 
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
-      errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
+      errors.add(:base, (m[1] == 'T' ? 'N' : 'n') + 'ope' + m[2].to_s)
 
     self.comment.to_s.strip.match?(/\Atl;?dr.?$\z/i) &&
-      errors.add(:base, "Wow!  A blue car!")
+      errors.add(:base, 'Wow!  A blue car!')
 
     self.comment.to_s.strip.match?(/\Ame too.?\z/i) &&
-      errors.add(:base, "Please just upvote the parent post instead.")
+      errors.add(:base, 'Please just upvote the parent post instead.')
 
     self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
-      errors.add(:hat, "not wearable by user")
+      errors.add(:hat, 'not wearable by user')
   end
 
   def self.arrange_for_user(user)
-    parents = self.order(Arel.sql("(upvotes - downvotes) < 0 ASC, confidence DESC"))
+    parents = self.order(Arel.sql('(upvotes - downvotes) < 0 ASC, confidence DESC'))
       .group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level
@@ -174,7 +174,7 @@ class Comment < ApplicationRecord
     if self.parent_comment_id.present?
       self.thread_id = self.parent_comment.thread_id
     else
-      self.thread_id = Keystore.incremented_value_for("thread_id")
+      self.thread_id = Keystore.incremented_value_for('thread_id')
     end
   end
 
@@ -212,7 +212,7 @@ class Comment < ApplicationRecord
       m = Moderation.new
       m.comment_id = self.id
       m.moderator_user_id = user.id
-      m.action = "deleted comment"
+      m.action = 'deleted comment'
 
       if reason.present?
         m.reason = reason
@@ -298,13 +298,13 @@ class Comment < ApplicationRecord
 
   def gone_text
     if self.is_moderated?
-      "Comment removed by moderator " +
-        self.moderation.try(:moderator).try(:username).to_s << ": " +
-        (self.moderation.try(:reason) || "No reason given")
+      'Comment removed by moderator ' +
+        self.moderation.try(:moderator).try(:username).to_s << ': ' +
+        (self.moderation.try(:reason) || 'No reason given')
     elsif self.user.is_banned?
-      "Comment from banned user removed"
+      'Comment from banned user removed'
     else
-      "Comment removed by author"
+      'Comment removed by author'
     end
   end
 
@@ -315,15 +315,15 @@ class Comment < ApplicationRecord
   def html_class_for_user
     c = []
     if !self.user.is_active?
-      c.push "inactive_user"
+      c.push 'inactive_user'
     elsif self.user.is_new?
-      c.push "new_user"
+      c.push 'new_user'
     elsif self.story && self.story.user_is_author? &&
           self.story.user_id == self.user_id
-      c.push "user_is_author"
+      c.push 'user_is_author'
     end
 
-    c.join("")
+    c.join('')
   end
 
   def is_deletable_by_user?(user)
@@ -392,11 +392,11 @@ class Comment < ApplicationRecord
 
   def mailing_list_message_id
     [
-      "comment",
+      'comment',
       self.short_id,
-      self.is_from_email ? "email" : nil,
+      self.is_from_email ? 'email' : nil,
       created_at.to_i,
-    ].reject(&:!).join(".") << "@" + Rails.application.domain
+    ].reject(&:!).join('.') << '@' + Rails.application.domain
   end
 
   def path
@@ -424,9 +424,9 @@ class Comment < ApplicationRecord
     if self.showing_downvotes_for_user?(u)
       score
     elsif u && u.can_downvote?(self)
-      "~"
+      '~'
     else
-      "&nbsp;".html_safe
+      '&nbsp;'.html_safe
     end
   end
 
@@ -465,7 +465,7 @@ class Comment < ApplicationRecord
     end
 
     r_counts.keys.sort.map {|k|
-      if k == ""
+      if k == ''
         "+#{r_counts[k]}"
       else
         o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
@@ -474,7 +474,7 @@ class Comment < ApplicationRecord
         end
         o
       end
-    }.join(", ")
+    }.join(', ')
   end
 
   def undelete_for_user(user)
@@ -489,7 +489,7 @@ class Comment < ApplicationRecord
         m = Moderation.new
         m.comment_id = self.id
         m.moderator_user_id = user.id
-        m.action = "undeleted comment"
+        m.action = 'undeleted comment'
         m.save
       end
     end

@@ -5,7 +5,7 @@ class Markdowner
 
   def self.to_html(text, opts = {})
     if text.blank?
-      return ""
+      return ''
     end
 
     exts = [:tagfilter, :autolink, :strikethrough]
@@ -16,23 +16,23 @@ class Markdowner
     ng = Nokogiri::HTML(root.to_html([:SAFE], exts))
 
     # change <h1>, <h2>, etc. headings to just bold tags
-    ng.css("h1, h2, h3, h4, h5, h6").each do |h|
-      h.name = "strong"
+    ng.css('h1, h2, h3, h4, h5, h6').each do |h|
+      h.name = 'strong'
     end
 
     if !opts[:allow_images]
-      ng.css("img").remove
+      ng.css('img').remove
     end
 
     # make links have rel=nofollow
-    ng.css("a").each do |h|
-      h[:rel] = "nofollow" unless (URI.parse(h[:href]).host.nil? rescue false)
+    ng.css('a').each do |h|
+      h[:rel] = 'nofollow' unless (URI.parse(h[:href]).host.nil? rescue false)
     end
 
-    if ng.at_css("body")
-      ng.at_css("body").inner_html
+    if ng.at_css('body')
+      ng.at_css('body').inner_html
     else
-      ""
+      ''
     end
   end
 

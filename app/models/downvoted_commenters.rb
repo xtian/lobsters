@@ -54,16 +54,16 @@ class DownvotedCommenters
     Rails.cache.fetch("downvoted_commenters_#{interval}", expires_in: CACHE_TIME) {
       rank = 0
       User.active.joins(:comments)
-        .where("comments.downvotes > 0 and comments.created_at >= ?", period)
-        .group("comments.user_id")
+        .where('comments.downvotes > 0 and comments.created_at >= ?', period)
+        .group('comments.user_id')
         .select("
           users.id, users.username,
           (sum(downvotes) - #{avg_sum_downvotes})/#{stddev_sum_downvotes} as sigma,
           count(distinct comments.id) as n_comments,
           count(distinct story_id) as n_stories,
           sum(downvotes) as n_downvotes")
-        .having("n_comments > 2 and n_stories > 1 and n_downvotes >= 10")
-        .order("sigma desc")
+        .having('n_comments > 2 and n_stories > 1 and n_downvotes >= 10')
+        .order('sigma desc')
         .limit(30)
         .each_with_object({}) {|u, hash|
           hash[u.id] = {
@@ -77,7 +77,7 @@ class DownvotedCommenters
             stddev: 0,
             percent_downvoted:
               # TODO: fix 1 + n caused by u.comments to grab total comment count
-              u.n_comments * 100.0 / u.comments.where("created_at >= ?", period).count,
+              u.n_comments * 100.0 / u.comments.where('created_at >= ?', period).count,
           }
         }
     }

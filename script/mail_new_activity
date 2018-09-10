@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-ENV["RAILS_ENV"] ||= "production"
+ENV['RAILS_ENV'] ||= 'production'
 
 APP_PATH = File.expand_path('../../config/application', __FILE__)
 require File.expand_path('../../config/boot', __FILE__)
@@ -10,10 +10,10 @@ Rails.application.require_environment!
 
 class String
   def quoted_printable(encoded_word = false)
-    s = [self].pack("M")
+    s = [self].pack('M')
 
     if encoded_word
-      s.split(/\r?\n/).map {|l| "=?UTF-8?Q?" + l.gsub(/=*$/, "").tr(" ", "_") << "?=" }.join("\n\t")
+      s.split(/\r?\n/).map {|l| '=?UTF-8?Q?' + l.gsub(/=*$/, '').tr(' ', '_') << '?=' }.join("\n\t")
     else
       s
     end
@@ -28,7 +28,7 @@ class String
       elsif (m = line.match(/^(> ?|   +)(.*)/))
         ind = m[1]
         if len - ind.length <= 0
-          ind = "    "
+          ind = '    '
         end
         m[2].gsub(/(.{1,#{len - ind.length}})(\s+|$)/, "#{ind}\\1\n").strip
       else
@@ -38,7 +38,7 @@ class String
   end
 end
 
-def story_subject(story, prefix = "")
+def story_subject(story, prefix = '')
   ss = "#{prefix}#{story.title}"
 
   story.tags.sort_by(&:tag).each do |t|
@@ -49,14 +49,14 @@ def story_subject(story, prefix = "")
 end
 
 EMAIL_WIDTH = 72
-LAST_STORY_KEY = "mailing:last_story_id"
-LAST_COMMENT_KEY = "mailing:last_comment_id"
+LAST_STORY_KEY = 'mailing:last_story_id'
+LAST_COMMENT_KEY = 'mailing:last_comment_id'
 
-mailing_list_users = User.where("mailing_list_mode > 0").select(&:is_active?)
+mailing_list_users = User.where('mailing_list_mode > 0').select(&:is_active?)
 
 last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last.id).to_i
 
-Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
+Story.where('id > ? AND is_expired = ?', last_story_id, false).order(:id).each do |s|
   s.fetch_story_cache!
 
   if s.story_cache.blank?
@@ -78,22 +78,22 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
 
     list = "#{Rails.application.shortname}-#{u.mailing_list_token}@#{Rails.application.domain}"
 
-    IO.popen([{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{Rails.application.domain}", u.email],
-             "w") do |mail|
+    IO.popen([{}, '/usr/sbin/sendmail', '-i', '-f', "nobody@#{Rails.application.domain}", u.email],
+             'w') do |mail|
       mail.puts "From: #{s.user.username} <#{s.user.username}@#{Rails.application.domain}>"
       mail.puts "Reply-To: #{list}"
       mail.puts "To: #{list}"
       mail.puts "X-BeenThere: #{list}"
       mail.puts "List-Id: #{Rails.application.name} <#{list}>"
       mail.puts "List-Unsubscribe: <#{Rails.application.root_url}settings>"
-      mail.puts "Precedence: list"
-      mail.puts "MIME-Version: 1.0"
-      mail.puts "Content-Type: text/plain; charset=\"utf-8\""
-      mail.puts "Content-Transfer-Encoding: quoted-printable"
+      mail.puts 'Precedence: list'
+      mail.puts 'MIME-Version: 1.0'
+      mail.puts 'Content-Type: text/plain; charset="utf-8"'
+      mail.puts 'Content-Transfer-Encoding: quoted-printable'
       mail.puts "Message-ID: <#{s.mailing_list_message_id}>"
-      mail.puts "Date: " + s.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
-      mail.puts "Subject: " + story_subject(s)
-      mail.puts ""
+      mail.puts 'Date: ' + s.created_at.strftime('%a, %d %b %Y %H:%M:%S %z')
+      mail.puts 'Subject: ' + story_subject(s)
+      mail.puts ''
 
       body = []
 
@@ -103,19 +103,19 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
 
       if s.url.present?
         if s.description.present?
-          body.push ""
+          body.push ''
         end
 
         body.push "Via: #{s.url}"
 
         if s.story_cache.present?
-          body.push ""
+          body.push ''
           body.push s.story_cache.to_s.word_wrap(EMAIL_WIDTH)
         end
       end
 
-      body.push ""
-      body.push "-- "
+      body.push ''
+      body.push '-- '
       body.push "Vote: #{s.short_id_url}"
 
       mail.puts body.join("\n").quoted_printable
@@ -133,7 +133,7 @@ last_comment_id = (Keystore.value_for(LAST_COMMENT_KEY) ||
   Comment.last.id).to_i
 
 Comment.where(
-  "id > ? AND (is_deleted = ? AND is_moderated = ?)",
+  'id > ? AND (is_deleted = ? AND is_moderated = ?)',
   last_comment_id,
   false,
   false
@@ -162,7 +162,7 @@ Comment.where(
     domain = Rails.application.domain
     list = "#{Rails.application.shortname}-#{u.mailing_list_token}@#{Rails.application.domain}"
 
-    IO.popen([{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{domain}", u.email], "w") do |mail|
+    IO.popen([{}, '/usr/sbin/sendmail', '-i', '-f', "nobody@#{domain}", u.email], 'w') do |mail|
       from = "From: \"#{c.user.username}"
       if c.hat
         from << " (#{c.hat.hat})"
@@ -174,10 +174,10 @@ Comment.where(
       mail.puts "To: #{list}"
       mail.puts "List-Id: #{Rails.application.name} <#{list}>"
       mail.puts "List-Unsubscribe: <#{Rails.application.root_url}settings>"
-      mail.puts "Precedence: list"
-      mail.puts "MIME-Version: 1.0"
-      mail.puts "Content-Type: text/plain; charset=\"utf-8\""
-      mail.puts "Content-Transfer-Encoding: quoted-printable"
+      mail.puts 'Precedence: list'
+      mail.puts 'MIME-Version: 1.0'
+      mail.puts 'Content-Type: text/plain; charset="utf-8"'
+      mail.puts 'Content-Transfer-Encoding: quoted-printable'
       mail.puts "Message-ID: <#{c.mailing_list_message_id}>"
 
       refs = ["<#{c.story.mailing_list_message_id}>"]
@@ -203,14 +203,14 @@ Comment.where(
         mail.puts "In-Reply-To: <#{c.story.mailing_list_message_id}>"
       end
 
-      mail.print "References:"
+      mail.print 'References:'
       refs.each do |ref|
         mail.puts " #{ref}"
       end
 
-      mail.puts "Date: " + c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
-      mail.puts "Subject: " + story_subject(c.story, "Re: ")
-      mail.puts ""
+      mail.puts 'Date: ' + c.created_at.strftime('%a, %d %b %Y %H:%M:%S %z')
+      mail.puts 'Subject: ' + story_subject(c.story, 'Re: ')
+      mail.puts ''
 
       body = []
 
@@ -224,8 +224,8 @@ Comment.where(
         body.push com.word_wrap(EMAIL_WIDTH)
       end
 
-      body.push ""
-      body.push "-- "
+      body.push ''
+      body.push '-- '
       body.push "Vote: #{c.short_id_url}"
 
       mail.puts body.join("\n").quoted_printable

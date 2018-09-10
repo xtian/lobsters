@@ -3,13 +3,13 @@
 class Story < ApplicationRecord
   belongs_to :user
   belongs_to :merged_into_story,
-             :class_name => "Story",
-             :foreign_key => "merged_story_id",
+             :class_name => 'Story',
+             :foreign_key => 'merged_story_id',
              :inverse_of => :merged_stories,
              :required => false
   has_many :merged_stories,
-           :class_name => "Story",
-           :foreign_key => "merged_story_id",
+           :class_name => 'Story',
+           :foreign_key => 'merged_story_id',
            :inverse_of => :merged_into_story,
            :dependent => :nullify
   has_many :taggings,
@@ -44,8 +44,8 @@ class Story < ApplicationRecord
     base.low_scoring
         .not_hidden_by(user)
         .filter_tags(exclude_tags || [])
-        .where("created_at >= ?", 10.days.ago)
-        .order("stories.created_at DESC")
+        .where('created_at >= ?', 10.days.ago)
+        .order('stories.created_at DESC')
   }
   scope :filter_tags, ->(tags) {
     tags.empty? ? all : where.not(
@@ -78,7 +78,7 @@ class Story < ApplicationRecord
     hottest(nil, Tag.where(tag: 'meta').pluck(:id))
         .where(twitter_id: nil)
         .where("#{Story.score_sql} >= 2")
-        .where("created_at >= ?", 2.days.ago)
+        .where('created_at >= ?', 2.days.ago)
         .limit(10)
   }
 
@@ -89,7 +89,7 @@ class Story < ApplicationRecord
 
   validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id
-      record.errors.add(:merge_story_short_id, "id cannot be itself.")
+      record.errors.add(:merge_story_short_id, 'id cannot be itself.')
     end
   end
 
@@ -111,7 +111,7 @@ class Story < ApplicationRecord
   HOTNESS_WINDOW = 60 * 60 * 22
 
   # drop these words from titles when making URLs
-  TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
+  TITLE_DROP_WORDS = ['', 'a', 'an', 'and', 'but', 'in', 'of', 'or', 'that', 'the', 'to'].freeze
 
   # link shortening and other ad tracking domains
   TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly
@@ -143,17 +143,17 @@ class Story < ApplicationRecord
     if self.url.present?
       check_already_posted
       check_not_tracking_domain
-      errors.add(:url, "is not valid") unless url.match?(URL_RE)
-    elsif self.description.to_s.strip == ""
-      errors.add(:description, "must contain text if no URL posted")
+      errors.add(:url, 'is not valid') unless url.match?(URL_RE)
+    elsif self.description.to_s.strip == ''
+      errors.add(:description, 'must contain text if no URL posted')
     end
 
-    if self.title.starts_with?("Ask") && self.tags_a.include?('ask')
+    if self.title.starts_with?('Ask') && self.tags_a.include?('ask')
       errors.add(:title, " starting 'Ask #{Rails.application.name}' or similar is redundant " +
-                          "with the ask tag.")
+                          'with the ask tag.')
     end
     if self.title.match?(GRAPHICS_RE)
-      errors.add(:title, " may not contain graphic codepoints")
+      errors.add(:title, ' may not contain graphic codepoints')
     end
 
     if !errors.any? && self.url.blank?
@@ -170,7 +170,7 @@ class Story < ApplicationRecord
     return unless self.already_posted_story
 
     if self.already_posted_story.is_recent?
-      errors.add(:url, "has already been submitted within the past " +
+      errors.add(:url, 'has already been submitted within the past ' +
         "#{RECENT_DAYS} days")
     end
   end
@@ -179,7 +179,7 @@ class Story < ApplicationRecord
     return unless self.url.present? && self.new_record?
 
     if TRACKING_DOMAINS.include?(domain)
-      errors.add(:url, "is a link shortening or ad tracking domain")
+      errors.add(:url, 'is a link shortening or ad tracking domain')
     end
   end
 
@@ -190,15 +190,15 @@ class Story < ApplicationRecord
 
     # https
     urls.each do |u|
-      urls2.push u.gsub(/^http:\/\//i, "https://")
-      urls2.push u.gsub(/^https:\/\//i, "http://")
+      urls2.push u.gsub(/^http:\/\//i, 'https://')
+      urls2.push u.gsub(/^https:\/\//i, 'http://')
     end
     urls = urls2.clone
 
     # trailing slash
     urls.each do |u|
-      urls2.push u.gsub(/\/+\z/, "")
-      urls2.push u + "/"
+      urls2.push u.gsub(/\/+\z/, '')
+      urls2.push u + '/'
     end
     urls = urls2.clone
 
@@ -213,13 +213,13 @@ class Story < ApplicationRecord
     # submitted again
     Story
       .where(:url => urls)
-      .where("is_expired = ? OR is_moderated = ?", false, true)
-      .order("id DESC").first
+      .where('is_expired = ? OR is_moderated = ?', false, true)
+      .order('id DESC').first
   end
 
   def self.recalculate_all_hotnesses!
     # do the front page first, since find_each can't take an order
-    Story.order("id DESC").limit(100).each(&:recalculate_hotness!)
+    Story.order('id DESC').limit(100).each(&:recalculate_hotness!)
     Story.find_each(&:recalculate_hotness!)
     true
   end
@@ -230,7 +230,7 @@ class Story < ApplicationRecord
   end
 
   def self.votes_cast_type
-    Story.connection.adapter_name.match?(/mysql/i) ? "signed" : "integer"
+    Story.connection.adapter_name.match?(/mysql/i) ? 'signed' : 'integer'
   end
 
   def archive_url
@@ -290,7 +290,7 @@ class Story < ApplicationRecord
 
     # give a story's comment votes some weight, ignoring submitter's comments
     cpoints = self.merged_comments
-      .where("user_id <> ?", self.user_id)
+      .where('user_id <> ?', self.user_id)
       .select(:upvotes, :downvotes)
       .map {|c|
         if base < 0
@@ -361,9 +361,9 @@ class Story < ApplicationRecord
     end
 
     if self.taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media? }.empty?
-      errors.add(:base, "Must have at least one non-media (PDF, video) " +
+      errors.add(:base, 'Must have at least one non-media (PDF, video) ' +
         "tag.  If no tags apply to your content, it probably doesn't " +
-        "belong here.")
+        'belong here.')
     end
   end
 
@@ -382,14 +382,14 @@ class Story < ApplicationRecord
 
   def description_or_story_cache(chars = 0)
     s = if self.description.present?
-      self.markeddown_description.gsub(/<[^>]*>/, "")
+      self.markeddown_description.gsub(/<[^>]*>/, '')
     else
       self.story_cache
     end
 
     if chars > 0 && s.to_s.length > chars
       # remove last truncated word
-      s = s.to_s[0, chars].gsub(/ [^ ]*\z/, "")
+      s = s.to_s[0, chars].gsub(/ [^ ]*\z/, '')
     end
 
     HTMLEntities.new.decode(s.to_s)
@@ -408,13 +408,13 @@ class Story < ApplicationRecord
   def fix_bogus_chars
     # this is needlessly complicated to work around character encoding issues
     # that arise when doing just self.title.to_s.gsub(160.chr, "")
-    self.title = self.title.to_s.split("").map {|chr|
+    self.title = self.title.to_s.split('').map {|chr|
       if chr.ord == 160
-        " "
+        ' '
       else
         chr
       end
-    }.join("")
+    }.join('')
 
     true
   end
@@ -444,14 +444,14 @@ class Story < ApplicationRecord
   def html_class_for_user
     c = []
     if !self.user.is_active?
-      c.push "inactive_user"
+      c.push 'inactive_user'
     elsif self.user.is_new?
-      c.push "new_user"
+      c.push 'new_user'
     elsif self.user_is_author?
-      c.push "user_is_author"
+      c.push 'user_is_author'
     end
 
-    c.join("")
+    c.join('')
   end
 
   def is_downvotable?
@@ -517,7 +517,7 @@ class Story < ApplicationRecord
     end
 
     all_changes = self.changes.merge(self.tagging_changes)
-    all_changes.delete("unavailable_at")
+    all_changes.delete('unavailable_at')
 
     if !all_changes.any?
       return
@@ -531,23 +531,23 @@ class Story < ApplicationRecord
     end
     m.story_id = self.id
 
-    if all_changes["is_expired"] && self.is_expired?
-      m.action = "deleted story"
-    elsif all_changes["is_expired"] && !self.is_expired?
-      m.action = "undeleted story"
+    if all_changes['is_expired'] && self.is_expired?
+      m.action = 'deleted story'
+    elsif all_changes['is_expired'] && !self.is_expired?
+      m.action = 'undeleted story'
     else
       m.action = all_changes.map {|k, v|
-        if k == "merged_story_id"
+        if k == 'merged_story_id'
           if v[1]
             "merged into #{self.merged_into_story.short_id} " +
               "(#{self.merged_into_story.title})"
           else
-            "unmerged from another story"
+            'unmerged from another story'
           end
         else
           "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
         end
-      }.join(", ")
+      }.join(', ')
     end
 
     m.reason = self.moderation_reason
@@ -599,13 +599,13 @@ class Story < ApplicationRecord
   end
 
   def tagging_changes
-    old_tags_a = self.taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(" ")
-    new_tags_a = self.taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(" ")
+    old_tags_a = self.taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(' ')
+    new_tags_a = self.taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(' ')
 
     if old_tags_a == new_tags_a
       {}
     else
-      { "tags" => [old_tags_a, new_tags_a] }
+      { 'tags' => [old_tags_a, new_tags_a] }
     end
   end
 
@@ -621,7 +621,7 @@ class Story < ApplicationRecord
     end
 
     new_tag_names_a.uniq.each do |tag_name|
-      if tag_name.to_s != "" && !self.tags.exists?(:tag => tag_name)
+      if tag_name.to_s != '' && !self.tags.exists?(:tag => tag_name)
         if (t = Tag.active.find_by(:tag => tag_name))
           # we can't lookup whether the user is allowed to use this tag yet
           # because we aren't assured to have a user_id by now; we'll do it in
@@ -645,7 +645,7 @@ class Story < ApplicationRecord
 
     new_tag_names_a.each do |tag_name|
       # XXX: AR bug? st.exists?(:tag => tag_name) does not work
-      if tag_name.to_s != "" && !st.map {|x| x.tag.tag }.include?(tag_name)
+      if tag_name.to_s != '' && !st.map {|x| x.tag.tag }.include?(tag_name)
         if (t = Tag.active.find_by(:tag => tag_name)) &&
            t.valid_for?(user)
           tg = self.suggested_taggings.build
@@ -681,7 +681,7 @@ class Story < ApplicationRecord
                         "#{final_tags.inspect} instead of #{self.tags_a.inspect}"
       self.editor = nil
       self.editing_from_suggestions = true
-      self.moderation_reason = "Automatically changed from user suggestions"
+      self.moderation_reason = 'Automatically changed from user suggestions'
       self.tags_a = final_tags.sort
       if !self.save
         Rails.logger.error "[s#{self.id}] failed auto promoting: " +
@@ -712,7 +712,7 @@ class Story < ApplicationRecord
                           "#{kv[0].inspect} instead of #{self.title.inspect}"
         self.editor = nil
         self.editing_from_suggestions = true
-        self.moderation_reason = "Automatically changed from user suggestions"
+        self.moderation_reason = 'Automatically changed from user suggestions'
         self.title = kv[0]
         if !self.save
           Rails.logger.error "[s#{self.id}] failed auto promoting: " +
@@ -736,8 +736,8 @@ class Story < ApplicationRecord
 
     self.title
          .parameterize
-         .gsub(/[^a-z0-9]/, "_")
-         .split("_")
+         .gsub(/[^a-z0-9]/, '_')
+         .split('_')
          .reject {|z| TITLE_DROP_WORDS.include?(z) }
          .each do |w|
       if wl + w.length <= max_len
@@ -752,10 +752,10 @@ class Story < ApplicationRecord
     end
 
     if words.empty?
-      words.push "_"
+      words.push '_'
     end
 
-    words.join("_").gsub(/_-_/, "-")
+    words.join('_').gsub(/_-_/, '-')
   end
 
   def to_param
@@ -812,7 +812,7 @@ class Story < ApplicationRecord
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
       params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
-      u = match[1] << (params.any?? "?" + params.join("&") : "")
+      u = match[1] << (params.any?? '?' + params.join('&') : '')
     end
 
     super(u)
@@ -850,14 +850,14 @@ class Story < ApplicationRecord
     end
 
     r_counts.keys.sort.map {|k|
-      if k == ""
+      if k == ''
         "+#{r_counts[k]}"
       else
         "#{r_counts[k]} " +
           (Vote::STORY_REASONS[k] || Vote::OLD_STORY_REASONS[k] || k) +
-          (user && user.is_moderator? ? " (#{r_whos[k].join(', ')})" : "")
+          (user && user.is_moderator? ? " (#{r_whos[k].join(', ')})" : '')
       end
-    }.join(", ")
+    }.join(', ')
   end
 
   def fetched_attributes
@@ -865,7 +865,7 @@ class Story < ApplicationRecord
 
     @fetched_attributes = {
       :url => self.url,
-      :title => "",
+      :title => '',
     }
 
     # security: do not connect to arbitrary user-submitted ports
@@ -876,7 +876,7 @@ class Story < ApplicationRecord
         s = Sponge.new
         s.timeout = 3
         @fetched_content = s.fetch(self.url, :get, nil, nil, {
-          "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}",
+          'User-agent' => "#{Rails.application.domain} for #{self.fetching_ip}",
         }, 3)
       rescue
         return @fetched_attributes
@@ -888,31 +888,31 @@ class Story < ApplicationRecord
     # parse best title from html tags
     # try <meta property="og:title"> first, it probably won't have the site
     # name
-    title = ""
+    title = ''
     begin
       title = parsed.at_css("meta[property='og:title']")
-        .attributes["content"].text
+        .attributes['content'].text
     rescue
     end
 
     # then try <meta name="title">
-    if title.to_s == ""
+    if title.to_s == ''
       begin
-        title = parsed.at_css("meta[name='title']").attributes["content"].text
+        title = parsed.at_css("meta[name='title']").attributes['content'].text
       rescue
       end
     end
 
     # then try plain old <title>
-    if title.to_s == ""
-      title = parsed.at_css("title").try(:text).to_s
+    if title.to_s == ''
+      title = parsed.at_css('title').try(:text).to_s
     end
 
     # see if the site name is available, so we can strip it out in case it was
     # present in the fetched title
     begin
       site_name = parsed.at_css("meta[property='og:site_name']")
-        .attributes["content"].text
+        .attributes['content'].text
 
       if site_name.present? &&
          site_name.length < title.length &&
@@ -932,7 +932,7 @@ class Story < ApplicationRecord
     # now get canonical version of url (though some cms software puts incorrect
     # urls here, hopefully the user will notice)
     begin
-      if (cu = parsed.at_css("link[rel='canonical']").attributes["href"] .text).present? &&
+      if (cu = parsed.at_css("link[rel='canonical']").attributes['href'] .text).present? &&
          (ucu = URI.parse(cu)) && ucu.scheme.present? &&
          ucu.host.present?
         @fetched_attributes[:url] = cu

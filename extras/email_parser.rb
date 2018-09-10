@@ -23,7 +23,7 @@ class EmailParser
   end
 
   def user_token
-    @recipient.gsub(/^#{Rails.application.shortname}-/, "").gsub(/@.*/, "")
+    @recipient.gsub(/^#{Rails.application.shortname}-/, '').gsub(/@.*/, '')
   end
 
   def been_here?
@@ -33,7 +33,7 @@ class EmailParser
   def sending_user
     return @sending_user if @sending_user
 
-    if (user = User.where("mailing_list_mode > 0 AND mailing_list_token = ?", user_token).first) &&
+    if (user = User.where('mailing_list_mode > 0 AND mailing_list_token = ?', user_token).first) &&
        user.is_active?
       @sending_user = user
       return user
@@ -43,7 +43,7 @@ class EmailParser
   def parent
     return @parent if @parent
 
-    irt = self.email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, "")
+    irt = self.email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, '')
 
     if (m = irt.match(/^comment\.([^\.]+)\.\d+@/))
       @parent = Comment.where(:short_id => m[1]).first
@@ -68,7 +68,7 @@ class EmailParser
         @body = found.first.body.to_s
 
         begin
-          @possible_charset = parts.first.content_type_parameters["charset"]
+          @possible_charset = parts.first.content_type_parameters['charset']
         rescue
         end
 
@@ -77,7 +77,7 @@ class EmailParser
         @body = found.first.body.to_s
 
         begin
-          @possible_charset = p.first.content_type_parameters["charset"]
+          @possible_charset = p.first.content_type_parameters['charset']
         rescue
         end
       end
@@ -87,7 +87,7 @@ class EmailParser
       @body = self.email.body.to_s
 
       begin
-        @possible_charset = self.email.content_type_parameters["charset"]
+        @possible_charset = self.email.content_type_parameters['charset']
       rescue
       end
 
@@ -100,11 +100,11 @@ class EmailParser
     # email_text to utf8 screw this up already?
 
     # try to remove sig lines
-    @body.gsub!(/^-- \n.+\z/m, "")
+    @body.gsub!(/^-- \n.+\z/m, '')
 
     # try to strip out attribution line, followed by an optional blank line,
     # and then lines prefixed with >
-    @body.gsub!(/^(On|on|at) .*\n\n?(>.*\n)+/, "")
+    @body.gsub!(/^(On|on|at) .*\n\n?(>.*\n)+/, '')
 
     @body.strip!
   end

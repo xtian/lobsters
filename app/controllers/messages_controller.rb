@@ -10,8 +10,8 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @cur_url = "/messages"
-        @title = "Messages"
+        @cur_url = '/messages'
+        @title = 'Messages'
 
         @new_message = Message.new
 
@@ -32,14 +32,14 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @cur_url = "/messages"
-        @title = "Messages Sent"
+        @cur_url = '/messages'
+        @title = 'Messages Sent'
 
         @direction = :out
 
         @new_message = Message.new
 
-        render :action => "index"
+        render :action => 'index'
       }
       format.json {
         render :json => @messages
@@ -48,8 +48,8 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @cur_url = "/messages"
-    @title = "Messages"
+    @cur_url = '/messages'
+    @title = 'Messages'
 
     @new_message = Message.new(message_params)
     @new_message.author_user_id = @user.id
@@ -61,16 +61,16 @@ class MessagesController < ApplicationController
       if @user.is_moderator? && @new_message.mod_note
         ModNote.create_from_message(@new_message, @user)
       end
-      flash[:success] = "Your message has been sent to " +
-                        @new_message.recipient.username.to_s << "."
-      return redirect_to "/messages"
+      flash[:success] = 'Your message has been sent to ' +
+                        @new_message.recipient.username.to_s << '.'
+      return redirect_to '/messages'
     else
-      render :action => "index"
+      render :action => 'index'
     end
   end
 
   def show
-    @cur_url = "/messages"
+    @cur_url = '/messages'
     @title = @message.subject
 
     if @message.author
@@ -102,12 +102,12 @@ class MessagesController < ApplicationController
 
     @message.save!
 
-    flash[:success] = "Deleted message."
+    flash[:success] = 'Deleted message.'
 
     if @message.author_user_id == @user.id
-      return redirect_to "/messages/sent"
+      return redirect_to '/messages/sent'
     else
-      return redirect_to "/messages"
+      return redirect_to '/messages'
     end
   end
 
@@ -115,7 +115,7 @@ class MessagesController < ApplicationController
     deleted = 0
 
     params.each do |k, v|
-      if (v.to_s == "1") && (m = k.match(/^delete_(.+)$/))
+      if (v.to_s == '1') && (m = k.match(/^delete_(.+)$/))
         if (message = Message.where(:short_id => m[1]).first)
           ok = false
           if message.author_user_id == @user.id
@@ -139,14 +139,14 @@ class MessagesController < ApplicationController
 
     @user.update_unread_message_count!
 
-    return redirect_to "/messages"
+    return redirect_to '/messages'
   end
 
   def keep_as_new
     @message.has_been_read = false
     @message.save
 
-    return redirect_to "/messages"
+    return redirect_to '/messages'
   end
 
   def mod_note
@@ -171,8 +171,8 @@ private
       end
     end
 
-    flash[:error] = "Could not find message."
-    redirect_to "/messages"
+    flash[:error] = 'Could not find message.'
+    redirect_to '/messages'
     return false
   end
 end

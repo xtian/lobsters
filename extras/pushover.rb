@@ -15,12 +15,12 @@ class Pushover
     end
 
     begin
-      if params[:message].to_s == ""
-        params[:message] = "(No message)"
+      if params[:message].to_s == ''
+        params[:message] = '(No message)'
       end
 
       s = Sponge.new
-      s.fetch("https://api.pushover.net/1/messages.json", :post, {
+      s.fetch('https://api.pushover.net/1/messages.json', :post, {
         :token => self.API_TOKEN,
         :user => user,
       }.merge(params))

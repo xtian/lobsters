@@ -4,7 +4,7 @@ class ModerationsController < ApplicationController
   ENTRIES_PER_PAGE = 50
 
   def index
-    @title = "Moderation Log"
+    @title = 'Moderation Log'
     @moderators = ['(All)', '(Users)'] + User.moderators.map(&:username)
 
     @moderator = params.fetch('moderator', '(All)')
@@ -23,7 +23,7 @@ class ModerationsController < ApplicationController
     when '(All)'
       @moderations
     when '(Users)'
-      @moderations.where("is_from_suggestions = true")
+      @moderations.where('is_from_suggestions = true')
     else
       @moderations.joins(:moderator).where(:users => { :username => @moderator })
     end
@@ -40,12 +40,12 @@ class ModerationsController < ApplicationController
     if @page == 0
       @page = 1
     elsif @page < 0 || @page > (2 ** 32) || @page > @pages
-      raise ActionController::RoutingError.new("page out of bounds")
+      raise ActionController::RoutingError.new('page out of bounds')
     end
 
     @moderations = @moderations
                      .offset((@page - 1) * ENTRIES_PER_PAGE)
-                     .order("moderations.created_at desc")
+                     .order('moderations.created_at desc')
                      .limit(ENTRIES_PER_PAGE)
   end
 end

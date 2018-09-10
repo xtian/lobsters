@@ -7,7 +7,7 @@ class RepliesController < ApplicationController
   after_action :update_read_ribbons, only: [:unread]
 
   def all
-    @heading = @title = "All Your Replies"
+    @heading = @title = 'All Your Replies'
     @replies = ReplyingComment
                  .for_user(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
@@ -17,7 +17,7 @@ class RepliesController < ApplicationController
   end
 
   def comments
-    @heading = @title = "Your Comment Replies"
+    @heading = @title = 'Your Comment Replies'
     @replies = ReplyingComment
                  .comment_replies_for(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
@@ -27,7 +27,7 @@ class RepliesController < ApplicationController
   end
 
   def stories
-    @heading = @title = "Your Story Replies"
+    @heading = @title = 'Your Story Replies'
     @replies = ReplyingComment
                  .story_replies_for(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
@@ -37,7 +37,7 @@ class RepliesController < ApplicationController
   end
 
   def unread
-    @heading = @title = "Your Unread Replies"
+    @heading = @title = 'Your Unread Replies'
     @replies = ReplyingComment.unread_replies_for(@user.id)
     apply_current_vote
     render :show
@@ -62,7 +62,7 @@ private
     if @page == 0
       @page = 1
     elsif @page < 0 || @page > (2 ** 32)
-      raise ActionController::RoutingError.new("page out of bounds")
+      raise ActionController::RoutingError.new('page out of bounds')
     end
   end
 

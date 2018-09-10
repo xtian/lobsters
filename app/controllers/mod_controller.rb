@@ -11,7 +11,7 @@ class ModController < ApplicationController
   def index
     @moderations = Moderation.all
       .eager_load(:moderator, :story, :comment, :tag, :user)
-      .where("moderator_user_id != ? or moderator_user_id is null", @user.id)
+      .where('moderator_user_id != ? or moderator_user_id is null', @user.id)
       .where('moderations.created_at >= (NOW() - INTERVAL 1 MONTH)')
       .order('moderations.id desc')
   end
@@ -19,8 +19,8 @@ class ModController < ApplicationController
   def flagged
     @stories = period(Story.base
       .includes(:user, :suggested_titles, :suggested_taggings, :tags)
-      .where("downvotes > 1")
-      .order("stories.id DESC"))
+      .where('downvotes > 1')
+      .order('stories.id DESC'))
   end
 
   def downvoted
@@ -30,7 +30,7 @@ class ModController < ApplicationController
                 votes.comment_id = comments.id and
                 vote < 0 and
                 votes.reason != 'M') > 2") # Me-Too comments rarely need attention
-      .order("comments.id DESC"))
+      .order('comments.id DESC'))
   end
 
   def commenters

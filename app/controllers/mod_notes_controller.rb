@@ -11,7 +11,7 @@ class ModNotesController < ModController
         @notes = query.where(user: user)
       else
         @notes = []
-        flash[:error] = "User not found"
+        flash[:error] = 'User not found'
       end
     else
       @notes = period(query)
@@ -26,7 +26,7 @@ class ModNotesController < ModController
     else
       # This is bad and needs to change if note ever has non-trivial validation
       redirect_to user_path(@mod_note.user),
-                  error: "Invalid note and Peter half-assed the error handling"
+                  error: 'Invalid note and Peter half-assed the error handling'
     end
   end
 

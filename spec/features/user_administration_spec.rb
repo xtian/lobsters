@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature "User Administration" do
+RSpec.feature 'User Administration' do
   let(:admin) { create(:user, :admin) }
   let(:user) { create(:user) }
   let(:banned) { create(:user, :banned, banner: admin) }
@@ -49,7 +49,7 @@ RSpec.feature "User Administration" do
     expect(Moderation.order('id asc').last.reason).to eq('Spammer')
   end
 
-  scenario "unbanning" do
+  scenario 'unbanning' do
     expect(banned.is_banned?).to be(true)
     visit user_path(banned)
     click_on 'Unban'

@@ -14,13 +14,13 @@ class LoginController < ApplicationController
       reset_session
     end
 
-    redirect_to "/"
+    redirect_to '/'
   end
 
   def index
-    @title = "Login"
+    @title = 'Login'
     @referer ||= request.referer
-    render :action => "index"
+    render :action => 'index'
   end
 
   def login
@@ -56,7 +56,7 @@ class LoginController < ApplicationController
 
       if user.has_2fa? && !Rails.env.development?
         session[:twofa_u] = user.session_token
-        return redirect_to "/login/2fa"
+        return redirect_to '/login/2fa'
       end
 
       session[:u] = user.session_token
@@ -75,15 +75,15 @@ class LoginController < ApplicationController
         end
       end
 
-      return redirect_to "/"
+      return redirect_to '/'
     rescue LoginBannedError
-      fail_reason = "Your account has been banned."
+      fail_reason = 'Your account has been banned.'
     rescue LoginDeletedError
-      fail_reason = "Your account has been deleted."
+      fail_reason = 'Your account has been deleted.'
     rescue LoginTOTPFailedError
-      fail_reason = "Your TOTP code was invalid."
+      fail_reason = 'Your TOTP code was invalid.'
     rescue LoginFailedError
-      fail_reason = "Invalid e-mail address and/or password."
+      fail_reason = 'Invalid e-mail address and/or password.'
     end
 
     flash.now[:error] = fail_reason
@@ -92,26 +92,26 @@ class LoginController < ApplicationController
   end
 
   def forgot_password
-    @title = "Reset Password"
-    render :action => "forgot_password"
+    @title = 'Reset Password'
+    render :action => 'forgot_password'
   end
 
   def reset_password
-    @found_user = User.where("email = ? OR username = ?", params[:email], params[:email]).first
+    @found_user = User.where('email = ? OR username = ?', params[:email], params[:email]).first
 
     if !@found_user
-      flash.now[:error] = "Invalid e-mail address or username."
+      flash.now[:error] = 'Invalid e-mail address or username.'
       return forgot_password
     end
 
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
-    flash.now[:success] = "Password reset instructions have been e-mailed to you."
+    flash.now[:success] = 'Password reset instructions have been e-mailed to you.'
     return index
   end
 
   def set_new_password
-    @title = "Reset Password"
+    @title = 'Reset Password'
 
     if (m = params[:token].to_s.match(/^(\d+)-/)) &&
        (Time.current - Time.zone.at(m[1].to_i)) < 24.hours
@@ -133,19 +133,19 @@ class LoginController < ApplicationController
 
         if @reset_user.save && @reset_user.is_active?
           if @reset_user.has_2fa?
-            flash[:success] = "Your password has been reset."
-            return redirect_to "/login"
+            flash[:success] = 'Your password has been reset.'
+            return redirect_to '/login'
           else
             session[:u] = @reset_user.session_token
-            return redirect_to "/"
+            return redirect_to '/'
           end
         else
-          flash[:error] = "Could not reset password."
+          flash[:error] = 'Could not reset password.'
         end
       end
     else
-      flash[:error] = "Invalid reset token.  It may have already been " +
-                      "used or you may have copied it incorrectly."
+      flash[:error] = 'Invalid reset token.  It may have already been ' +
+                      'used or you may have copied it incorrectly.'
       return redirect_to forgot_password_path
     end
   end
@@ -156,7 +156,7 @@ class LoginController < ApplicationController
                         "(#{tmpu.username}), verifying TOTP"
     else
       reset_session
-      return redirect_to "/login"
+      return redirect_to '/login'
     end
   end
 
@@ -164,10 +164,10 @@ class LoginController < ApplicationController
     if (tmpu = find_twofa_user) && tmpu.authenticate_totp(params[:totp_code])
       session[:u] = tmpu.session_token
       session.delete(:twofa_u)
-      return redirect_to "/"
+      return redirect_to '/'
     else
-      flash[:error] = "Your TOTP code did not match.  Please try again."
-      return redirect_to "/login/2fa"
+      flash[:error] = 'Your TOTP code did not match.  Please try again.'
+      return redirect_to '/login/2fa'
     end
   end
 

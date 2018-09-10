@@ -12,7 +12,7 @@ module StoriesHelper
 
     if Moderation.joins(:story)
                  .where(
-                   "stories.user_id = ? AND moderations.created_at > ?",
+                   'stories.user_id = ? AND moderations.created_at > ?',
                    @user.id,
                    5.days.ago
                  ).exists?

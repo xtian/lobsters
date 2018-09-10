@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Keystore < ApplicationRecord
-  self.primary_key = "key"
+  self.primary_key = 'key'
 
   validates :key, presence: true
 
@@ -14,8 +14,8 @@ class Keystore < ApplicationRecord
   end
 
   def self.put(key, value)
-    if Keystore.connection.adapter_name == "SQLite"
-      Keystore.connection.execute("INSERT OR REPLACE INTO " +
+    if Keystore.connection.adapter_name == 'SQLite'
+      Keystore.connection.execute('INSERT OR REPLACE INTO ' +
         "#{Keystore.table_name} (`key`, `value`) VALUES " +
         "(#{q(key)}, #{q(value)})")
     elsif Keystore.connection.adapter_name.match?(/Mysql/)
@@ -37,8 +37,8 @@ class Keystore < ApplicationRecord
 
   def self.incremented_value_for(key, amount = 1)
     Keystore.transaction do
-      if Keystore.connection.adapter_name == "SQLite"
-        Keystore.connection.execute("INSERT OR IGNORE INTO " +
+      if Keystore.connection.adapter_name == 'SQLite'
+        Keystore.connection.execute('INSERT OR IGNORE INTO ' +
           "#{Keystore.table_name} (`key`, `value`) VALUES " +
           "(#{q(key)}, 0)")
         Keystore.connection.execute("UPDATE #{Keystore.table_name} " +

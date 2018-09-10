@@ -2,7 +2,7 @@
 
 class Utils
   def self.random_str(len)
-    str = ""
+    str = ''
     while str.length < len
       chr = OpenSSL::Random.random_bytes(1)
       ord = chr.unpack1('C')
@@ -19,7 +19,7 @@ class Utils
   def self.silence_stream(*streams)
     on_hold = streams.collect(&:dup)
     streams.each do |stream|
-      stream.reopen("/dev/null")
+      stream.reopen('/dev/null')
       stream.sync = true
     end
     yield

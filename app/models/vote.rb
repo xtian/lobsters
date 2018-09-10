@@ -6,22 +6,22 @@ class Vote < ApplicationRecord
   belongs_to :comment, required: false
 
   COMMENT_REASONS = {
-    "O" => "Off-topic",
-    "I" => "Incorrect",
-    "M" => "Me-too",
-    "T" => "Troll",
-    "S" => "Spam",
-    "" => "Cancel",
+    'O' => 'Off-topic',
+    'I' => 'Incorrect',
+    'M' => 'Me-too',
+    'T' => 'Troll',
+    'S' => 'Spam',
+    '' => 'Cancel',
   }.freeze
 
   STORY_REASONS = {
-    "O" => "Off-topic",
-    "A" => "Already Posted",
-    "S" => "Spam",
-    "" => "Cancel",
+    'O' => 'Off-topic',
+    'A' => 'Already Posted',
+    'S' => 'Spam',
+    '' => 'Cancel',
   }.freeze
   OLD_STORY_REASONS = {
-    "Q" => "Low Quality",
+    'Q' => 'Low Quality',
   }.freeze
 
   def self.votes_by_user_for_stories_hash(user, stories)
@@ -41,7 +41,7 @@ class Vote < ApplicationRecord
     Vote.where(
       :user_id => user_id, :story_id => story_id
     ).where(
-      "comment_id IS NOT NULL"
+      'comment_id IS NOT NULL'
     ).find_each do |v|
       votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
     end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "uri"
-require "net/https"
-require "resolv"
-require "ipaddr"
+require 'uri'
+require 'net/https'
+require 'resolv'
+require 'ipaddr'
 
 module Net
   class HTTP
@@ -25,7 +25,7 @@ module Net
   private
 
     def conn_address
-      if self.custom_conn_address.to_s != ""
+      if self.custom_conn_address.to_s != ''
         self.custom_conn_address
       else
         address
@@ -42,23 +42,23 @@ class Sponge
 
   # rfc3330
   BAD_NETS = [
-    "0.0.0.0/8",
-    "10.0.0.0/8",
-    "127.0.0.0/8",
-    "169.254.0.0/16",
-    "172.16.0.0/12",
-    "192.0.2.0/24",
-    "192.88.99.0/24",
-    "192.168.0.0/16",
-    "198.18.0.0/15",
-    "224.0.0.0/4",
-    "240.0.0.0/4",
+    '0.0.0.0/8',
+    '10.0.0.0/8',
+    '127.0.0.0/8',
+    '169.254.0.0/16',
+    '172.16.0.0/12',
+    '192.0.2.0/24',
+    '192.88.99.0/24',
+    '192.168.0.0/16',
+    '198.18.0.0/15',
+    '224.0.0.0/4',
+    '240.0.0.0/4',
   ].freeze
 
   # old api
   def self.fetch(url, headers = {}, limit = 10)
     s = Sponge.new
-    s.fetch(url, "get", nil, nil, headers, limit)
+    s.fetch(url, 'get', nil, nil, headers, limit)
   end
 
   def initialize
@@ -73,7 +73,7 @@ class Sponge
       @cookies[host] = {}
     end
 
-    if val.to_s == ""
+    if val.to_s == ''
       @cookies[host][name] ? @cookies[host][name].delete : nil
     else
       @cookies[host][name] = val
@@ -92,14 +92,14 @@ class Sponge
     end
 
     if cooks
-      return cooks.map {|k, v| "#{k}=#{v};" }.join(" ")
+      return cooks.map {|k, v| "#{k}=#{v};" }.join(' ')
     else
-      return ""
+      return ''
     end
   end
 
   def fetch(url, method = :get, fields = nil, raw_post_data = nil, headers = {}, limit = 10)
-    raise ArgumentError.new("http redirection too deep") if limit <= 0
+    raise ArgumentError.new('http redirection too deep') if limit <= 0
 
     uri = URI.parse(url)
 
@@ -148,7 +148,7 @@ class Sponge
       host.set_debug_output $stdout
     end
 
-    if uri.scheme == "https"
+    if uri.scheme == 'https'
       host.use_ssl = true
       host.address = uri.host
       host.custom_conn_address = ip.to_s
@@ -157,40 +157,40 @@ class Sponge
 
     send_headers = headers.dup
 
-    path = (uri.path == "" ? "/" : uri.path)
+    path = (uri.path == '' ? '/' : uri.path)
     if uri.query
-      path += "?" + uri.query
+      path += '?' + uri.query
     elsif method == :get && raw_post_data
-      path += "?" + URI.encode_www_form(raw_post_data)
-      send_headers["Content-type"] = "application/x-www-form-urlencoded"
+      path += '?' + URI.encode_www_form(raw_post_data)
+      send_headers['Content-type'] = 'application/x-www-form-urlencoded'
     end
 
     if method == :post
       if raw_post_data
         post_data = raw_post_data
-        send_headers["Content-type"] = "application/x-www-form-urlencoded"
+        send_headers['Content-type'] = 'application/x-www-form-urlencoded'
       else
-        post_data = fields.map {|k, v| "#{k}=#{v}" }.join("&")
+        post_data = fields.map {|k, v| "#{k}=#{v}" }.join('&')
       end
 
-      send_headers["Content-Length"] = post_data.length.to_s
+      send_headers['Content-Length'] = post_data.length.to_s
     end
 
-    path.gsub!(/^\/\//, "/")
+    path.gsub!(/^\/\//, '/')
 
     dputs "fetching #{url} (#{ip}) " +
-          (uri.user ? "with http auth " + uri.user + "/" + ("*" * uri.password.length) + " " : "") +
+          (uri.user ? 'with http auth ' + uri.user + '/' + ('*' * uri.password.length) + ' ' : '') +
           "by #{method} with cookies #{cookies(uri.host)}"
 
     send_headers = {
-      "Host" => uri.host,
-      "Cookie" => cookies(uri.host),
-      "Referer" => url.to_s,
-      "User-Agent" => "Mozilla/5.0 (compatible)",
+      'Host' => uri.host,
+      'Cookie' => cookies(uri.host),
+      'Referer' => url.to_s,
+      'User-Agent' => 'Mozilla/5.0 (compatible)',
     }.merge(send_headers || {})
 
     if uri.user
-      send_headers["Authorization"] = "Basic " +
+      send_headers['Authorization'] = 'Basic ' +
                                       ["#{uri.user}:#{uri.password}"].pack('m').delete("\r\n")
     end
 
@@ -208,8 +208,8 @@ class Sponge
       return nil
     end
 
-    if res.get_fields("Set-Cookie")
-      res.get_fields("Set-Cookie").each do |cook|
+    if res.get_fields('Set-Cookie')
+      res.get_fields('Set-Cookie').each do |cook|
         if (p = Regexp.new(/^([^=]+)=([^;]*)/).match(cook))
           set_cookie(uri.host, p[1], p[2])
         else
@@ -223,9 +223,9 @@ class Sponge
       return res.body
     when Net::HTTPRedirection
       # follow
-      newuri = URI.parse(res["location"])
+      newuri = URI.parse(res['location'])
       if newuri.host
-        dputs "following redirection to " + res["location"]
+        dputs 'following redirection to ' + res['location']
       else
         # relative path
         newuri.host = uri.host
@@ -233,19 +233,19 @@ class Sponge
         newuri.port = uri.port
         newuri.path = "/#{newuri.path}"
 
-        dputs "following relative redirection to " + newuri.to_s
+        dputs 'following relative redirection to ' + newuri.to_s
       end
 
-      fetch(newuri.to_s, "get", nil, nil, headers, limit - 1)
+      fetch(newuri.to_s, 'get', nil, nil, headers, limit - 1)
     end
   end
 
   def get(url)
-    fetch(url, "get")
+    fetch(url, 'get')
   end
 
   def post(url, fields)
-    fetch(url, "post", fields)
+    fetch(url, 'post', fields)
   end
 
 private

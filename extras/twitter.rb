@@ -26,12 +26,12 @@ class Twitter
   end
 
   def self.oauth_consumer
-    OAuth::Consumer.new(self.CONSUMER_KEY, self.CONSUMER_SECRET, :site => "https://api.twitter.com")
+    OAuth::Consumer.new(self.CONSUMER_KEY, self.CONSUMER_SECRET, :site => 'https://api.twitter.com')
   end
 
   def self.oauth_request(req, method = :get, post_data = nil)
     if !self.AUTH_TOKEN
-      raise "no auth token configured"
+      raise 'no auth token configured'
     end
 
     begin
@@ -47,10 +47,10 @@ class Twitter
         end
 
         if res.class == Net::HTTPUnauthorized
-          raise "not authorized"
+          raise 'not authorized'
         end
 
-        if res.body.to_s == ""
+        if res.body.to_s == ''
           raise res.inspect
         else
           return JSON.parse(res.body)
@@ -63,14 +63,14 @@ class Twitter
     rt = OAuth::RequestToken.from_hash(self.oauth_consumer, :oauth_token => tok)
     at = rt.get_access_token(:oauth_verifier => verifier)
 
-    res = at.get("/1.1/account/verify_credentials.json")
+    res = at.get('/1.1/account/verify_credentials.json')
     js = JSON.parse(res.body)
 
-    if js["screen_name"].blank?
+    if js['screen_name'].blank?
       return nil
     end
 
-    [at.token, at.secret, js["screen_name"]]
+    [at.token, at.secret, js['screen_name']]
   end
 
   def self.oauth_request_token(state)

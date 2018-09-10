@@ -15,7 +15,7 @@ class InvitationRequest < ApplicationRecord
   def create_code
     (1...10).each do |tries|
       if tries == 10
-        raise "too many hash collisions"
+        raise 'too many hash collisions'
       end
 
       self.code = Utils.random_str(15)

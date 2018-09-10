@@ -12,47 +12,47 @@ class HomeController < ApplicationController
 
   def four_oh_four
     begin
-      @title = "Resource Not Found"
-      render :action => "404", :status => :not_found
+      @title = 'Resource Not Found'
+      render :action => '404', :status => :not_found
     rescue ActionView::MissingTemplate
-      render :html => ("<div class=\"box wide\">" +
-        "<div class=\"legend\">404</div>" +
-        "Resource not found" +
-        "</div>").html_safe, :layout => "application"
+      render :html => ('<div class="box wide">' +
+        '<div class="legend">404</div>' +
+        'Resource not found' +
+        '</div>').html_safe, :layout => 'application'
     end
   end
 
   def about
     begin
-      @title = "About"
-      render :action => "about"
+      @title = 'About'
+      render :action => 'about'
     rescue ActionView::MissingTemplate
-      render :html => ("<div class=\"box wide\">" +
-        "A mystery." +
-        "</div>").html_safe, :layout => "application"
+      render :html => ('<div class="box wide">' +
+        'A mystery.' +
+        '</div>').html_safe, :layout => 'application'
     end
   end
 
   def chat
     begin
-      @title = "Chat"
-      render :action => "chat"
+      @title = 'Chat'
+      render :action => 'chat'
     rescue ActionView::MissingTemplate
-      render :html => ("<div class=\"box wide\">" +
-        "<div class=\"legend\">Chat</div>" +
-        "Keep it on-site" +
-        "</div>").html_safe, :layout => "application"
+      render :html => ('<div class="box wide">' +
+        '<div class="legend">Chat</div>' +
+        'Keep it on-site' +
+        '</div>').html_safe, :layout => 'application'
     end
   end
 
   def privacy
     begin
-      @title = "Privacy"
-      render :action => "privacy"
+      @title = 'Privacy'
+      render :action => 'privacy'
     rescue ActionView::MissingTemplate
-      render :html => ("<div class=\"box wide\">" +
-                      "You apparently have no privacy." +
-                      "</div>").html_safe, :layout => "application"
+      render :html => ('<div class="box wide">' +
+                      'You apparently have no privacy.' +
+                      '</div>').html_safe, :layout => 'application'
     end
   end
 
@@ -61,10 +61,10 @@ class HomeController < ApplicationController
       paginate stories.hidden
     }
 
-    @heading = @title = "Hidden Stories"
-    @cur_url = "/hidden"
+    @heading = @title = 'Hidden Stories'
+    @cur_url = '/hidden'
 
-    render :action => "index"
+    render :action => 'index'
   end
 
   def index
@@ -73,26 +73,26 @@ class HomeController < ApplicationController
     }
 
     @rss_link ||= {
-      :title => "RSS 2.0",
-      :href => user_token_link("/rss"),
+      :title => 'RSS 2.0',
+      :href => user_token_link('/rss'),
     }
     @comments_rss_link ||= {
-      :title => "Comments - RSS 2.0",
-      :href => user_token_link("/comments.rss"),
+      :title => 'Comments - RSS 2.0',
+      :href => user_token_link('/comments.rss'),
     }
 
-    @heading = @title = ""
-    @cur_url = "/"
+    @heading = @title = ''
+    @cur_url = '/'
 
     respond_to do |format|
-      format.html { render :action => "index" }
+      format.html { render :action => 'index' }
       format.rss {
         if @user
           @title = "Private feed for #{@user.username}"
-          render :action => "rss", :layout => false
+          render :action => 'rss', :layout => false
         else
-          content = Rails.cache.fetch("rss", :expires_in => (60 * 2)) {
-            render_to_string :action => "rss", :layout => false
+          content = Rails.cache.fetch('rss', :expires_in => (60 * 2)) {
+            render_to_string :action => 'rss', :layout => false
           }
           render :plain => content, :layout => false
         end
@@ -106,22 +106,22 @@ class HomeController < ApplicationController
       paginate stories.newest
     }
 
-    @heading = @title = "Newest Stories"
-    @cur_url = "/newest"
+    @heading = @title = 'Newest Stories'
+    @cur_url = '/newest'
 
     @rss_link = {
-      :title => "RSS 2.0 - Newest Items",
-      :href => user_token_link("/newest.rss"),
+      :title => 'RSS 2.0 - Newest Items',
+      :href => user_token_link('/newest.rss'),
     }
 
     respond_to do |format|
-      format.html { render :action => "index" }
+      format.html { render :action => 'index' }
       format.rss {
         if @user && params[:token].present?
           @title += " - Private feed for #{@user.username}"
         end
 
-        render :action => "rss", :layout => false
+        render :action => 'rss', :layout => false
       }
       format.json { render :json => @stories }
     end
@@ -141,9 +141,9 @@ class HomeController < ApplicationController
     @for_user = by_user.username
 
     respond_to do |format|
-      format.html { render :action => "index" }
+      format.html { render :action => 'index' }
       format.rss {
-        render :action => "rss", :layout => false
+        render :action => 'rss', :layout => false
       }
       format.json { render :json => @stories }
     end
@@ -154,13 +154,13 @@ class HomeController < ApplicationController
       paginate Story.recent(@user, filtered_tag_ids)
     }
 
-    @heading = @title = "Recent Stories"
-    @cur_url = "/recent"
+    @heading = @title = 'Recent Stories'
+    @cur_url = '/recent'
 
     # our list is unstable because upvoted stories get removed, so point at /newest.rss
-    @rss_link = { :title => "RSS 2.0 - Newest Items", :href => user_token_link("/newest.rss") }
+    @rss_link = { :title => 'RSS 2.0 - Newest Items', :href => user_token_link('/newest.rss') }
 
-    render :action => "index"
+    render :action => 'index'
   end
 
   def saved
@@ -169,20 +169,20 @@ class HomeController < ApplicationController
     }
 
     @rss_link ||= {
-      :title => "RSS 2.0",
-      :href => user_token_link("/saved.rss"),
+      :title => 'RSS 2.0',
+      :href => user_token_link('/saved.rss'),
     }
 
-    @heading = @title = "Saved Stories"
-    @cur_url = "/saved"
+    @heading = @title = 'Saved Stories'
+    @cur_url = '/saved'
 
     respond_to do |format|
-      format.html { render :action => "index" }
+      format.html { render :action => 'index' }
       format.rss {
         if @user
           @title = "Private feed of saved stories for #{@user.username}"
         end
-        render :action => "rss", :layout => false
+        render :action => 'rss', :layout => false
       }
       format.json { render :json => @stories }
     end
@@ -205,14 +205,14 @@ class HomeController < ApplicationController
     }
 
     respond_to do |format|
-      format.html { render :action => "index" }
-      format.rss { render :action => "rss", :layout => false }
+      format.html { render :action => 'index' }
+      format.rss { render :action => 'rss', :layout => false }
       format.json { render :json => @stories }
     end
   end
 
   def top
-    @cur_url = "/top"
+    @cur_url = '/top'
     length = time_interval(params[:length])
     @cur_url << "/#{params[:length]}"
 
@@ -222,12 +222,12 @@ class HomeController < ApplicationController
 
     if length[:dur] > 1
       @heading = @title = "Top Stories of the Past #{length[:dur]} " +
-                          length[:intv] << "s"
+                          length[:intv] << 's'
     else
-      @heading = @title = "Top Stories of the Past " + length[:intv]
+      @heading = @title = 'Top Stories of the Past ' + length[:intv]
     end
 
-    render :action => "index"
+    render :action => 'index'
   end
 
   def upvoted
@@ -235,22 +235,22 @@ class HomeController < ApplicationController
       paginate @user.upvoted_stories.order('votes.id DESC')
     }
 
-    @heading = @title = "Your Upvoted Stories"
-    @cur_url = "/upvoted"
+    @heading = @title = 'Your Upvoted Stories'
+    @cur_url = '/upvoted'
 
     @rss_link = {
-      :title => "RSS 2.0 - Your Upvoted Stories",
-      :href => user_token_link("/upvoted.rss"),
+      :title => 'RSS 2.0 - Your Upvoted Stories',
+      :href => user_token_link('/upvoted.rss'),
     }
 
     respond_to do |format|
-      format.html { render :action => "index" }
+      format.html { render :action => 'index' }
       format.rss {
         if @user && params[:token].present?
           @title += " - Private feed for #{@user.username}"
         end
 
-        render :action => "rss", :layout => false
+        render :action => 'rss', :layout => false
       }
       format.json { render :json => @stories }
     end
@@ -275,7 +275,7 @@ private
     if p == 0
       p = 1
     elsif p < 0 || p > (2 ** 32)
-      raise ActionController::RoutingError.new("page out of bounds")
+      raise ActionController::RoutingError.new('page out of bounds')
     end
     p
   end
@@ -288,7 +288,7 @@ private
     if Rails.env.development? || @user || tags_filtered_by_cookie.any?
       yield
     else
-      key = opts.merge(page: page).sort.map {|k, v| "#{k}=#{v.to_param}" }.join(" ")
+      key = opts.merge(page: page).sort.map {|k, v| "#{k}=#{v.to_param}" }.join(' ')
       begin
         Rails.cache.fetch("stories #{key}", :expires_in => 45, &block)
       rescue Errno::ENOENT => e

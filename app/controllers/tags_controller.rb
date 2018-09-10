@@ -4,20 +4,20 @@ class TagsController < ApplicationController
   before_action :require_logged_in_admin, except: [:index]
 
   def index
-    @cur_url = "/tags"
-    @title = "Tags"
+    @cur_url = '/tags'
+    @title = 'Tags'
 
     @tags = Tag.all_with_story_counts_for(nil)
 
     respond_to do |format|
-      format.html { render :action => "index" }
+      format.html { render :action => 'index' }
       format.json { render :json => @tags }
     end
   end
 
   def new
     @tag = Tag.new
-    @title = "Create Tag"
+    @title = 'Create Tag'
   end
 
   def create
@@ -33,7 +33,7 @@ class TagsController < ApplicationController
 
   def edit
     @tag = Tag.find(params[:id])
-    @title = "Edit Tag"
+    @title = 'Edit Tag'
   end
 
   def update

@@ -30,7 +30,7 @@ class CommentsController < ApplicationController
         .first)
         comment.parent_comment = pc
       else
-        return render :json => { :error => "invalid parent comment", :status => :bad_request }
+        return render :json => { :error => 'invalid parent comment', :status => :bad_request }
       end
     end
 
@@ -40,11 +40,11 @@ class CommentsController < ApplicationController
                            :user_id => @user.id,
                            :parent_comment_id => comment.parent_comment_id).first)
       if (Time.current - pc.created_at) < 5.minutes && !@user.is_moderator?
-        comment.errors.add(:comment, "^You have already posted a comment " +
-          "here recently.")
+        comment.errors.add(:comment, '^You have already posted a comment ' +
+          'here recently.')
 
-        return render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => { :comment => comment }
+        return render :partial => 'commentbox', :layout => false,
+          :content_type => 'text/html', :locals => { :comment => comment }
       end
     end
 
@@ -52,8 +52,8 @@ class CommentsController < ApplicationController
       comment.current_vote = { :vote => 1 }
 
       if request.xhr?
-        render :partial => "comments/postedreply", :layout => false,
-          :content_type => "text/html", :locals => { :comment => comment }
+        render :partial => 'comments/postedreply', :layout => false,
+          :content_type => 'text/html', :locals => { :comment => comment }
       else
         redirect_to comment.path
       end
@@ -70,9 +70,9 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => :bad_request
     end
 
-    render :partial => "comment",
+    render :partial => 'comment',
            :layout => false,
-           :content_type => "text/html",
+           :content_type => 'text/html',
            :locals => {
              :comment => comment,
              :show_tree_lines => params[:show_tree_lines],
@@ -100,8 +100,8 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => :bad_request
     end
 
-    render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+    render :partial => 'commentbox', :layout => false,
+      :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def reply
@@ -113,8 +113,8 @@ class CommentsController < ApplicationController
     comment.story = parent_comment.story
     comment.parent_comment = parent_comment
 
-    render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+    render :partial => 'commentbox', :layout => false,
+      :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def delete
@@ -124,8 +124,8 @@ class CommentsController < ApplicationController
 
     comment.delete_for_user(@user, params[:reason])
 
-    render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+    render :partial => 'comment', :layout => false,
+      :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def undelete
@@ -135,8 +135,8 @@ class CommentsController < ApplicationController
 
     comment.undelete_for_user(@user)
 
-    render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+    render :partial => 'comment', :layout => false,
+      :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def disown
@@ -147,8 +147,8 @@ class CommentsController < ApplicationController
     InactiveUser.disown! comment
     comment = find_comment
 
-    render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+    render :partial => 'comment', :layout => false,
+      :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def update
@@ -166,9 +166,9 @@ class CommentsController < ApplicationController
       votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])
       comment.current_vote = votes[comment.id]
 
-      render :partial => "comments/comment",
+      render :partial => 'comments/comment',
              :layout => false,
-             :content_type => "text/html",
+             :content_type => 'text/html',
              :locals => { :comment => comment, :show_tree_lines => params[:show_tree_lines] }
     else
       comment.current_vote = { :vote => 1 }
@@ -186,7 +186,7 @@ class CommentsController < ApplicationController
       0, comment.story_id, comment.id, @user.id, nil
     )
 
-    render :plain => "ok"
+    render :plain => 'ok'
   end
 
   def upvote
@@ -198,7 +198,7 @@ class CommentsController < ApplicationController
       1, comment.story_id, comment.id, @user.id, params[:reason]
     )
 
-    render :plain => "ok"
+    render :plain => 'ok'
   end
 
   def downvote
@@ -207,40 +207,40 @@ class CommentsController < ApplicationController
     end
 
     if !Vote::COMMENT_REASONS[params[:reason]]
-      return render :plain => "invalid reason", :status => :bad_request
+      return render :plain => 'invalid reason', :status => :bad_request
     end
 
     if !@user.can_downvote?(comment)
-      return render :plain => "not permitted to downvote", :status => :bad_request
+      return render :plain => 'not permitted to downvote', :status => :bad_request
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       -1, comment.story_id, comment.id, @user.id, params[:reason]
     )
 
-    render :plain => "ok"
+    render :plain => 'ok'
   end
 
   def index
     @rss_link ||= {
-      :title => "RSS 2.0 - Newest Comments",
-      :href => "/comments.rss" + (@user ? "?token=#{@user.rss_token}" : ""),
+      :title => 'RSS 2.0 - Newest Comments',
+      :href => '/comments.rss' + (@user ? "?token=#{@user.rss_token}" : ''),
     }
 
-    @heading = @title = "Newest Comments"
-    @cur_url = "/comments"
+    @heading = @title = 'Newest Comments'
+    @cur_url = '/comments'
 
     @page = params[:page].to_i
     if @page == 0
       @page = 1
     elsif @page < 0 || @page > (2 ** 32)
-      raise ActionController::RoutingError.new("page out of bounds")
+      raise ActionController::RoutingError.new('page out of bounds')
     end
 
     @comments = Comment.where(
       :is_deleted => false, :is_moderated => false
     ).order(
-      "id DESC"
+      'id DESC'
     ).offset(
       (@page - 1) * COMMENTS_PER_PAGE
     ).limit(
@@ -250,9 +250,9 @@ class CommentsController < ApplicationController
     )
 
     if @user
-      @comments = @comments.where("NOT EXISTS (SELECT 1 FROM " +
-        "hidden_stories WHERE user_id = ? AND " +
-        "hidden_stories.story_id = comments.story_id)", @user.id)
+      @comments = @comments.where('NOT EXISTS (SELECT 1 FROM ' +
+        'hidden_stories WHERE user_id = ? AND ' +
+        'hidden_stories.story_id = comments.story_id)', @user.id)
 
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
 
@@ -264,13 +264,13 @@ class CommentsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { render :action => "index" }
+      format.html { render :action => 'index' }
       format.rss {
         if @user && params[:token].present?
           @title = "Private comments feed for #{@user.username}"
         end
 
-        render :action => "index.rss", :layout => false
+        render :action => 'index.rss', :layout => false
       }
     end
   end
@@ -282,11 +282,11 @@ class CommentsController < ApplicationController
       @cur_url = "/threads/#{@showing_user.username}"
     elsif !@user
       # TODO: show all recent threads
-      return redirect_to "/login"
+      return redirect_to '/login'
     else
       @showing_user = @user
-      @heading = @title = "Your Threads"
-      @cur_url = "/threads"
+      @heading = @title = 'Your Threads'
+      @cur_url = '/threads'
     end
 
     thread_ids = @showing_user.recent_threads(20, !!(@user && @user.id == @showing_user.id))
@@ -319,9 +319,9 @@ private
     comment.previewing = true
     comment.is_deleted = false # show normal preview for deleted comments
 
-    render :partial => "comments/commentbox",
+    render :partial => 'comments/commentbox',
            :layout => false,
-           :content_type => "text/html",
+           :content_type => 'text/html',
            :locals => {
              :comment => comment,
              :show_comment => comment,

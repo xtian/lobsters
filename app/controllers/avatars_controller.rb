@@ -23,7 +23,7 @@ class AvatarsController < ApplicationController
     end
 
     flash[:success] = "Your avatar cache has been purged of #{'file'.pluralize(expired)}"
-    return redirect_to "/settings"
+    return redirect_to '/settings'
   end
 
   def show
@@ -31,30 +31,30 @@ class AvatarsController < ApplicationController
     size = size.to_i
 
     if !ALLOWED_SIZES.include?(size)
-      raise ActionController::RoutingError.new("invalid size")
+      raise ActionController::RoutingError.new('invalid size')
     end
 
     if !username.match?(User::VALID_USERNAME)
-      raise ActionController::RoutingError.new("invalid user name")
+      raise ActionController::RoutingError.new('invalid user name')
     end
 
     u = User.where(:username => username).first!
 
     if !(av = u.fetched_avatar(size))
-      raise ActionController::RoutingError.new("failed fetching avatar")
+      raise ActionController::RoutingError.new('failed fetching avatar')
     end
 
     if !Dir.exist?(CACHE_DIR)
       Dir.mkdir(CACHE_DIR)
     end
 
-    File.open("#{CACHE_DIR}/.#{u.username}-#{size}.png", "wb+") do |f|
+    File.open("#{CACHE_DIR}/.#{u.username}-#{size}.png", 'wb+') do |f|
       f.write av
     end
 
     File.rename("#{CACHE_DIR}/.#{u.username}-#{size}.png", "#{CACHE_DIR}/#{u.username}-#{size}.png")
 
-    response.headers["Expires"] = 1.hour.from_now.httpdate
-    send_data av, :type => "image/png", :disposition => "inline"
+    response.headers['Expires'] = 1.hour.from_now.httpdate
+    send_data av, :type => 'image/png', :disposition => 'inline'
   end
 end

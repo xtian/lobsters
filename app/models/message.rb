@@ -2,12 +2,12 @@
 
 class Message < ApplicationRecord
   belongs_to :recipient,
-             :class_name => "User",
-             :foreign_key => "recipient_user_id",
+             :class_name => 'User',
+             :foreign_key => 'recipient_user_id',
              :inverse_of => :received_messages
   belongs_to :author,
-             :class_name => "User",
-             :foreign_key => "author_user_id",
+             :class_name => 'User',
+             :foreign_key => 'author_user_id',
              :inverse_of => :sent_messages
   belongs_to :hat,
              :required => false
@@ -60,7 +60,7 @@ class Message < ApplicationRecord
     if self.author
       self.author.username
     else
-      "System"
+      'System'
     end
   end
 
@@ -92,7 +92,7 @@ class Message < ApplicationRecord
         :message => self.plaintext_body,
         :url => self.url,
         :url_title => (self.author ? "Reply to #{self.author_username}" :
-          "View message")
+          'View message')
       )
     end
   end
@@ -104,7 +104,7 @@ class Message < ApplicationRecord
       self.recipient_user_id = u.id
       @recipient_username = username
     else
-      errors.add(:recipient_username, "is not a valid user")
+      errors.add(:recipient_username, 'is not a valid user')
     end
   end
 

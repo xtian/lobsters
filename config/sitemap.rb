@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-SitemapGenerator::Sitemap.default_host = "https://lobste.rs"
+SitemapGenerator::Sitemap.default_host = 'https://lobste.rs'
 
 check_hourly = 4.days.ago
 check_daily = 2.weeks.ago
