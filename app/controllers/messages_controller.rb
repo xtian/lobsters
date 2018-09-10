@@ -115,23 +115,21 @@ class MessagesController < ApplicationController
     deleted = 0
 
     params.each do |k, v|
-      if (v.to_s == '1') && (m = k.match(/^delete_(.+)$/))
-        if (message = Message.where(:short_id => m[1]).first)
-          ok = false
-          if message.author_user_id == @user.id
-            message.deleted_by_author = true
-            ok = true
-          end
-          if message.recipient_user_id == @user.id
-            message.deleted_by_recipient = true
-            ok = true
-          end
+      next unless (v.to_s == '1') && (m = k.match(/^delete_(.+)$/))
+      next unless (message = Message.where(:short_id => m[1]).first)
+      ok = false
+      if message.author_user_id == @user.id
+        message.deleted_by_author = true
+        ok = true
+      end
+      if message.recipient_user_id == @user.id
+        message.deleted_by_recipient = true
+        ok = true
+      end
 
-          if ok
-            message.save!
-            deleted += 1
-          end
-        end
+      if ok
+        message.save!
+        deleted += 1
       end
     end
 

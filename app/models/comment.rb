@@ -230,29 +230,27 @@ class Comment < ApplicationRecord
 
   def deliver_mention_notifications
     plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
-      if (u = User.find_by(:username => mention))
-        if u.id == user.id
-          next
-        end
+      next unless (u = User.find_by(:username => mention))
+      if u.id == user.id
+        next
+      end
 
-        if u.email_mentions?
-          begin
-            EmailReply.mention(self, u).deliver_now
-          rescue => e
-            Rails.logger.error "error e-mailing #{u.email}: #{e}"
-          end
-        end
-
-        if u.pushover_mentions?
-          u.pushover!(
-            :title => "#{Rails.application.name} mention by " +
-              "#{user.username} on #{story.title}",
-            :message => plaintext_comment,
-            :url => url,
-            :url_title => "Reply to #{user.username}"
-          )
+      if u.email_mentions?
+        begin
+          EmailReply.mention(self, u).deliver_now
+        rescue => e
+          Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
       end
+
+      next unless u.pushover_mentions?
+      u.pushover!(
+        :title => "#{Rails.application.name} mention by " +
+          "#{user.username} on #{story.title}",
+        :message => plaintext_comment,
+        :url => url,
+        :url_title => "Reply to #{user.username}"
+      )
     end
   end
 

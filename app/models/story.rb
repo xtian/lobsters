@@ -621,14 +621,12 @@ class Story < ApplicationRecord
     end
 
     new_tag_names_a.uniq.each do |tag_name|
-      if tag_name.to_s != '' && !tags.exists?(:tag => tag_name)
-        if (t = Tag.active.find_by(:tag => tag_name))
-          # we can't lookup whether the user is allowed to use this tag yet
-          # because we aren't assured to have a user_id by now; we'll do it in
-          # the validation with check_tags
-          tags << t
-        end
-      end
+      next unless tag_name.to_s != '' && !tags.exists?(:tag => tag_name)
+      next unless (t = Tag.active.find_by(:tag => tag_name))
+      # we can't lookup whether the user is allowed to use this tag yet
+      # because we aren't assured to have a user_id by now; we'll do it in
+      # the validation with check_tags
+      tags << t
     end
   end
 
@@ -707,20 +705,19 @@ class Story < ApplicationRecord
     end
 
     title_votes.sort_by {|_k, v| v }.reverse_each do |kv|
-      if kv[1] >= SUGGESTION_QUORUM
-        Rails.logger.info "[s#{id}] promoting suggested title " +
-                          "#{kv[0].inspect} instead of #{self.title.inspect}"
-        self.editor = nil
-        self.editing_from_suggestions = true
-        self.moderation_reason = 'Automatically changed from user suggestions'
-        self.title = kv[0]
-        if !save
-          Rails.logger.error "[s#{id}] failed auto promoting: " +
-                             errors.inspect
-        end
-
-        break
+      next unless kv[1] >= SUGGESTION_QUORUM
+      Rails.logger.info "[s#{id}] promoting suggested title " +
+                        "#{kv[0].inspect} instead of #{self.title.inspect}"
+      self.editor = nil
+      self.editing_from_suggestions = true
+      self.moderation_reason = 'Automatically changed from user suggestions'
+      self.title = kv[0]
+      if !save
+        Rails.logger.error "[s#{id}] failed auto promoting: " +
+                           errors.inspect
       end
+
+      break
     end
   end
 
