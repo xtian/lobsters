@@ -30,7 +30,6 @@ class StoryCacher
 
         return j['text']
       end
-
     rescue => e
       Rails.logger.error "error fetching #{db_url}: #{e.message}"
     end

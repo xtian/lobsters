@@ -231,7 +231,8 @@ class SettingsController < ApplicationController
     session.delete(:twitter_state)
 
     tok, sec, username = Twitter.token_secret_and_user_from_token_and_verifier(
-      params[:oauth_token], params[:oauth_verifier])
+      params[:oauth_token], params[:oauth_verifier]
+    )
     if tok.present? && username.present?
       @user.twitter_oauth_token = tok
       @user.twitter_oauth_token_secret = sec
@@ -254,7 +255,7 @@ class SettingsController < ApplicationController
     redirect_to '/settings'
   end
 
-private
+  private
 
   def user_params
     params.require(:user).permit(

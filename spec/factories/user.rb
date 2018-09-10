@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :user do
-    sequence(:email) {|n| "user-#{n}@example.com" }
-    sequence(:username) {|n| "username#{n}" }
+    sequence(:email) { |n| "user-#{n}@example.com" }
+    sequence(:username) { |n| "username#{n}" }
     password { 'blah blah' }
     password_confirmation(&:password)
     trait(:banned) do
@@ -24,7 +24,7 @@ FactoryBot.define do
     end
     trait(:inactive) do
       username { 'inactive-user' }
-      to_create {|user| user.save(validate: false) }
+      to_create { |user| user.save(validate: false) }
     end
     trait(:admin) do
       is_admin { true }

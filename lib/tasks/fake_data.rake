@@ -12,22 +12,22 @@ class FakeDataGenerator
       password = Faker::Internet.password
       user_name = Faker::Internet.user_name(name, %w[_])
       User.create! email: Faker::Internet.email(name),
-        password: password,
-        password_confirmation: password,
-        username: user_name
+                   password: password,
+                   password_confirmation: password,
+                   username: user_name
     end
 
     @stories_count.times do |i|
-      user = users[Random.rand(@users_count-1)]
+      user = users[Random.rand(@users_count - 1)]
       title = Faker::Lorem.sentence(3)
       tag = Tag.find_or_create_by! tag: title.split(' ').first.downcase
       if i.even?
         Story.create! user: user, title: title, url: Faker::Internet.url, tags_a: [tag.tag]
       else
         Story.create! user: user,
-          title: title,
-          description: Faker::Lorem.paragraphs(3).join("\n\n"),
-          tags_a: [tag.tag]
+                      title: title,
+                      description: Faker::Lorem.paragraphs(3).join("\n\n"),
+                      tags_a: [tag.tag]
       end
     end
   end

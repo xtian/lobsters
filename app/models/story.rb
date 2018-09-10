@@ -36,16 +36,16 @@ class Story < ApplicationRecord
   scope :low_scoring, ->(max = 5) { where("#{Story.score_sql} < ?", max) }
   scope :hottest, ->(user = nil, exclude_tags = nil) {
     base.not_hidden_by(user)
-        .filter_tags(exclude_tags || [])
-        .positive_ranked
-        .order('hotness')
+      .filter_tags(exclude_tags || [])
+      .positive_ranked
+      .order('hotness')
   }
   scope :recent, ->(user = nil, exclude_tags = nil) {
     base.low_scoring
-        .not_hidden_by(user)
-        .filter_tags(exclude_tags || [])
-        .where('created_at >= ?', 10.days.ago)
-        .order('stories.created_at DESC')
+      .not_hidden_by(user)
+      .filter_tags(exclude_tags || [])
+      .where('created_at >= ?', 10.days.ago)
+      .order('stories.created_at DESC')
   }
   scope :filter_tags, ->(tags) {
     tags.empty? ? all : where.not(
@@ -76,10 +76,10 @@ class Story < ApplicationRecord
   }
   scope :to_tweet, -> {
     hottest(nil, Tag.where(tag: 'meta').pluck(:id))
-        .where(twitter_id: nil)
-        .where("#{Story.score_sql} >= 2")
-        .where('created_at >= ?', 2.days.ago)
-        .limit(10)
+      .where(twitter_id: nil)
+      .where("#{Story.score_sql} >= 2")
+      .where('created_at >= ?', 2.days.ago)
+      .limit(10)
   }
 
   validates :title, length: { :in => 3..150 }
@@ -113,11 +113,11 @@ class Story < ApplicationRecord
 
   # link shortening and other ad tracking domains
   TRACKING_DOMAINS = %w[ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly
-    bitly.com buzurl.com cur.lv cutt.us db.tt db.tt doiop.com filoops.info
-    goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog po.st prettylinkpro.com q.gs
-    qr.ae qr.net scrnch.me s.id sptfy.com t.co tinyarrows.com tiny.cc
-    tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
-    wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net ].freeze
+                         bitly.com buzurl.com cur.lv cutt.us db.tt db.tt doiop.com filoops.info
+                         goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog po.st prettylinkpro.com q.gs
+                         qr.ae qr.net scrnch.me s.id sptfy.com t.co tinyarrows.com tiny.cc
+                         tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
+                         wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net ].freeze
 
   # URI.parse is not very lenient, so we can't use it
   URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i
@@ -198,8 +198,8 @@ class Story < ApplicationRecord
 
     # www prefix
     urls.each do |u|
-      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| Regexp.last_match(1) }
-      urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{Regexp.last_match(1)}www." }
+      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) { |_| Regexp.last_match(1) }
+      urls2.push u.gsub(/^(https?:\/\/)/i) { |_| "#{Regexp.last_match(1)}www." }
     end
     urls = urls2.clone
 
@@ -284,15 +284,15 @@ class Story < ApplicationRecord
     cpoints = merged_comments
       .where('user_id <> ?', user_id)
       .select(:upvotes, :downvotes)
-      .map {|c|
-        if base < 0
-          # in stories already starting out with a bad hotness mod, only look
-          # at the downvotes to find out if this tire fire needs to be put out
-          c.downvotes * -0.5
-        else
-          c.upvotes + 1 - c.downvotes
-        end
-      }
+      .map { |c|
+      if base < 0
+        # in stories already starting out with a bad hotness mod, only look
+        # at the downvotes to find out if this tire fire needs to be put out
+        c.downvotes * -0.5
+      else
+        c.upvotes + 1 - c.downvotes
+      end
+    }
       .inject(&:+).to_f * 0.5
 
     # mix in any stories this one cannibalized
@@ -325,7 +325,7 @@ class Story < ApplicationRecord
   def can_have_suggestions_from_user?(user)
     return false if !user || (user.id == user_id) || !user.can_offer_suggestions?
 
-    return false if taggings.select {|t| t.tag&.privileged? }.any?
+    return false if taggings.select { |t| t.tag&.privileged? }.any?
 
     true
   end
@@ -344,7 +344,7 @@ class Story < ApplicationRecord
       end
     end
 
-    if taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media? }.empty?
+    if taggings.reject { |t| t.marked_for_destruction? || t.tag.is_media? }.empty?
       errors.add(:base, 'Must have at least one non-media (PDF, video) ' \
         "tag.  If no tags apply to your content, it probably doesn't " \
         'belong here.')
@@ -366,9 +366,9 @@ class Story < ApplicationRecord
 
   def description_or_story_cache(chars = 0)
     s = if description.present?
-      markeddown_description.gsub(/<[^>]*>/, '')
-    else
-      story_cache
+          markeddown_description.gsub(/<[^>]*>/, '')
+        else
+          story_cache
     end
 
     if chars > 0 && s.to_s.length > chars
@@ -390,7 +390,7 @@ class Story < ApplicationRecord
   def fix_bogus_chars
     # this is needlessly complicated to work around character encoding issues
     # that arise when doing just self.title.to_s.gsub(160.chr, "")
-    self.title = title.to_s.split('').map {|chr|
+    self.title = title.to_s.split('').map { |chr|
       if chr.ord == 160
         ' '
       else
@@ -516,7 +516,7 @@ class Story < ApplicationRecord
     elsif all_changes['is_expired'] && !is_expired?
       m.action = 'undeleted story'
     else
-      m.action = all_changes.map {|k, v|
+      m.action = all_changes.map { |k, v|
         if k == 'merged_story_id'
           if v[1]
             "merged into #{merged_into_story.short_id} " \
@@ -579,8 +579,8 @@ class Story < ApplicationRecord
   end
 
   def tagging_changes
-    old_tags_a = taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(' ')
-    new_tags_a = taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(' ')
+    old_tags_a = taggings.reject(&:new_record?).map { |tg| tg.tag.tag }.join(' ')
+    new_tags_a = taggings.reject(&:marked_for_destruction?).map { |tg| tg.tag.tag }.join(' ')
 
     if old_tags_a == new_tags_a
       {}
@@ -590,7 +590,7 @@ class Story < ApplicationRecord
   end
 
   def tags_a
-    @_tags_a ||= taggings.reject(&:marked_for_destruction?).map {|t| t.tag.tag }
+    @_tags_a ||= taggings.reject(&:marked_for_destruction?).map { |t| t.tag.tag }
   end
 
   def tags_a=(new_tag_names_a)
@@ -619,7 +619,7 @@ class Story < ApplicationRecord
 
     new_tag_names_a.each do |tag_name|
       # XXX: AR bug? st.exists?(:tag => tag_name) does not work
-      if tag_name.to_s != '' && !st.map {|x| x.tag.tag }.include?(tag_name)
+      if tag_name.to_s != '' && !st.map { |x| x.tag.tag }.include?(tag_name)
         if (t = Tag.active.find_by(:tag => tag_name)) &&
            t.valid_for?(user)
           tg = suggested_taggings.build
@@ -678,7 +678,7 @@ class Story < ApplicationRecord
       title_votes[s.title] += 1
     end
 
-    title_votes.sort_by {|_k, v| v }.reverse_each do |kv|
+    title_votes.sort_by { |_k, v| v }.reverse_each do |kv|
       next unless kv[1] >= SUGGESTION_QUORUM
       Rails.logger.info "[s#{id}] promoting suggested title " \
                         "#{kv[0].inspect} instead of #{self.title.inspect}"
@@ -706,11 +706,11 @@ class Story < ApplicationRecord
     words = []
 
     title
-         .parameterize
-         .gsub(/[^a-z0-9]/, '_')
-         .split('_')
-         .reject {|z| TITLE_DROP_WORDS.include?(z) }
-         .each do |w|
+      .parameterize
+      .gsub(/[^a-z0-9]/, '_')
+      .split('_')
+      .reject { |z| TITLE_DROP_WORDS.include?(z) }
+      .each do |w|
       if wl + w.length <= max_len
         words.push w
         wl += w.length
@@ -741,7 +741,7 @@ class Story < ApplicationRecord
     comments = merged_comments.arrange_for_user(nil)
 
     # calculate count after removing deleted comments and threads
-    update_column :comments_count, (self.comments_count = comments.count {|c| !c.is_gone? })
+    update_column :comments_count, (self.comments_count = comments.count { |c| !c.is_gone? })
 
     recalculate_hotness!
   end
@@ -776,8 +776,8 @@ class Story < ApplicationRecord
     # strip out stupid google analytics parameters
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
-      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
-      u = match[1] << (params.any?? '?' + params.join('&') : '')
+      params.reject! { |p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
+      u = match[1] << (params.any? ? '?' + params.join('&') : '')
     end
 
     super(u)
@@ -814,7 +814,7 @@ class Story < ApplicationRecord
       end
     end
 
-    r_counts.keys.sort.map {|k|
+    r_counts.keys.sort.map { |k|
       if k == ''
         "+#{r_counts[k]}"
       else
@@ -841,8 +841,8 @@ class Story < ApplicationRecord
         s = Sponge.new
         s.timeout = 3
         @fetched_content = s.fetch(url, :get, nil, nil, {
-          'User-agent' => "#{Rails.application.domain} for #{fetching_ip}"
-        }, 3)
+                                     'User-agent' => "#{Rails.application.domain} for #{fetching_ip}"
+                                   }, 3)
       rescue
         return @fetched_attributes
       end

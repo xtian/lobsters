@@ -20,12 +20,12 @@ class ModerationsController < ApplicationController
 
     # filter based on target
     @moderations = case @moderator
-    when '(All)'
-      @moderations
-    when '(Users)'
-      @moderations.where('is_from_suggestions = true')
-    else
-      @moderations.joins(:moderator).where(:users => { :username => @moderator })
+                   when '(All)'
+                     @moderations
+                   when '(Users)'
+                     @moderations.where('is_from_suggestions = true')
+                   else
+                     @moderations.joins(:moderator).where(:users => { :username => @moderator })
     end
 
     # filter based on type of thing moderated
@@ -39,13 +39,13 @@ class ModerationsController < ApplicationController
     @page = params[:page].to_i
     if @page == 0
       @page = 1
-    elsif @page < 0 || @page > (2 ** 32) || @page > @pages
+    elsif @page < 0 || @page > (2**32) || @page > @pages
       raise ActionController::RoutingError.new('page out of bounds')
     end
 
     @moderations = @moderations
-                     .offset((@page - 1) * ENTRIES_PER_PAGE)
-                     .order('moderations.created_at desc')
-                     .limit(ENTRIES_PER_PAGE)
+      .offset((@page - 1) * ENTRIES_PER_PAGE)
+      .order('moderations.created_at desc')
+      .limit(ENTRIES_PER_PAGE)
   end
 end

@@ -18,7 +18,7 @@ class StoriesPaginator
       .includes(:user, :suggested_titles, :suggested_taggings, :taggings => :tag)
   end
 
-private
+  private
 
   def with_pagination_info(scope)
     scope = scope.to_a

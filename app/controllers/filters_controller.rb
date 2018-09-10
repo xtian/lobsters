@@ -20,7 +20,7 @@ class FiltersController < ApplicationController
     tags_param = params[:tags]
     new_tags = tags_param.blank? ? [] :
       Tag.active.where(:tag => tags_param).to_a
-    new_tags.keep_if {|t| t.valid_for? @user }
+    new_tags.keep_if { |t| t.valid_for? @user }
 
     if @user
       @user.tag_filter_tags = new_tags

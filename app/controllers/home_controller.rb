@@ -242,7 +242,7 @@ class HomeController < ApplicationController
     end
   end
 
-private
+  private
 
   def filtered_tag_ids
     if @user
@@ -260,7 +260,7 @@ private
     p = params[:page].to_i
     if p == 0
       p = 1
-    elsif p < 0 || p > (2 ** 32)
+    elsif p < 0 || p > (2**32)
       raise ActionController::RoutingError.new('page out of bounds')
     end
     p
@@ -274,7 +274,7 @@ private
     if Rails.env.development? || @user || tags_filtered_by_cookie.any?
       yield
     else
-      key = opts.merge(page: page).sort.map {|k, v| "#{k}=#{v.to_param}" }.join(' ')
+      key = opts.merge(page: page).sort.map { |k, v| "#{k}=#{v.to_param}" }.join(' ')
       begin
         Rails.cache.fetch("stories #{key}", :expires_in => 45, &block)
       rescue Errno::ENOENT => e

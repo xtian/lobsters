@@ -27,9 +27,8 @@ class String
       if !str.valid_encoding? || str.encoding.to_s != 'UTF-8'
         raise Encoding::UndefinedConversionError
       end
-
     rescue Encoding::UndefinedConversionError
-      str = chars.map {|c|
+      str = chars.map { |c|
         begin
           c.encode('UTF-8', :invalid => :replace, :undef => :replace)
         rescue

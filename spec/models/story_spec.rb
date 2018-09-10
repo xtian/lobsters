@@ -159,7 +159,7 @@ describe Story do
     mod = create(:user, :moderator)
 
     s = create(:story, :title => 'blah', :tags_a => %w[tag1 tag2],
-      :description => 'desc')
+                       :description => 'desc')
 
     s.title = 'changed title'
     s.description = nil

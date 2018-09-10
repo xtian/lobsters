@@ -44,7 +44,7 @@ class CommentsController < ApplicationController
           'here recently.')
 
         return render :partial => 'commentbox', :layout => false,
-          :content_type => 'text/html', :locals => { :comment => comment }
+                      :content_type => 'text/html', :locals => { :comment => comment }
       end
     end
 
@@ -53,7 +53,7 @@ class CommentsController < ApplicationController
 
       if request.xhr?
         render :partial => 'comments/postedreply', :layout => false,
-          :content_type => 'text/html', :locals => { :comment => comment }
+               :content_type => 'text/html', :locals => { :comment => comment }
       else
         redirect_to comment.path
       end
@@ -101,7 +101,7 @@ class CommentsController < ApplicationController
     end
 
     render :partial => 'commentbox', :layout => false,
-      :content_type => 'text/html', :locals => { :comment => comment }
+           :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def reply
@@ -114,7 +114,7 @@ class CommentsController < ApplicationController
     comment.parent_comment = parent_comment
 
     render :partial => 'commentbox', :layout => false,
-      :content_type => 'text/html', :locals => { :comment => comment }
+           :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def delete
@@ -125,7 +125,7 @@ class CommentsController < ApplicationController
     comment.delete_for_user(@user, params[:reason])
 
     render :partial => 'comment', :layout => false,
-      :content_type => 'text/html', :locals => { :comment => comment }
+           :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def undelete
@@ -136,7 +136,7 @@ class CommentsController < ApplicationController
     comment.undelete_for_user(@user)
 
     render :partial => 'comment', :layout => false,
-      :content_type => 'text/html', :locals => { :comment => comment }
+           :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def disown
@@ -148,7 +148,7 @@ class CommentsController < ApplicationController
     comment = find_comment
 
     render :partial => 'comment', :layout => false,
-      :content_type => 'text/html', :locals => { :comment => comment }
+           :content_type => 'text/html', :locals => { :comment => comment }
   end
 
   def update
@@ -233,7 +233,7 @@ class CommentsController < ApplicationController
     @page = params[:page].to_i
     if @page == 0
       @page = 1
-    elsif @page < 0 || @page > (2 ** 32)
+    elsif @page < 0 || @page > (2**32)
       raise ActionController::RoutingError.new('page out of bounds')
     end
 
@@ -307,7 +307,7 @@ class CommentsController < ApplicationController
     end
   end
 
-private
+  private
 
   def preview(comment)
     comment.previewing = true
@@ -327,7 +327,7 @@ private
     comment = Comment.where(:short_id => params[:id]).first
     if @user && comment
       comment.current_vote = Vote.where(:user_id => @user.id,
-        :story_id => comment.story_id, :comment_id => comment.id).first
+                                        :story_id => comment.story_id, :comment_id => comment.id).first
     end
 
     comment

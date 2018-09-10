@@ -11,7 +11,7 @@ Rails.application.require_environment!
 Story.to_tweet.each_with_index do |s, x|
   sleep 2 if x > 0
 
-  tags = s.tags.pluck(:tag).map {|t| ' #' + t }.join('')
+  tags = s.tags.pluck(:tag).map { |t| ' #' + t }.join('')
 
   via = ''
   if s.user.twitter_username.present?
@@ -43,9 +43,9 @@ Story.to_tweet.each_with_index do |s, x|
   # if there are any urls in the title, they should be sized (at least) to a
   # twitter t.co url
   left_len -= title.scan(/[^ ]\.[a-z]{2,10}/i)
-                   .map {|_u| [0, Twitter::TCO_LEN].max }
-                   .inject(:+)
-                   .to_i
+    .map { |_u| [0, Twitter::TCO_LEN].max }
+    .inject(:+)
+    .to_i
 
   left_len = -3 if left_len < -3
 
@@ -60,7 +60,7 @@ Story.to_tweet.each_with_index do |s, x|
   begin
     if res['id_str'].to_s.match?(/\d+/)
       s.update_column('twitter_id', res['id_str'])
-    elsif res['errors'].select {|e| e['code'] == 226 || e['code'] == 186 }.any?
+    elsif res['errors'].select { |e| e['code'] == 226 || e['code'] == 186 }.any?
       # twitter is rejecting the content of this message, skip it
       s.update_column('twitter_id', 0)
       puts "skipping: failed posting story #{s.id} (#{status.inspect}): #{res.inspect}\n"

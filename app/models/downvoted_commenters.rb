@@ -65,21 +65,21 @@ class DownvotedCommenters
         .having('n_comments > 2 and n_stories > 1 and n_downvotes >= 10')
         .order('sigma desc')
         .limit(30)
-        .each_with_object({}) {|u, hash|
-          hash[u.id] = {
-            username: u.username,
-            rank: rank += 1,
-            sigma: u.sigma,
-            n_comments: u.n_comments,
-            n_stories: u.n_stories,
-            n_downvotes: u.n_downvotes,
-            average_downvotes: u.n_downvotes * 1.0 / u.n_comments,
-            stddev: 0,
-            percent_downvoted:
-              # TODO: fix 1 + n caused by u.comments to grab total comment count
-              u.n_comments * 100.0 / u.comments.where('created_at >= ?', period).count
-          }
+        .each_with_object({}) { |u, hash|
+        hash[u.id] = {
+          username: u.username,
+          rank: rank += 1,
+          sigma: u.sigma,
+          n_comments: u.n_comments,
+          n_stories: u.n_stories,
+          n_downvotes: u.n_downvotes,
+          average_downvotes: u.n_downvotes * 1.0 / u.n_comments,
+          stddev: 0,
+          percent_downvoted:
+            # TODO: fix 1 + n caused by u.comments to grab total comment count
+            u.n_comments * 100.0 / u.comments.where('created_at >= ?', period).count
         }
+      }
     }
   end
 end

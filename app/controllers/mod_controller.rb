@@ -40,7 +40,7 @@ class ModController < ApplicationController
     @commenters = dvc.commenters
   end
 
-private
+  private
 
   def default_periods
     @periods = %w[1d 2d 3d 1w 1m]

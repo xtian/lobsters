@@ -14,7 +14,7 @@ module ApplicationHelper
   end
 
   def break_long_words(str, len = 30)
-    safe_join(str.split(' ').map {|w|
+    safe_join(str.split(' ').map { |w|
       if w.length > len
         safe_join(w.split(/(.{#{len}})/), '<wbr>'.html_safe)
       else
@@ -109,9 +109,9 @@ module ApplicationHelper
   end
 
   def page_numbers_for_pagination(max, cur)
-    return (1 .. max).to_a if max <= MAX_PAGES
+    return (1..max).to_a if max <= MAX_PAGES
 
-    pages = (cur - (MAX_PAGES / 2) + 1 .. cur + (MAX_PAGES / 2) - 1).to_a
+    pages = (cur - (MAX_PAGES / 2) + 1..cur + (MAX_PAGES / 2) - 1).to_a
 
     while pages[0] < 1
       pages.push pages.last + 1

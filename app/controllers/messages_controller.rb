@@ -147,7 +147,7 @@ class MessagesController < ApplicationController
     redirect_to messages_path, notice: 'ModNote created'
   end
 
-private
+  private
 
   def message_params
     params.require(:message).permit(

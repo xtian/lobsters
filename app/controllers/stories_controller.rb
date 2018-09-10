@@ -5,7 +5,7 @@ class StoriesController < ApplicationController
 
   before_action :require_logged_in_user_or_400,
                 :only => %i[upvote downvote unvote hide unhide preview save unsave
-                          check_url_dupe]
+                            check_url_dupe]
   before_action :require_logged_in_user,
                 :only => %i[destroy create edit fetch_url_attributes new suggest]
   before_action :verify_user_can_submit_stories, :only => %i[new create]
@@ -130,8 +130,8 @@ class StoriesController < ApplicationController
 
     @comments = get_arranged_comments_from_cache(params[:id]) do
       @story.merged_comments
-            .includes(:user, :story, :hat, :votes => :user)
-            .arrange_for_user(@user)
+        .includes(:user, :story, :hat, :votes => :user)
+        .arrange_for_user(@user)
     end
 
     @title = @story.title
@@ -172,7 +172,7 @@ class StoriesController < ApplicationController
     end
 
     if (suggested_tags = @story.suggested_taggings.where(:user_id => @user.id)).any?
-      @story.tags_a = suggested_tags.map {|st| st.tag.tag }
+      @story.tags_a = suggested_tags.map { |st| st.tag.tag }
     end
     if (tt = @story.suggested_titles.where(:user_id => @user.id).first)
       @story.title = tt.title
@@ -195,7 +195,7 @@ class StoriesController < ApplicationController
         dsug = true
       end
 
-      sugtags = params[:story][:tags_a].reject {|t| t.to_s.strip == '' }.sort
+      sugtags = params[:story][:tags_a].reject { |t| t.to_s.strip == '' }.sort
       if @story.tags_a.sort != sugtags
         @story.save_suggested_tags_a_for_user!(sugtags, @user)
         dsug = true
@@ -337,10 +337,10 @@ class StoriesController < ApplicationController
     @story.check_already_posted
 
     render :partial => 'stories/form_errors', :layout => false,
-      :content_type => 'text/html', :locals => { :story => @story }
+           :content_type => 'text/html', :locals => { :story => @story }
   end
 
-private
+  private
 
   def get_arranged_comments_from_cache(short_id, &block)
     if Rails.env.development? || @user
@@ -367,7 +367,7 @@ private
     story = Story.where(:short_id => params[:story_id]).first
     if @user && story
       story.vote = Vote.where(:user_id => @user.id,
-        :story_id => story.id, :comment_id => nil).first.try(:vote)
+                              :story_id => story.id, :comment_id => nil).first.try(:vote)
     end
 
     story

@@ -7,11 +7,11 @@ module StoriesHelper
     return true if @user.stories_submitted_count <= 5
 
     if Moderation.joins(:story)
-                 .where(
-                   'stories.user_id = ? AND moderations.created_at > ?',
-                   @user.id,
-                   5.days.ago
-                 ).exists?
+        .where(
+          'stories.user_id = ? AND moderations.created_at > ?',
+          @user.id,
+          5.days.ago
+        ).exists?
       return true
     end
 

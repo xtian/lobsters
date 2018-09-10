@@ -2,8 +2,8 @@
 
 Rails.application.routes.draw do
   root :to => 'home#index',
-    :protocol => (Rails.application.config.force_ssl ? 'https://' : 'http://'),
-    :as => 'root'
+       :protocol => (Rails.application.config.force_ssl ? 'https://' : 'http://'),
+       :as => 'root'
 
   get '/ping.txt', to: proc { [200, {}, ['ok']] }
 
@@ -56,11 +56,11 @@ Rails.application.routes.draw do
   get '/signup/invite' => 'signup#invite'
 
   get '/login/forgot_password' => 'login#forgot_password',
-    :as => 'forgot_password'
+      :as => 'forgot_password'
   post '/login/reset_password' => 'login#reset_password',
-    :as => 'reset_password'
+       :as => 'reset_password'
   match '/login/set_new_password' => 'login#set_new_password',
-    :as => 'set_new_password', :via => %i[get post]
+        :as => 'set_new_password', :via => %i[get post]
 
   get '/t/:tag' => 'home#tagged', :as => 'tag'
   get '/t/:tag/page/:page' => 'home#tagged'
@@ -102,7 +102,7 @@ Rails.application.routes.draw do
   get '/messages/sent' => 'messages#sent'
   get '/messages' => 'messages#index'
   post '/messages/batch_delete' => 'messages#batch_delete',
-    :as => 'batch_delete_messages'
+       :as => 'batch_delete_messages'
   resources :messages do
     post 'keep_as_new'
     post 'mod_note'
@@ -125,22 +125,22 @@ Rails.application.routes.draw do
   post '/users/:username/ban' => 'users#ban', :as => 'user_ban'
   post '/users/:username/unban' => 'users#unban', :as => 'user_unban'
   post '/users/:username/disable_invitation' => 'users#disable_invitation',
-        :as => 'user_disable_invite'
+       :as => 'user_disable_invite'
   post '/users/:username/enable_invitation' => 'users#enable_invitation',
-        :as => 'user_enable_invite'
+       :as => 'user_enable_invite'
 
   get '/settings' => 'settings#index'
   post '/settings' => 'settings#update'
   post '/settings/delete_account' => 'settings#delete_account',
-    :as => 'delete_account'
+       :as => 'delete_account'
   get '/settings/2fa' => 'settings#twofa', :as => 'twofa'
   post '/settings/2fa_auth' => 'settings#twofa_auth', :as => 'twofa_auth'
   get '/settings/2fa_enroll' => 'settings#twofa_enroll',
-    :as => 'twofa_enroll'
+      :as => 'twofa_enroll'
   get '/settings/2fa_verify' => 'settings#twofa_verify',
-    :as => 'twofa_verify'
+      :as => 'twofa_verify'
   post '/settings/2fa_update' => 'settings#twofa_update',
-    :as => 'twofa_update'
+       :as => 'twofa_update'
 
   post '/settings/pushover_auth' => 'settings#pushover_auth'
   get '/settings/pushover_callback' => 'settings#pushover_callback'
@@ -165,24 +165,24 @@ Rails.application.routes.draw do
   get '/invitations' => 'invitations#index'
   get '/invitations/request' => 'invitations#build'
   post '/invitations/create_by_request' => 'invitations#create_by_request',
-    :as => 'create_invitation_by_request'
+       :as => 'create_invitation_by_request'
   get '/invitations/confirm/:code' => 'invitations#confirm_email'
   post '/invitations/send_for_request' => 'invitations#send_for_request',
-    :as => 'send_invitation_for_request'
+       :as => 'send_invitation_for_request'
   get '/invitations/:invitation_code' => 'signup#invited'
   post '/invitations/delete_request' => 'invitations#delete_request',
-    :as => 'delete_invitation_request'
+       :as => 'delete_invitation_request'
 
   get '/hats' => 'hats#index'
   get '/hats/build_request' => 'hats#build_request',
-    :as => 'request_hat'
+      :as => 'request_hat'
   post '/hats/create_request' => 'hats#create_request',
-    :as => 'create_hat_request'
+       :as => 'create_hat_request'
   get '/hats/requests' => 'hats#requests_index'
   post '/hats/approve_request/:id' => 'hats#approve_request',
-    :as => 'approve_hat_request'
+       :as => 'approve_hat_request'
   post '/hats/reject_request/:id' => 'hats#reject_request',
-    :as => 'reject_hat_request'
+       :as => 'reject_hat_request'
 
   get '/moderations' => 'moderations#index'
   get '/moderations/page/:page' => 'moderations#index'

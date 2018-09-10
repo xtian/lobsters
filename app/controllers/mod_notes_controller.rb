@@ -30,7 +30,7 @@ class ModNotesController < ModController
     end
   end
 
-private
+  private
 
   def mod_note_params
     params.require(:mod_note).permit(:username, :note)

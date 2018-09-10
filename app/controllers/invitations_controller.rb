@@ -67,7 +67,8 @@ class InvitationsController < ApplicationController
   def create_by_request
     if Rails.application.allow_invitation_requests?
       @invitation_request = InvitationRequest.new(
-        params.require(:invitation_request).permit(:name, :email, :memo))
+        params.require(:invitation_request).permit(:name, :email, :memo)
+      )
 
       @invitation_request.ip_address = request.remote_ip
 

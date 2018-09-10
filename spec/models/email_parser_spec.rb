@@ -14,7 +14,7 @@ describe EmailParser do
 
     @emails = {}
     Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml")
-    .each do |f|
+      .each do |f|
       @emails[File.basename(f).gsub(/\..*/, '')] = File.read(f)
         .gsub(/##SHORTNAME##/, Rails.application.shortname)
         .gsub(/##MAILING_LIST_TOKEN##/, @emailer.mailing_list_token)
@@ -27,7 +27,8 @@ describe EmailParser do
       'user@example.com',
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails['1'])
+      @emails['1']
+    )
 
     expect(parser).to_not be_nil
     expect(parser.email).to_not be_nil
@@ -44,7 +45,8 @@ describe EmailParser do
       'user@example.com',
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails['2'])
+      @emails['2']
+    )
 
     expect(parser.email).to_not be_nil
     expect(parser.been_here?).to be true
@@ -55,7 +57,8 @@ describe EmailParser do
       'user@example.com',
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails['3'])
+      @emails['3']
+    )
 
     expect(parser.email).to_not be_nil
     expect(parser.body)
@@ -68,7 +71,8 @@ describe EmailParser do
       'user@example.com',
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails['4'])
+      @emails['4']
+    )
 
     expect(parser.email).to_not be_nil
     expect(parser.body)

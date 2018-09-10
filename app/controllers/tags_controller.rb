@@ -47,7 +47,7 @@ class TagsController < ApplicationController
     end
   end
 
-private
+  private
 
   def tag_params
     params.require(:tag).permit(

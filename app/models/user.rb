@@ -44,7 +44,7 @@ class User < ApplicationRecord
   has_many :upvoted_stories,
            -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
            :through => :votes,
-    :source => :story
+           :source => :story
   has_many :hats, :dependent => :destroy
   has_many :wearable_hats, -> { where('doffed_at is null') },
            :class_name => 'Hat',
@@ -103,9 +103,9 @@ class User < ApplicationRecord
   end
 
   BANNED_USERNAMES = ['admin', 'administrator', 'contact', 'fraud', 'guest',
-    'help', 'hostmaster', 'inactive-user', 'lobster', 'lobsters', 'mailer-daemon', 'moderator',
-    'moderators', 'nobody', 'postmaster', 'root', 'security', 'support',
-    'sysop', 'webmaster', 'enable', 'new', 'signup'].freeze
+                      'help', 'hostmaster', 'inactive-user', 'lobster', 'lobsters', 'mailer-daemon', 'moderator',
+                      'moderators', 'nobody', 'postmaster', 'root', 'security', 'support',
+                      'sysop', 'webmaster', 'enable', 'new', 'signup'].freeze
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7
@@ -320,7 +320,7 @@ class User < ApplicationRecord
     User.transaction do
       comments
         .where('upvotes - downvotes < 0')
-        .find_each {|c| c.delete_for_user(self) }
+        .find_each { |c| c.delete_for_user(self) }
 
       sent_messages.each do |m|
         m.deleted_by_author = true

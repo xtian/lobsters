@@ -20,35 +20,8 @@ AllCops:
 # Gemspec
 
 # Layout
-Layout/AccessModifierIndentation:
-  EnforcedStyle: outdent
-Layout/AlignArray:
-  Enabled: false
-Layout/AlignHash:
-  Enabled: false
-Layout/CaseIndentation:
-  EnforcedStyle: end
-Layout/ElseAlignment:
-  Enabled: false
-Layout/EmptyLinesAroundExceptionHandlingKeywords:
-  Enabled: false
-Layout/EndAlignment:
-  EnforcedStyleAlignWith: variable
-Layout/IndentHash:
-  EnforcedStyle: consistent
-Layout/MultilineMethodCallBraceLayout:
-  Enabled: false
 Layout/MultilineMethodCallIndentation:
-  Enabled: false
-Layout/MultilineOperationIndentation:
-  Enabled: false
-Layout/SpaceAroundOperators:
-  Enabled: false
-Layout/SpaceInsideBlockBraces:
-  EnforcedStyle: space
-  SpaceBeforeBlockParameters: false
-Layout/SpaceInsideRangeLiteral:
-  Enabled: false
+  EnforcedStyle: indented
 
 # Lint
 Lint/HandleExceptions:

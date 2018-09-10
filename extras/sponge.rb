@@ -22,7 +22,7 @@ module Net
       self
     end
 
-  private
+    private
 
     def conn_address
       if custom_conn_address.to_s != ''
@@ -83,14 +83,14 @@ class Sponge
 
     # check for domain cookies
     @cookies.keys.each do |dom|
-      if dom.length < host.length && dom == host[host.length - dom.length .. host.length - 1]
+      if dom.length < host.length && dom == host[host.length - dom.length..host.length - 1]
         dputs "adding domain keys from #{dom}"
         cooks = cooks.merge @cookies[dom]
       end
     end
 
     if cooks
-      return cooks.map {|k, v| "#{k}=#{v};" }.join(' ')
+      return cooks.map { |k, v| "#{k}=#{v};" }.join(' ')
     else
       return ''
     end
@@ -113,7 +113,7 @@ class Sponge
         raise if ips.none?
 
         # reject ipv6 addresses
-        ips.reject! {|address| address.match?(/:/) }
+        ips.reject! { |address| address.match?(/:/) }
 
         # pick a random one
         tip = ips[rand(ips.length)]
@@ -132,7 +132,7 @@ class Sponge
 
     raise "couldn't resolve #{uri.host}" unless ip
 
-    raise "refusing to talk to IP #{ip}" if BAD_NETS.select {|n| IPAddr.new(n).include?(ip) }.any?
+    raise "refusing to talk to IP #{ip}" if BAD_NETS.select { |n| IPAddr.new(n).include?(ip) }.any?
 
     host = Net::HTTP.new(ip.to_s, uri.port)
     host.read_timeout = timeout
@@ -160,7 +160,7 @@ class Sponge
         post_data = raw_post_data
         send_headers['Content-type'] = 'application/x-www-form-urlencoded'
       else
-        post_data = fields.map {|k, v| "#{k}=#{v}" }.join('&')
+        post_data = fields.map { |k, v| "#{k}=#{v}" }.join('&')
       end
 
       send_headers['Content-Length'] = post_data.length.to_s
@@ -236,7 +236,7 @@ class Sponge
     fetch(url, 'post', fields)
   end
 
-private
+  private
 
   def dputs(string)
     puts string if debug

@@ -15,7 +15,7 @@ class ReplyingComment < ApplicationRecord
         ->(user_id) { for_user(user_id).where('parent_comment_id is not null') }
   scope :story_replies_for, ->(user_id) { for_user(user_id).where('parent_comment_id is null') }
 
-protected
+  protected
 
   # This is a view, not a real table
   def readonly?

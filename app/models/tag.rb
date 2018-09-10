@@ -28,7 +28,7 @@ class Tag < ApplicationRecord
   def self.all_with_filtered_counts_for(user)
     counts = TagFilter.group(:tag_id).count
 
-    Tag.active.order(:tag).select {|t| t.valid_for?(user) }.map {|t|
+    Tag.active.order(:tag).select { |t| t.valid_for?(user) }.map { |t|
       t.filtered_count = counts[t.id].to_i
       t
     }
@@ -37,14 +37,14 @@ class Tag < ApplicationRecord
   def self.all_with_story_counts_for(user)
     counts = Tagging.group(:tag_id).count
 
-    Tag.active.order(:tag).select {|t| t.valid_for?(user) }.map {|t|
+    Tag.active.order(:tag).select { |t| t.valid_for?(user) }.map { |t|
       t.stories_count = counts[t.id].to_i
       t
     }
   end
 
   def css_class
-    "tag tag_#{tag}" + (is_media?? ' tag_is_media' : '')
+    "tag tag_#{tag}" + (is_media? ? ' tag_is_media' : '')
   end
 
   def valid_for?(user)
@@ -62,10 +62,10 @@ class Tag < ApplicationRecord
   def log_modifications
     Moderation.create do |m|
       if new_record?
-        m.action = 'Created new tag ' + changes.map {|f, c| "with #{f} '#{c[1]}'" }.join(', ')
+        m.action = 'Created new tag ' + changes.map { |f, c| "with #{f} '#{c[1]}'" }.join(', ')
       else
         m.action = "Updating tag #{tag}, " + saved_changes
-          .map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
+          .map { |f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
       end
       m.moderator_user_id = @edit_user_id
       m.tag_id = id

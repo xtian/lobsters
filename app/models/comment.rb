@@ -43,7 +43,7 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  SCORE_RANGE_TO_HIDE = (-2 .. 4)
+  SCORE_RANGE_TO_HIDE = (-2..4)
 
   validate do
     comment.to_s.strip == '' &&
@@ -292,7 +292,7 @@ class Comment < ApplicationRecord
     if is_moderated?
       'Comment removed by moderator ' +
         moderation.try(:moderator).try(:username).to_s << ': ' +
-        (moderation.try(:reason) || 'No reason given')
+                                                          (moderation.try(:reason) || 'No reason given')
     elsif user.is_banned?
       'Comment from banned user removed'
     else
@@ -428,8 +428,8 @@ class Comment < ApplicationRecord
 
   def showing_downvotes_for_user?(u)
     (u&.is_moderator?) ||
-           (created_at && created_at < 36.hours.ago) ||
-           !SCORE_RANGE_TO_HIDE.include?(score)
+      (created_at && created_at < 36.hours.ago) ||
+      !SCORE_RANGE_TO_HIDE.include?(score)
   end
 
   def to_param
@@ -456,7 +456,7 @@ class Comment < ApplicationRecord
       r_users[v.reason.to_s].push v.user.username
     end
 
-    r_counts.keys.sort.map {|k|
+    r_counts.keys.sort.map { |k|
       if k == ''
         "+#{r_counts[k]}"
       else

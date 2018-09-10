@@ -33,7 +33,7 @@ class Search
   end
 
   def to_url_params
-    %i[q what order].map {|p| "#{p}=#{CGI.escape(send(p).to_s)}" }.join('&amp;')
+    %i[q what order].map { |p| "#{p}=#{CGI.escape(send(p).to_s)}" }.join('&amp;')
   end
 
   def page_count
@@ -83,7 +83,7 @@ class Search
     # extract domain query since it must be done separately
     domain = nil
     tag_scopes = []
-    words = q.to_s.split(' ').reject {|w|
+    words = q.to_s.split(' ').reject { |w|
       if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
       elsif (m = w.match(/^tag:(.+)$/))
@@ -193,7 +193,6 @@ class Search
         end
       end
     end
-
   rescue ActiveRecord::StatementInvalid
     # this is most likely bad boolean chars
     self.results = []
