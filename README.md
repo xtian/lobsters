@@ -1,4 +1,4 @@
-### Lobsters Rails Project [![Build Status](https://travis-ci.org/xtian/obelisk.link.svg?branch=master)](https://travis-ci.org/xtian/obelisk.link)
+### Lobsters Rails Project [![Build Status](https://travis-ci.org/xtian/obelisk.link.svg?branch=master)](https://travis-ci.org/xtian/obelisk.link) [![Maintainability](https://api.codeclimate.com/v1/badges/dce77ce72d640f65e83e/maintainability)](https://codeclimate.com/github/xtian/obelisk.link/maintainability)
 
 This is the
 [quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
