@@ -1,14 +1,18 @@
 ---
 language: ruby
 services:
-  - mysql
+  - postgres
+
 env:
   global:
-    - DATABASE_URL=mysql2://root:@localhost/lobsters_dev
+    - DATABASE_HOST=localhost
+    - DATABASE_USER=postgres
     - RAILS_ENV=test
+
 before_script:
   - ./bin/rails db:create
   - ./bin/rails db:schema:load
+
 script:
   - bundle exec rubocop
   - bundle exec rspec
