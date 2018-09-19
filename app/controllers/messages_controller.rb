@@ -144,7 +144,7 @@ class MessagesController < ApplicationController
   def mod_note
     ModNote.create_from_message(@message, @user)
 
-    redirect_to messages_path, notice: 'ModNote created'
+    redirect_to @message, notice: 'ModNote created'
   end
 
   private
