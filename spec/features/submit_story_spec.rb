@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Submitting Stories', type: :feature do
+RSpec.feature 'Submitting Stories' do
   let(:user) { create(:user) }
   before(:each) { stub_login_as user }
 

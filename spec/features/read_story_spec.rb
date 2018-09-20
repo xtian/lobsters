@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Reading Stories', type: :feature do
+RSpec.feature 'Reading Stories' do
   let!(:story) { create(:story) }
   let!(:comment) { create(:comment, story: story) }
 
