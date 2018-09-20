@@ -9,7 +9,8 @@ module Net
   class HTTP
     attr_accessor :address, :custom_conn_address, :skip_close
 
-    def start # :yield: http
+    # :yield: http
+    def start
       if block_given? && !skip_close
         begin
           do_start

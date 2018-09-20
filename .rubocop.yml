@@ -62,8 +62,6 @@ Rails/SkipsModelValidations:
 # Security
 
 # Style
-Style/CommentedKeyword:
-  Enabled: false
 Style/ClassVars:
   Enabled: false
 Style/CollectionMethods:
