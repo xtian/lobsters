@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Vote < ApplicationRecord
-  belongs_to :user, required: false
-  belongs_to :story, required: false
+  belongs_to :user
+  belongs_to :story
   belongs_to :comment, required: false
 
   COMMENT_REASONS = {

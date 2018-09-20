@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_20_143138) do
+ActiveRecord::Schema.define(version: 2018_09_20_200007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_143138) do
 
   create_table "comments", id: :serial, force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.datetime "updated_at"
+    t.datetime "updated_at", null: false
     t.string "short_id", limit: 10, default: "", null: false
     t.integer "story_id", null: false
     t.integer "user_id", null: false
@@ -42,19 +42,19 @@ ActiveRecord::Schema.define(version: 2018_09_20_143138) do
   end
 
   create_table "hat_requests", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "user_id"
-    t.string "hat"
-    t.string "link"
-    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.string "hat", null: false
+    t.string "link", null: false
+    t.text "comment", null: false
   end
 
   create_table "hats", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "user_id"
-    t.integer "granted_by_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.integer "granted_by_user_id", null: false
     t.string "hat", null: false
     t.string "link"
     t.boolean "modlog_use", default: false
@@ -62,16 +62,16 @@ ActiveRecord::Schema.define(version: 2018_09_20_143138) do
   end
 
   create_table "hidden_stories", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "story_id"
+    t.integer "user_id", null: false
+    t.integer "story_id", null: false
     t.index ["user_id", "story_id"], name: "index_hidden_stories_on_user_id_and_story_id", unique: true
   end
 
   create_table "invitation_requests", id: :serial, force: :cascade do |t|
     t.string "code"
     t.boolean "is_verified", default: false
-    t.citext "email"
-    t.string "name"
+    t.citext "email", null: false
+    t.string "name", null: false
     t.text "memo"
     t.string "ip_address"
     t.datetime "created_at", null: false
@@ -96,9 +96,9 @@ ActiveRecord::Schema.define(version: 2018_09_20_143138) do
   end
 
   create_table "messages", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "author_user_id"
-    t.integer "recipient_user_id"
+    t.datetime "created_at", null: false
+    t.integer "author_user_id", null: false
+    t.integer "recipient_user_id", null: false
     t.boolean "has_been_read", default: false
     t.string "subject", limit: 100
     t.text "body"
@@ -137,8 +137,8 @@ ActiveRecord::Schema.define(version: 2018_09_20_143138) do
     t.boolean "is_following", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
-    t.bigint "story_id"
+    t.bigint "user_id", null: false
+    t.bigint "story_id", null: false
     t.index ["story_id"], name: "index_read_ribbons_on_story_id"
     t.index ["user_id"], name: "index_read_ribbons_on_user_id"
   end
@@ -146,14 +146,14 @@ ActiveRecord::Schema.define(version: 2018_09_20_143138) do
   create_table "saved_stories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.integer "story_id"
+    t.integer "user_id", null: false
+    t.integer "story_id", null: false
     t.index ["user_id", "story_id"], name: "index_saved_stories_on_user_id_and_story_id", unique: true
   end
 
   create_table "stories", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.integer "user_id", null: false
     t.string "url", limit: 250, default: ""
     t.string "title", limit: 150, default: "", null: false
     t.text "description"
@@ -183,22 +183,22 @@ ActiveRecord::Schema.define(version: 2018_09_20_143138) do
   end
 
   create_table "suggested_taggings", id: :serial, force: :cascade do |t|
-    t.integer "story_id"
-    t.integer "tag_id"
-    t.integer "user_id"
+    t.integer "story_id", null: false
+    t.integer "tag_id", null: false
+    t.integer "user_id", null: false
   end
 
   create_table "suggested_titles", id: :serial, force: :cascade do |t|
-    t.integer "story_id"
-    t.integer "user_id"
+    t.integer "story_id", null: false
+    t.integer "user_id", null: false
     t.string "title", limit: 150, default: "", null: false
   end
 
   create_table "tag_filters", id: :serial, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.integer "tag_id"
+    t.integer "user_id", null: false
+    t.integer "tag_id", null: false
     t.index ["user_id", "tag_id"], name: "user_tag_idx"
   end
 
@@ -222,7 +222,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_143138) do
     t.string "username", limit: 50
     t.citext "email"
     t.string "password_digest", limit: 75
-    t.datetime "created_at"
+    t.datetime "created_at", null: false
     t.boolean "is_admin", default: false
     t.string "password_reset_token", limit: 75
     t.string "session_token", limit: 75, default: "", null: false
