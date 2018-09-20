@@ -423,7 +423,7 @@ class Story < ApplicationRecord
   end
 
   def hider_count
-    @hider_count ||= HiddenStory.where(story_id: id).count
+    @_hider_count ||= HiddenStory.where(story_id: id).count
   end
 
   def html_class_for_user

@@ -503,7 +503,7 @@ class User < ApplicationRecord
   end
 
   def unread_message_count
-    @unread_message_count ||= Keystore.value_for("user:#{id}:unread_messages").to_i
+    @_unread_message_count ||= Keystore.value_for("user:#{id}:unread_messages").to_i
   end
 
   def update_unread_message_count!
@@ -512,7 +512,7 @@ class User < ApplicationRecord
   end
 
   def unread_replies_count
-    @unread_replies_count ||= ReplyingComment.where(user_id: id, is_unread: true).count
+    @_unread_replies_count ||= ReplyingComment.where(user_id: id, is_unread: true).count
   end
 
   def votes_for_others

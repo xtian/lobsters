@@ -2,7 +2,7 @@
 
 module InactiveUser
   def self.inactive_user
-    @inactive_user ||= User.find_by!(username: 'inactive-user')
+    @_inactive_user ||= User.find_by!(username: 'inactive-user')
   end
 
   def self.disown!(comment)

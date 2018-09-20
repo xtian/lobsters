@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
   end
 
   def tags_filtered_by_cookie
-    @_tags_filtered ||= Tag.where(
+    @_tags_filtered_by_cookie ||= Tag.where(
       tag: cookies[TAG_FILTER_COOKIE].to_s.split(',')
     )
   end

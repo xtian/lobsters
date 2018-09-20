@@ -56,7 +56,7 @@ class Tag < ApplicationRecord
   end
 
   def filtered_count
-    @filtered_count ||= TagFilter.where(tag_id: id).count
+    @_filtered_count ||= TagFilter.where(tag_id: id).count
   end
 
   def log_modifications

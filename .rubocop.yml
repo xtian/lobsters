@@ -8,12 +8,6 @@ AllCops:
     - 'db/**/*'
     - 'vendor/**/*'
 
-# Cop configuration:
-
-# Bundler
-
-# Gemspec
-
 # Layout
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -48,7 +42,7 @@ Metrics/PerceivedComplexity:
 Naming/AccessorMethodName:
   Enabled: false
 Naming/MemoizedInstanceVariableName:
-  Enabled: false
+  EnforcedStyleForLeadingUnderscores: required
 Naming/PredicateName:
   Enabled: false
 # disabled until class vaiables in extras become constants
