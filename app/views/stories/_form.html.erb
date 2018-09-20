@@ -52,11 +52,12 @@
       html = "<strong>#{h(t.tag)}</strong> - #{h(t.description.to_s)}"
 
       if t.hotness_mod != 0
-        html << " (hotness mod #{t.hotness_mod > 0 ? "+" : ""}#{t.hotness_mod})"
+        html += " (hotness mod #{t.hotness_mod > 0 ? "+" : ""}#{t.hotness_mod})"
       end
+
       if t.filtered_count > 0
-        html << " <em>#{t.filtered_count} user" +
-          (t.filtered_count == 1 ? "" : "s") << " filtering</em>"
+        html += " <em>#{t.filtered_count} user" +
+          (t.filtered_count == 1 ? "" : "s") + " filtering</em>"
       end
 
       [ "#{t.tag} - #{t.description}", t.tag, { "data-html" => raw(html) } ]},

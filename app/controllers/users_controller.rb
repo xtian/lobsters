@@ -28,7 +28,7 @@ class UsersController < ApplicationController
       content = Rails.cache.fetch("users_by_karma_#{newest_user}", expires_in: (60 * 60 * 24)) do
         @users = User.order('karma DESC, id ASC').to_a
         @user_count = @users.length
-        @title << ' By Karma'
+        @title += ' By Karma'
         render_to_string action: 'list', layout: nil
       end
       render html: content.html_safe, layout: 'application'

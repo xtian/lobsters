@@ -297,8 +297,7 @@ class Comment < ApplicationRecord
     if is_moderated?
       reason = moderation.try(:reason) || 'No reason given'
 
-      'Comment removed by moderator ' +
-        moderation.try(:moderator).try(:username).to_s << ': ' + reason
+      "Comment removed by moderator #{moderation&.moderator&.username}: #{reason}"
 
     elsif user.is_banned?
       'Comment from banned user removed'
@@ -395,7 +394,7 @@ class Comment < ApplicationRecord
       short_id,
       is_from_email ? 'email' : nil,
       created_at.to_i
-    ].reject(&:!).join('.') << '@' + Rails.application.domain
+    ].reject(&:!).join('.') + '@' + Rails.application.domain
   end
 
   def path
@@ -468,7 +467,7 @@ class Comment < ApplicationRecord
         "+#{r_counts[k]}"
       else
         o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
-        o << " (#{r_users[k].join(', ')})" if user&.is_moderator? && user_id != user.id
+        o += " (#{r_users[k].join(', ')})" if user&.is_moderator? && user_id != user.id
         o
       end
     end.join(', ')

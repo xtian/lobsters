@@ -18,11 +18,11 @@ module ApplicationHelper
   def errors_for(object, _message = nil)
     html = ''
     if object.errors.present?
-      html << "<div class=\"flash-error\">\n"
+      html += "<div class=\"flash-error\">\n"
       object.errors.full_messages.each do |error|
-        html << error << '<br>'
+        html += "#{error}<br>"
       end
-      html << "</div>\n"
+      html += "</div>\n"
     end
 
     raw(html)

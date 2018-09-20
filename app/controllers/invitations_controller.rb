@@ -50,8 +50,8 @@ class InvitationsController < ApplicationController
     begin
       i.save!
       i.send_email
-      flash[:success] = 'Successfully e-mailed invitation to ' +
-                        params[:email].to_s << '.'
+      flash[:success] = 'Successfully e-mailed invitation to ' \
+                        "#{params[:email]}."
     rescue StandardError
       flash[:error] = 'Could not send invitation, verify the e-mail ' \
                       'address is valid.'
@@ -73,8 +73,8 @@ class InvitationsController < ApplicationController
       @invitation_request.ip_address = request.remote_ip
 
       if @invitation_request.save
-        flash[:success] = 'You have been e-mailed a confirmation to ' +
-                          params[:invitation_request][:email].to_s << '.'
+        flash[:success] = 'You have been e-mailed a confirmation to ' \
+                          "#{params[:invitation_request][:email]}."
         return redirect_to '/invitations/request'
       else
         render action: :build
@@ -102,8 +102,7 @@ class InvitationsController < ApplicationController
     i.save!
     i.send_email
     ir.destroy!
-    flash[:success] = 'Successfully e-mailed invitation to ' +
-                      ir.name.to_s << '.'
+    flash[:success] = "Successfully e-mailed invitation to #{ir.name}."
 
     Rails.logger.info "[u#{@user.id}] sent invitiation for request " +
                       ir.inspect
@@ -120,8 +119,7 @@ class InvitationsController < ApplicationController
     end
 
     ir.destroy!
-    flash[:success] = 'Successfully deleted invitation request from ' +
-                      ir.name.to_s << '.'
+    flash[:success] = "Successfully deleted invitation request from #{ir.name}."
 
     Rails.logger.info "[u#{@user.id}] deleted invitation request " \
                       "from #{ir.inspect}"

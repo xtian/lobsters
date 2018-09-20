@@ -27,8 +27,8 @@ class Pushover
 
   def self.subscription_url(params)
     u = "https://pushover.net/subscribe/#{self.SUBSCRIPTION_CODE}"
-    u << "?success=#{CGI.escape(params[:success])}"
-    u << "&failure=#{CGI.escape(params[:failure])}"
+    u += "?success=#{CGI.escape(params[:success])}"
+    u += "&failure=#{CGI.escape(params[:failure])}"
     u
   end
 end

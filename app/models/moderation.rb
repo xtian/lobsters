@@ -35,41 +35,29 @@ class Moderation < ApplicationRecord
       m.recipient_user_id = story.user_id
       m.subject = 'Your story has been edited by ' +
                   (is_from_suggestions? ? 'user suggestions' : 'a moderator')
+
       m.body = "Your story [#{story.title}](" \
                "#{story.comments_url}) has been edited with the following " \
-               "changes:\n" \
-               "\n" \
+               "changes:\n\n" \
                "> *#{action}*\n"
 
-      if reason.present?
-        m.body << "\n" \
-          "The reason given:\n" \
-          "\n" \
-          "> *#{reason}*\n"
-      end
+      m.body += "\nThe reason given:\n\n> *#{reason}*\n" if reason.present?
 
     elsif comment
       m.recipient_user_id = comment.user_id
       m.subject = 'Your comment has been moderated'
       m.body = "Your comment on [#{comment.story.title}](" \
-               "#{comment.story.comments_url}) has been moderated:\n" \
-               "\n" \
+               "#{comment.story.comments_url}) has been moderated:\n\n" \
                "> *#{comment.comment}*\n"
 
-      if reason.present?
-        m.body << "\n" \
-          "The reason given:\n" \
-          "\n" \
-          "> *#{reason}*\n"
-      end
+      m.body += "\nThe reason given:\n\n> *#{reason}*\n" if reason.present?
 
     else
       # no point in alerting deleted users, they can't login to read it
       return
     end
 
-    m.body << "\n" \
-      '*This is an automated message.*'
+    m.body += "\n*This is an automated message.*"
 
     m.save
   end

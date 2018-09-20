@@ -35,18 +35,18 @@ class Hat < ApplicationRecord
         'title="Granted by ' + "#{granted_by_user.username} on " +
         created_at.strftime('%Y-%m-%d')
 
-    h << " - #{ERB::Util.html_escape(link)}" if !hl && link.present?
+    h += " - #{ERB::Util.html_escape(link)}" if !hl && link.present?
 
-    h << '">' \
+    h += '">' \
       '<span class="crown">'
 
-    h << "<a href=\"#{ERB::Util.html_escape(link)}\" target=\"_blank\">" if hl
+    h += "<a href=\"#{ERB::Util.html_escape(link)}\" target=\"_blank\">" if hl
 
-    h << ERB::Util.html_escape(hat)
+    h += ERB::Util.html_escape(hat)
 
-    h << '</a>' if hl
+    h += '</a>' if hl
 
-    h << '</span></span>'
+    h += '</span></span>'
 
     h.html_safe
   end

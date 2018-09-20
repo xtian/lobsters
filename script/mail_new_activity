@@ -15,7 +15,7 @@ class String
     if encoded_word
       s
         .split(/\r?\n/)
-        .map { |l| '=?UTF-8?Q?' + l.gsub(/=*$/, '').tr(' ', '_') << '?=' }
+        .map { |l| '=?UTF-8?Q?' + l.gsub(/=*$/, '').tr(' ', '_') + '?=' }
         .join("\n\t")
     else
       s
@@ -43,7 +43,7 @@ def story_subject(story, prefix = '')
   ss = "#{prefix}#{story.title}"
 
   story.tags.sort_by(&:tag).each do |t|
-    ss << " [#{t.tag}]"
+    ss += " [#{t.tag}]"
   end
 
   ss.quoted_printable(true)
@@ -157,8 +157,8 @@ Comment.where(
 
     IO.popen([{}, '/usr/sbin/sendmail', '-i', '-f', "nobody@#{domain}", u.email], 'w') do |mail|
       from = "From: \"#{c.user.username}"
-      from << " (#{c.hat.hat})" if c.hat
-      from << "\" <#{c.user.username}@#{domain}>"
+      from += " (#{c.hat.hat})" if c.hat
+      from += "\" <#{c.user.username}@#{domain}>"
       mail.puts from
 
       mail.puts "Reply-To: #{list}"

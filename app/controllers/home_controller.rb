@@ -202,17 +202,16 @@ class HomeController < ApplicationController
   def top
     @cur_url = '/top'
     length = time_interval(params[:length])
-    @cur_url << "/#{params[:length]}"
+    @cur_url += "/#{params[:length]}"
 
     @stories, @show_more = get_from_cache(top: true, length: length) do
       paginate stories.top(length)
     end
 
     @heading = @title = if length[:dur] > 1
-                          "Top Stories of the Past #{length[:dur]} " +
-                            length[:intv] << 's'
+                          "Top Stories of the Past #{length[:dur]} #{length[:intv]}s"
                         else
-                          'Top Stories of the Past ' + length[:intv]
+                          "Top Stories of the Past #{length[:intv]}"
                         end
 
     render action: 'index'
