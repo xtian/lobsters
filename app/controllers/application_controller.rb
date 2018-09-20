@@ -74,13 +74,13 @@ class ApplicationController < ActionController::Base
 
     # logo background intensity is based on traffic
     intensity = format('%02x', [(@traffic * 7).floor + 50.0, 255].min)
-    set_traffic_style intensity
+    self.traffic_style = intensity
 
     true
   end
 
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf
-  def set_traffic_style(intensity)
+  def traffic_style=(intensity)
     @traffic_style = "background-color: ##{intensity}0000;"
     return unless @user
 

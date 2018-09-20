@@ -39,8 +39,6 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 # Naming
-Naming/AccessorMethodName:
-  Enabled: false
 Naming/MemoizedInstanceVariableName:
   EnforcedStyleForLeadingUnderscores: required
 Naming/PredicateName:

@@ -755,10 +755,10 @@ class Story < ApplicationRecord
 
   def domain
     return @domain if @domain
-    set_domain url.match(URL_RE) if url
+    self.domain = url.match(URL_RE) if url
   end
 
-  def set_domain(match)
+  def domain=(match)
     @domain = match ? match[:domain].sub(/^www\d*\./, '') : nil
   end
 
@@ -774,7 +774,7 @@ class Story < ApplicationRecord
         @url_port = nil
       end
     end
-    set_domain match
+    self.domain = match
 
     # strip out stupid google analytics parameters
     if (match = url.match(/\A([^\?]+)\?(.+)\z/))
