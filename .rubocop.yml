@@ -4,6 +4,7 @@ Rails:
 
 AllCops:
   Exclude:
+    - Brewfile
     - 'bin/**/*'
     - 'db/**/*'
     - 'vendor/**/*'
