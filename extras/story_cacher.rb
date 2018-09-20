@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Naming/VariableName, Style/ClassVars
+
 class StoryCacher
   cattr_accessor :DIFFBOT_API_KEY
 
@@ -45,3 +47,4 @@ class StoryCacher
     nil
   end
 end
+# rubocop:enable Naming/VariableName, Style/ClassVars

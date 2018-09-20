@@ -45,9 +45,6 @@ Naming/MemoizedInstanceVariableName:
   EnforcedStyleForLeadingUnderscores: required
 Naming/PredicateName:
   Enabled: false
-# disabled until class vaiables in extras become constants
-Naming/VariableName:
-  Enabled: false
 
 # Performance
 
@@ -62,8 +59,6 @@ Rails/SkipsModelValidations:
 # Security
 
 # Style
-Style/ClassVars:
-  Enabled: false
 Style/CollectionMethods:
   Enabled: true
 # It would be nice to have this on, but I'm not up for writing 66 of these in

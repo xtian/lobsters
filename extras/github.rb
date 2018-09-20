@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Naming/VariableName, Style/ClassVars
+
 class Github
   cattr_accessor :CLIENT_ID, :CLIENT_SECRET
 
@@ -41,3 +43,4 @@ class Github
       "state=#{state}"
   end
 end
+# rubocop:enable Naming/VariableName, Style/ClassVars

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Naming/VariableName, Style/ClassVars
+
 class Twitter
   cattr_accessor :CONSUMER_KEY, :CONSUMER_SECRET, :AUTH_TOKEN, :AUTH_SECRET
 
@@ -76,3 +78,4 @@ class Twitter
     oauth_request_token(state).authorize_url
   end
 end
+# rubocop:enable Naming/VariableName, Style/ClassVars
