@@ -10,10 +10,11 @@ class AvatarsController < ApplicationController
   def expire
     expired = 0
 
-    Dir.entries(CACHE_DIR).select do |f|
+    files = Dir.entries(CACHE_DIR).select do |f|
       f.match(/\A#{@user.username}-(\d+)\.png\z/)
-    end.each do |f|
+    end
 
+    files.each do |f|
       Rails.logger.debug "Expiring #{f}"
       File.unlink("#{CACHE_DIR}/#{f}")
       expired += 1

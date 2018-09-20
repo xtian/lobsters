@@ -46,8 +46,6 @@ Naming/MemoizedInstanceVariableName:
 Naming/PredicateName:
   Enabled: false
 
-# Performance
-
 # Rails
 Rails/FilePath:
   Enabled: false
@@ -55,8 +53,6 @@ Rails/OutputSafety:
   Enabled: false
 Rails/SkipsModelValidations:
   Enabled: false
-
-# Security
 
 # Style
 Style/CollectionMethods:
@@ -71,8 +67,6 @@ Style/DoubleNegation:
 Style/GuardClause:
   Enabled: false
 Style/Lambda:
-  Enabled: false
-Style/MultilineBlockChain:
   Enabled: false
 Style/MultilineTernaryOperator:
   Enabled: false
