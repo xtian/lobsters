@@ -51,6 +51,7 @@ group :test, :development do
 end
 
 group :test do
+  gem 'fuubar' # RSpec progress bar formatter
   gem 'webmock' # Mocks external requests
 end
 
