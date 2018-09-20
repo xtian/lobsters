@@ -50,6 +50,10 @@ group :test, :development do
   gem 'sqlite3'
 end
 
+group :test do
+  gem 'webmock' # Mocks external requests
+end
+
 group :production do
   gem 'exception_notification' # Sends notifications when errors occur
   gem 'puma-heroku' # Default Puma configuration

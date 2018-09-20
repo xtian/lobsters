@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Search do
+RSpec.describe Search do
   # We need to set up and then teardown the environment
   # outside of the typical RSpec transaction because
   # the search module uses custom SQL that doesn't

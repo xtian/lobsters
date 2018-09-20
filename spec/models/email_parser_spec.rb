@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe EmailParser do
+RSpec.describe EmailParser do
   before(:each) do
     @user = create(:user)
     @story = create(:story, user: @user)

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Comment do
+RSpec.describe Comment do
   it 'should get a short id' do
     c = create(:comment)
 

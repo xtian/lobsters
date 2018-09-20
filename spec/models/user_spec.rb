@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe User do
+RSpec.describe User do
   it 'has a valid username' do
     expect { create(:user, username: nil) }.to raise_error
     expect { create(:user, username: '') }.to raise_error

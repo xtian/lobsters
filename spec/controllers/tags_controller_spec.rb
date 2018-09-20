@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe TagsController do
+RSpec.describe TagsController do
   let(:user) { create(:user) }
   before do
     stub_login_as user

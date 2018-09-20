@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Markdowner do
+RSpec.describe Markdowner do
   it 'parses simple markdown' do
     expect(Markdowner.to_html('hello there *italics* and **bold**!'))
       .to eq("<p>hello there <em>italics</em> and <strong>bold</strong>!</p>\n")

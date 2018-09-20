@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Story do
+RSpec.describe Story do
   it 'should get a short id' do
     s = create(:story, title: 'hello', url: 'http://example.com/')
 

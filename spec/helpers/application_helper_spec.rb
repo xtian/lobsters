@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe ApplicationHelper do
+RSpec.describe ApplicationHelper do
   describe '#page_numbers_for_pagination' do
     it 'returns the right number of pages' do
       expect(helper.page_numbers_for_pagination(10, 1))

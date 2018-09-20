@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Vote do
+RSpec.describe Vote do
   it 'applies a story upvote and karma properly' do
     s = create(:story)
     expect(s.upvotes).to eq(1)

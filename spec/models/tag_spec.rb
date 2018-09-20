@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Tag do
+RSpec.describe Tag do
   context 'validations' do
     it 'allows a valid tag to be created' do
       expect(Tag.create(tag: 'tag_name', hotness_mod: 0.25, description: 'test description'))
