@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_19_233321) do
+ActiveRecord::Schema.define(version: 2018_09_20_143138) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "plpgsql"
 
   create_table "comments", id: :serial, force: :cascade do |t|
@@ -69,7 +70,7 @@ ActiveRecord::Schema.define(version: 2018_09_19_233321) do
   create_table "invitation_requests", id: :serial, force: :cascade do |t|
     t.string "code"
     t.boolean "is_verified", default: false
-    t.string "email"
+    t.citext "email"
     t.string "name"
     t.text "memo"
     t.string "ip_address"
@@ -79,7 +80,7 @@ ActiveRecord::Schema.define(version: 2018_09_19_233321) do
 
   create_table "invitations", id: :serial, force: :cascade do |t|
     t.integer "user_id", null: false
-    t.string "email"
+    t.citext "email"
     t.string "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -219,7 +220,7 @@ ActiveRecord::Schema.define(version: 2018_09_19_233321) do
 
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "username", limit: 50
-    t.string "email", limit: 100
+    t.citext "email"
     t.string "password_digest", limit: 75
     t.datetime "created_at"
     t.boolean "is_admin", default: false
@@ -241,6 +242,7 @@ ActiveRecord::Schema.define(version: 2018_09_19_233321) do
     t.integer "disabled_invite_by_user_id"
     t.string "disabled_invite_reason", limit: 200
     t.text "settings"
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["mailing_list_mode"], name: "mailing_list_enabled"
     t.index ["mailing_list_token"], name: "mailing_list_token", unique: true
     t.index ["password_reset_token"], name: "password_reset_token", unique: true
