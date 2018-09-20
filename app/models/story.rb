@@ -758,12 +758,14 @@ class Story < ApplicationRecord
   def domain
     return @domain if @domain
 
-    self.domain = url.match(URL_RE) if url
+    set_domain url.match(URL_RE) if url
   end
 
-  def domain=(match)
+  # rubocop:disable Naming/AccessorMethodName
+  def set_domain(match)
     @domain = match ? match[:domain].sub(/^www\d*\./, '') : nil
   end
+  # rubocop:enable Naming/AccessorMethodName
 
   def url=(url)
     super(url&.strip) || return if url.blank?
@@ -777,7 +779,7 @@ class Story < ApplicationRecord
         @url_port = nil
       end
     end
-    self.domain = match
+    set_domain match
 
     # strip out stupid google analytics parameters
     if (match = url.match(/\A([^\?]+)\?(.+)\z/))
