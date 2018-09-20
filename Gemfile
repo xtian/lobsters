@@ -50,3 +50,7 @@ group :test, :development do
   gem 'rubocop-rspec', require: false
   gem 'sqlite3'
 end
+
+group :production do
+  gem 'puma-heroku' # Default Puma configuration
+end
