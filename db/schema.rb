@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_30_114325) do
+ActiveRecord::Schema.define(version: 2018_09_19_233321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -253,7 +253,7 @@ ActiveRecord::Schema.define(version: 2018_08_30_114325) do
     t.integer "user_id", null: false
     t.integer "story_id", null: false
     t.integer "comment_id"
-    t.integer "vote", limit: 1, null: false
+    t.integer "vote", limit: 2, null: false
     t.string "reason", limit: 1
     t.datetime "updated_at", null: false
     t.index ["comment_id"], name: "index_votes_on_comment_id"
@@ -261,6 +261,47 @@ ActiveRecord::Schema.define(version: 2018_08_30_114325) do
     t.index ["user_id", "story_id"], name: "user_id_story_id"
   end
 
+  add_foreign_key "comments", "comments", column: "parent_comment_id"
+  add_foreign_key "comments", "stories"
+  add_foreign_key "comments", "users"
+  add_foreign_key "hat_requests", "users", on_delete: :cascade
+  add_foreign_key "hats", "users", column: "granted_by_user_id"
+  add_foreign_key "hats", "users", on_delete: :cascade
+  add_foreign_key "hidden_stories", "stories", on_delete: :cascade
+  add_foreign_key "hidden_stories", "users", on_delete: :cascade
+  add_foreign_key "invitations", "users", column: "new_user_id"
+  add_foreign_key "invitations", "users", on_delete: :cascade
+  add_foreign_key "messages", "hats"
+  add_foreign_key "messages", "users", column: "author_user_id"
+  add_foreign_key "messages", "users", column: "recipient_user_id"
+  add_foreign_key "mod_notes", "users"
+  add_foreign_key "mod_notes", "users", column: "moderator_user_id"
+  add_foreign_key "moderations", "comments", on_delete: :cascade
+  add_foreign_key "moderations", "stories"
+  add_foreign_key "moderations", "tags"
+  add_foreign_key "moderations", "users"
+  add_foreign_key "moderations", "users", column: "moderator_user_id"
+  add_foreign_key "read_ribbons", "stories", on_delete: :cascade
+  add_foreign_key "read_ribbons", "users", on_delete: :cascade
+  add_foreign_key "saved_stories", "stories", on_delete: :cascade
+  add_foreign_key "saved_stories", "users", on_delete: :cascade
+  add_foreign_key "stories", "stories", column: "merged_story_id", on_delete: :nullify
+  add_foreign_key "stories", "users"
+  add_foreign_key "suggested_taggings", "stories", on_delete: :cascade
+  add_foreign_key "suggested_taggings", "tags", on_delete: :cascade
+  add_foreign_key "suggested_taggings", "users", on_delete: :cascade
+  add_foreign_key "suggested_titles", "stories", on_delete: :cascade
+  add_foreign_key "suggested_titles", "users", on_delete: :cascade
+  add_foreign_key "tag_filters", "tags", on_delete: :cascade
+  add_foreign_key "tag_filters", "users", on_delete: :cascade
+  add_foreign_key "taggings", "stories", on_delete: :cascade
+  add_foreign_key "taggings", "tags", on_delete: :cascade
+  add_foreign_key "users", "users", column: "banned_by_user_id"
+  add_foreign_key "users", "users", column: "disabled_invite_by_user_id"
+  add_foreign_key "users", "users", column: "invited_by_user_id"
+  add_foreign_key "votes", "comments", on_delete: :cascade
+  add_foreign_key "votes", "stories", on_delete: :cascade
+  add_foreign_key "votes", "users", on_delete: :cascade
 
   create_view "replying_comments",  sql_definition: <<-SQL
       SELECT read_ribbons.user_id,
