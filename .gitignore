@@ -7,11 +7,6 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore the default SQLite database.
-/db/*.sqlite3
-/db/*.sqlite3-journal
-/db/sphinx
-
 # Ignore all logfiles and tempfiles.
 /log
 /tmp
@@ -39,4 +34,3 @@ public/apple-touch-icon*
 lib/tasks/deploy.rake
 config/initializers/production.rb
 config/initializers/secret_token.rb
-config/*.sphinx.conf

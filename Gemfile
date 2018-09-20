@@ -47,7 +47,6 @@ group :test, :development do
   gem 'rspec-rails'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
-  gem 'sqlite3'
 end
 
 group :test do
