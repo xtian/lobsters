@@ -123,7 +123,7 @@ class Story < ApplicationRecord
                          wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net ].freeze
 
   # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i
+  URL_RE = %r{\A(?<protocol>https?)://(?<domain>([^\./]+\.)+[a-z]+)(?<port>:\d+)?(/|\z)}i
 
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/
@@ -187,22 +187,22 @@ class Story < ApplicationRecord
 
     # https
     urls.each do |u|
-      urls2.push u.gsub(/^http:\/\//i, 'https://')
-      urls2.push u.gsub(/^https:\/\//i, 'http://')
+      urls2.push u.gsub(%r{^http://}i, 'https://')
+      urls2.push u.gsub(%r{^https://}i, 'http://')
     end
     urls = urls2.clone
 
     # trailing slash
     urls.each do |u|
-      urls2.push u.gsub(/\/+\z/, '')
+      urls2.push u.gsub(%r{/+\z}, '')
       urls2.push u + '/'
     end
     urls = urls2.clone
 
     # www prefix
     urls.each do |u|
-      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) { |_| Regexp.last_match(1) }
-      urls2.push u.gsub(/^(https?:\/\/)/i) { |_| "#{Regexp.last_match(1)}www." }
+      urls2.push u.gsub(%r{^(https?://)www\d*\.}i) { |_| Regexp.last_match(1) }
+      urls2.push u.gsub(%r{^(https?://)}i) { |_| "#{Regexp.last_match(1)}www." }
     end
     urls = urls2.clone
 

@@ -166,7 +166,7 @@ class Sponge
       send_headers['Content-Length'] = post_data.length.to_s
     end
 
-    path.gsub!(/^\/\//, '/')
+    path.gsub!(%r{^//}, '/')
 
     dputs "fetching #{url} (#{ip}) " +
           (uri.user ? 'with http auth ' + uri.user + '/' + ('*' * uri.password.length) + ' ' : '') +

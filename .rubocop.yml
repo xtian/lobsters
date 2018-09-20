@@ -93,8 +93,6 @@ Style/MultilineTernaryOperator:
   Enabled: false
 Style/NumericPredicate:
   Enabled: false
-Style/RegexpLiteral:
-  AllowInnerSlashes: true
 Style/Send:
   Enabled: true
 Style/StringMethods:

@@ -63,7 +63,7 @@ class EmailParser
       # parts[0] - multipart/alternative
       #  parts[0].parts[0] - text/plain
       #  parts[0].parts[1] - text/html
-      if (found = email.parts.first.parts.select { |p| p.content_type.match(/text\/plain/i) }
+      if (found = email.parts.first.parts.select { |p| p.content_type.match(%r{text/plain}i) }
          ).any?
         @body = found.first.body.to_s
 
@@ -73,7 +73,7 @@ class EmailParser
         end
 
       # parts[0] - text/plain
-      elsif (found = email.parts.select { |p| p.content_type.match(/text\/plain/i) }).any?
+      elsif (found = email.parts.select { |p| p.content_type.match(%r{text/plain}i) }).any?
         @body = found.first.body.to_s
 
         begin
@@ -83,7 +83,7 @@ class EmailParser
       end
 
     # simple one-part
-    elsif email.content_type.to_s.match?(/text\/plain/)
+    elsif email.content_type.to_s.match?(%r{text/plain}i)
       @body = email.body.to_s
 
       begin

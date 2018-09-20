@@ -28,7 +28,7 @@ class Hat < ApplicationRecord
   end
 
   def to_html_label
-    hl = (link.present? && link.match(/^https?:\/\//))
+    hl = (link.present? && link.match(%r{^https?://}))
 
     h = '<span class="hat ' \
         "hat_#{hat.gsub(/[^A-Za-z0-9]/, '_').downcase}\" " \
