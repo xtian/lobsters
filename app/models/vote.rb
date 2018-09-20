@@ -80,6 +80,7 @@ class Vote < ApplicationRecord
     end
   end
 
+  # rubocop:disable Metrics/ParameterLists
   def self.vote_thusly_on_story_or_comment_for_user_because(
     vote, story_id, comment_id, user_id, reason, update_counters = true
   )
@@ -129,4 +130,5 @@ class Vote < ApplicationRecord
       end
     end
   end
+  # rubocop:enable Metrics/ParameterLists
 end

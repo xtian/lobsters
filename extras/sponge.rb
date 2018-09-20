@@ -97,6 +97,7 @@ class Sponge
     end
   end
 
+  # rubocop:disable Metrics/ParameterLists
   def fetch(url, method = :get, fields = nil, raw_post_data = nil, headers = {}, limit = 10)
     raise ArgumentError, 'http redirection too deep' if limit <= 0
 
@@ -228,6 +229,7 @@ class Sponge
       fetch(newuri.to_s, 'get', nil, nil, headers, limit - 1)
     end
   end
+  # rubocop:enable Metrics/ParameterLists
 
   def get(url)
     fetch(url, 'get')
