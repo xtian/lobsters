@@ -698,9 +698,9 @@ class Story < ApplicationRecord
     end
   end
 
-  def title=(t)
+  def title=(title)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.strip.gsub(/[\.,;:!]*$/, '')
+    self[:title] = title.strip.gsub(/[\.,;:!]*$/, '')
   end
 
   def title_as_url
@@ -762,28 +762,28 @@ class Story < ApplicationRecord
     @domain = match ? match[:domain].sub(/^www\d*\./, '') : nil
   end
 
-  def url=(u)
-    super(u.try(:strip)) || return if u.blank?
+  def url=(url)
+    super(url.try(:strip)) || return if url.blank?
 
-    if (match = u.match(URL_RE))
+    if (match = url.match(URL_RE))
       # remove well-known port for http and https if present
       @url_port = match[:port]
       if match[:protocol] == 'http'  && match[:port] == ':80' ||
          match[:protocol] == 'https' && match[:port] == ':443'
-        u = u[0...match.begin(3)] + u[match.end(3)..-1]
+        url = url[0...match.begin(3)] + url[match.end(3)..-1]
         @url_port = nil
       end
     end
     set_domain match
 
     # strip out stupid google analytics parameters
-    if (match = u.match(/\A([^\?]+)\?(.+)\z/))
+    if (match = url.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
       params.reject! { |p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
-      u = match[1] << (params.any? ? '?' + params.join('&') : '')
+      url = match[1] << (params.any? ? '?' + params.join('&') : '')
     end
 
-    super(u)
+    super(url)
   end
 
   def url_is_editable_by_user?(user)

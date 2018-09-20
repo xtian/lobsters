@@ -46,8 +46,6 @@ Naming/MemoizedInstanceVariableName:
 Naming/PredicateName:
   Enabled: false
 # disabled until class vaiables in extras become constants
-Naming/UncommunicativeMethodParamName:
-  Enabled: false
 Naming/VariableName:
   Enabled: false
 

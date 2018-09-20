@@ -418,10 +418,10 @@ class Comment < ApplicationRecord
     self.upvotes - self.downvotes
   end
 
-  def score_for_user(u)
-    if showing_downvotes_for_user?(u)
+  def score_for_user(user)
+    if showing_downvotes_for_user?(user)
       score
-    elsif u&.can_downvote?(self)
+    elsif user&.can_downvote?(self)
       '~'
     else
       '&nbsp;'.html_safe
@@ -432,8 +432,8 @@ class Comment < ApplicationRecord
     Rails.application.root_url + "c/#{short_id}"
   end
 
-  def showing_downvotes_for_user?(u)
-    (u&.is_moderator?) ||
+  def showing_downvotes_for_user?(user)
+    (user&.is_moderator?) ||
       (created_at && created_at < 36.hours.ago) ||
       !SCORE_RANGE_TO_HIDE.include?(score)
   end
@@ -450,7 +450,7 @@ class Comment < ApplicationRecord
     story.comments_url + "#c_#{short_id}"
   end
 
-  def vote_summary_for_user(u)
+  def vote_summary_for_user(user)
     r_counts = {}
     r_users = {}
     # don't includes(:user) here and assume the caller did this already
@@ -467,7 +467,7 @@ class Comment < ApplicationRecord
         "+#{r_counts[k]}"
       else
         o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
-        o << " (#{r_users[k].join(', ')})" if u&.is_moderator? && user_id != u.id
+        o << " (#{r_users[k].join(', ')})" if user&.is_moderator? && user_id != user.id
         o
       end
     end.join(', ')

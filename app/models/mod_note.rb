@@ -25,8 +25,8 @@ class ModNote < ApplicationRecord
     end
   end
 
-  def note=(n)
-    self[:note] = n.to_s.strip
+  def note=(note)
+    self[:note] = note.to_s.strip
     self.markeddown_note = generated_markeddown
   end
 
