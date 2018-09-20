@@ -355,20 +355,6 @@ div#footer a {
 }
 
 /* other specifics */
-div#gravatar {
-  border: 2px solid #fff;
-  border-radius: 100% 100%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-  float: right;
-  height: 100px;
-  width: 100px;
-}
-div#gravatar img {
-  border-radius: 50px;
-  height: 100px;
-  width: 100px;
-}
-
 .help {
   margin-top: 2em;
 }
@@ -644,17 +630,6 @@ div.comment:target div.voters {
 li .byline {
   color: #888;
   font-size: 9.5pt;
-}
-li .byline > img.avatar {
-  margin-bottom: -5px;
-}
-li .byline img.avatar {
-  border-radius: 8px;
-  height: 16px;
-  margin-bottom: 2px;
-  margin-right: 2px;
-  vertical-align: middle;
-  width: 16px;
 }
 li.story .byline {
   margin-top: 1px;

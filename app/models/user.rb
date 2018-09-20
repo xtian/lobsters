@@ -60,7 +60,6 @@ class User < ApplicationRecord
     s.boolean :email_messages, default: false
     s.boolean :pushover_messages, default: false
     s.boolean :email_mentions, default: false
-    s.boolean :show_avatars, default: true
     s.boolean :show_story_previews, default: false
     s.boolean :show_submitted_story_threads, default: false
     s.string :totp_secret
@@ -154,7 +153,6 @@ class User < ApplicationRecord
 
     h = super(only: attrs)
 
-    h[:avatar_url] = avatar_url
     h[:invited_by_user] = User.where(id: invited_by_user_id).pluck(:username).first
 
     h[:github_username] = github_username if github_username.present?
@@ -167,20 +165,6 @@ class User < ApplicationRecord
   def authenticate_totp(code)
     totp = ROTP::TOTP.new(totp_secret)
     totp.verify(code)
-  end
-
-  def avatar_path(size = 100)
-    ActionController::Base.helpers.image_path(
-      "/avatars/#{username}-#{size}.png",
-      skip_pipeline: true
-    )
-  end
-
-  def avatar_url(size = 100)
-    ActionController::Base.helpers.image_url(
-      "/avatars/#{username}-#{size}.png",
-      skip_pipeline: true
-    )
   end
 
   def average_karma
@@ -294,23 +278,6 @@ class User < ApplicationRecord
 
   def comments_posted_count
     Keystore.value_for("user:#{id}:comments_posted").to_i
-  end
-
-  def fetched_avatar(size = 100)
-    gravatar_url = 'https://www.gravatar.com/avatar/' +
-                   Digest::MD5.hexdigest(email.strip.downcase) <<
-                   "?r=pg&d=identicon&s=#{size}"
-
-    begin
-      s = Sponge.new
-      s.timeout = 3
-      res = s.fetch(gravatar_url)
-      return res if res.present?
-    rescue StandardError => e
-      Rails.logger.error "error fetching #{gravatar_url}: #{e.message}"
-    end
-
-    nil
   end
 
   def update_comments_posted_count!

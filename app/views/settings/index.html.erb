@@ -73,17 +73,6 @@
       External Accounts
     </div>
 
-    <div class="boxline">
-      <%= label_tag :gravatar,
-        raw("<a href=\"https://gravatar.com/\">Gravatar</a>:"),
-        :class => "required" %>
-      <span>
-        Your avatar will be cached from the Gravatar icon for your e-mail
-        address above.
-        (<%= link_to "Expire cache", "/avatars/expire", :method => :post %>)
-      </span>
-    </div>
-
     <% if Pushover.enabled? %>
       <div class="boxline">
         <%= label_tag :pushover_user_key,
@@ -272,11 +261,6 @@
       <%= f.label :show_story_previews, "Show Story Previews:",
         :class => "required" %>
       <%= f.check_box :show_story_previews %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :show_avatars, "Show User Avatars:", :class => "required" %>
-      <%= f.check_box :show_avatars %>
     </div>
 
     <br>

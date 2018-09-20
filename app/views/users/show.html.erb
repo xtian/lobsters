@@ -15,12 +15,6 @@
     <% end %>
   </div>
 
-  <% if @showing_user.is_active? %>
-    <div id="gravatar">
-      <%= avatar_img(@showing_user, 100) %>
-    </div>
-  <% end %>
-
   <label class="required">Status:</label>
   <span class="d"
   <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>

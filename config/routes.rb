@@ -119,9 +119,6 @@ Rails.application.routes.draw do
   get '/u' => 'users#tree'
   get '/u/:username' => 'users#show', :as => 'user'
 
-  get '/avatars/:username_size.png' => 'avatars#show'
-  post '/avatars/expire' => 'avatars#expire'
-
   post '/users/:username/ban' => 'users#ban', :as => 'user_ban'
   post '/users/:username/unban' => 'users#unban', :as => 'user_unban'
   post '/users/:username/disable_invitation' => 'users#disable_invitation',

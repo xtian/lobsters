@@ -13,7 +13,6 @@
 
 vendor/bundle
 public/assets
-public/avatars
 public/sitemap*
 node_modules/
 yarn-error.log

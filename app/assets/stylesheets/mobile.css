@@ -258,10 +258,6 @@
     min-width: 305px !important;
   }
 
-  div#gravatar {
-    float: none;
-  }
-
   div#user_about {
     margin-left: 0;
   }

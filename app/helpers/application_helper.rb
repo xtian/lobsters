@@ -5,16 +5,6 @@
 module ApplicationHelper
   MAX_PAGES = 15
 
-  def avatar_img(user, size)
-    image_tag(
-      user.avatar_path(size),
-      srcset: "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
-      class: 'avatar',
-      size: "#{size}x#{size}",
-      alt: "#{user.username} avatar"
-    )
-  end
-
   def break_long_words(str, len = 30)
     safe_join(str.split(' ').map do |w|
       if w.length > len
