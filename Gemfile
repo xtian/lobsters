@@ -20,7 +20,6 @@ gem 'uglifier', '>= 1.3.0'
 
 # deployment
 gem 'actionpack-page_caching'
-gem 'exception_notification'
 gem 'puma'
 
 # security
@@ -52,5 +51,6 @@ group :test, :development do
 end
 
 group :production do
+  gem 'exception_notification' # Sends notifications when errors occur
   gem 'puma-heroku' # Default Puma configuration
 end
