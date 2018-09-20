@@ -89,7 +89,6 @@ class Story < ApplicationRecord
   validates :title, length: { in: 3..150 }
   validates :description, length: { maximum: (64 * 1024) }
   validates :url, length: { maximum: 250, allow_nil: true }
-  validates :user_id, presence: true
 
   validates_each :merged_story_id do |record, _attr, value|
     record.errors.add(:merge_story_short_id, 'id cannot be itself.') if value.to_i == record.id
