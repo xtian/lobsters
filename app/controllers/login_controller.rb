@@ -117,6 +117,7 @@ class LoginController < ApplicationController
 
         @reset_user.deleted_at = nil if !@reset_user.is_active? && !@reset_user.is_banned?
 
+        # rubocop:disable Metrics/BlockNesting
         if @reset_user.save && @reset_user.is_active?
           if @reset_user.has_2fa?
             flash[:success] = 'Your password has been reset.'
@@ -128,6 +129,7 @@ class LoginController < ApplicationController
         else
           flash[:error] = 'Could not reset password.'
         end
+        # rubocop:enable Metrics/BlockNesting:
       end
     else
       flash[:error] = 'Invalid reset token.  It may have already been ' \
