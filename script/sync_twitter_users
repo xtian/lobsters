@@ -14,6 +14,7 @@ TWITTER_LIST = 'users'
 res = Twitter.oauth_request('/1.1/lists/list.json', :get)
 our_list = res.select { |l| l['name'] == TWITTER_LIST }.first
 raise "can't find list #{TWITTER_LIST.inspect} in #{res.inspect}" if our_list.blank?
+
 list_id = our_list['id_str']
 
 # fetch its member list
@@ -22,6 +23,7 @@ res = Twitter.oauth_request("/1.1/lists/members.json?list_id=#{list_id}" \
 their_users = res['users'].map { |u| [u['screen_name'].downcase, true] }.to_h
 
 raise "Intemittent Twitter bug: they said the list is empty when it's not" if their_users.empty?
+
 STDERR.puts 'need to implement paging for list members' if their_users.count >= 5000
 
 # fetch our active users that have a linked twitter account

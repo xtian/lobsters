@@ -95,6 +95,7 @@ class ApplicationController < ActionController::Base
       # rubocop:enable Metrics/LineLength,
     ].each do |cumulative_odds, name, style|
       break unless rand(cumulative_odds) == 0
+
       color = name
       @traffic_style = style
     end

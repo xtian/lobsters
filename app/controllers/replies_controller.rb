@@ -50,6 +50,7 @@ class RepliesController < ApplicationController
   def apply_current_vote
     @replies.each do |r|
       next if r.current_vote_vote.blank?
+
       r.comment.current_vote = {
         vote: r.current_vote_vote,
         reason: r.current_vote_reason.to_s

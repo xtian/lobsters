@@ -604,6 +604,7 @@ class Story < ApplicationRecord
     new_tag_names_a.uniq.each do |tag_name|
       next unless tag_name.to_s != '' && !tags.exists?(tag: tag_name)
       next unless (t = Tag.active.find_by(tag: tag_name))
+
       # we can't lookup whether the user is allowed to use this tag yet
       # because we aren't assured to have a user_id by now; we'll do it in
       # the validation with check_tags
@@ -683,6 +684,7 @@ class Story < ApplicationRecord
 
     title_votes.sort_by { |_k, v| v }.reverse_each do |kv|
       next unless kv[1] >= SUGGESTION_QUORUM
+
       Rails.logger.info "[s#{id}] promoting suggested title " \
                         "#{kv[0].inspect} instead of #{self.title.inspect}"
       self.editor = nil
@@ -755,6 +757,7 @@ class Story < ApplicationRecord
 
   def domain
     return @domain if @domain
+
     self.domain = url.match(URL_RE) if url
   end
 
@@ -809,6 +812,7 @@ class Story < ApplicationRecord
     r_whos = {}
     votes.includes(user && user.is_moderator? ? :user : nil).find_each do |v|
       next if v.vote == 0
+
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
       if user&.is_moderator?

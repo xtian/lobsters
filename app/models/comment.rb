@@ -242,6 +242,7 @@ class Comment < ApplicationRecord
       end
 
       next unless u.pushover_mentions?
+
       u.pushover!(
         title: "#{Rails.application.name} mention by " \
           "#{user.username} on #{story.title}",

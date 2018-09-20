@@ -19,6 +19,7 @@ class Message < ApplicationRecord
   validates :body, length: { maximum: (64 * 1024) }
   validate :hat do
     next if hat.blank?
+
     if author.blank? || author.wearable_hats.exclude?(hat)
       errors.add(:hat, 'not wearable by author')
     end

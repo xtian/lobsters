@@ -11,6 +11,8 @@ AllCops:
 # Layout
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+Layout/RescueEnsureAlignment:
+  Enabled: false
 
 # Lint
 Lint/HandleExceptions:
