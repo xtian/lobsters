@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ModuleLength
+
 module ApplicationHelper
   MAX_PAGES = 15
 
@@ -167,3 +169,4 @@ module ApplicationHelper
     raw(content_tag(:span, ago, title: time.strftime('%F %T %z'), class: span_class))
   end
 end
+# rubocop:enable Metrics/ModuleLength
