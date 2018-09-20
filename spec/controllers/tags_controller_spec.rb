@@ -4,12 +4,13 @@ require 'rails_helper'
 
 RSpec.describe TagsController do
   let(:user) { create(:user) }
+
   before do
     stub_login_as user
     allow(controller).to receive(:require_logged_in_admin)
   end
 
-  context 'create' do
+  describe 'create' do
     it 'creates new tags' do
       post :create, params: { tag: { tag: 'mytag' } }
       expect(Tag.find_by(tag: 'mytag')).to be_valid
@@ -17,7 +18,7 @@ RSpec.describe TagsController do
     end
 
     it 'does not create a new tag when the name is blank' do
-      expect { post :create, params: { tag: { tag: '' } } } .not_to(change { Tag.count })
+      expect { post :create, params: { tag: { tag: '' } } } .not_to(change(Tag, :count))
       expect(response).to redirect_to new_tag_path
       expect(flash[:error]).to include "Tag can't be blank"
     end
@@ -47,7 +48,7 @@ RSpec.describe TagsController do
     end
   end
 
-  context 'update' do
+  describe 'update' do
     let(:tag) { Tag.first }
 
     it 'updates tags with valid params' do

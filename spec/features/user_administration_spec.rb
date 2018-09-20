@@ -8,7 +8,7 @@ RSpec.feature 'User Administration' do
   let(:banned) { create(:user, :banned, banner: admin) }
   let(:noinvite) { create(:user, :noinvite, disabler: admin) }
 
-  before(:each) { stub_login_as admin }
+  before { stub_login_as admin }
 
   scenario 'diabling invites' do
     expect(user.can_invite?).to be(true)

@@ -11,7 +11,7 @@ RSpec.describe Vote do
 
     u = create(:user)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+    described_class.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
 
     s.reload
 
@@ -25,7 +25,7 @@ RSpec.describe Vote do
     u = create(:user)
 
     2.times do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+      described_class.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
 
       s.reload
 
@@ -40,7 +40,7 @@ RSpec.describe Vote do
 
     u = create(:user)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, 'H')
+    described_class.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, 'H')
     s.reload
     expect(s.user.karma).to eq(0)
     expect(s.upvotes).to eq(1)
@@ -54,7 +54,7 @@ RSpec.describe Vote do
 
     u = create(:user)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
+    described_class.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
     c.reload
     expect(c.user.karma).to eq(1)
     # initial poster upvote plus new user's vote
@@ -62,7 +62,7 @@ RSpec.describe Vote do
     expect(c.downvotes).to eq(0)
 
     # flip vote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
+    described_class.vote_thusly_on_story_or_comment_for_user_because(
       -1, s.id, c.id, u.id, Vote::COMMENT_REASONS.keys.first
     )
     c.reload
@@ -78,13 +78,13 @@ RSpec.describe Vote do
 
     u = create(:user)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
+    described_class.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
     c.reload
     expect(c.user.karma).to eq(1)
     expect(c.upvotes).to eq(2)
     expect(c.downvotes).to eq(0)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, c.id, u.id, nil)
+    described_class.vote_thusly_on_story_or_comment_for_user_because(0, s.id, c.id, u.id, nil)
     c.reload
 
     expect(c.user.karma).to eq(0)

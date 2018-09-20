@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Message do
-  it 'should get a short id' do
+  it 'gets a short id' do
     m = create(:message)
     expect(m.short_id).to match(/^\A[a-zA-Z0-9]{1,10}\z/)
   end

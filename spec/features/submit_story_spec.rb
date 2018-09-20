@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.feature 'Submitting Stories' do
   let(:user) { create(:user) }
-  before(:each) { stub_login_as user }
+
+  before { stub_login_as user }
 
   scenario 'submitting a link' do
     visit '/stories/new'

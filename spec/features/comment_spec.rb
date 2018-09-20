@@ -9,7 +9,7 @@ RSpec.feature 'Commenting' do
   let(:story) { create(:story) }
   let(:user) { create(:user) }
 
-  before(:each) { stub_login_as user }
+  before { stub_login_as user }
 
   scenario 'posting a comment' do
     visit "/s/#{story.short_id}"
@@ -20,7 +20,7 @@ RSpec.feature 'Commenting' do
     expect(page).to have_content('example comment')
   end
 
-  feature 'deleting comments' do
+  describe 'deleting comments' do
     scenario 'deleting a comment' do
       comment = create(:comment,
                        user_id: user.id,
@@ -33,7 +33,7 @@ RSpec.feature 'Commenting' do
       visit "/s/#{story.short_id}"
       expect(page).to have_link('undelete')
       comment.reload
-      expect(comment.is_deleted?)
+      expect(comment.is_deleted?).to eq(true)
     end
 
     scenario 'trying to delete old comments' do
@@ -43,11 +43,11 @@ RSpec.feature 'Commenting' do
 
       page.driver.post "/comments/#{comment.short_id}/delete"
       comment.reload
-      expect(!comment.is_deleted?)
+      expect(comment.is_deleted?).to eq(false)
     end
   end
 
-  feature 'disowning comments' do
+  describe 'disowning comments' do
     scenario 'disowning a comment' do
       # bypass validations to create inactive-user:
       create(:user, :inactive)

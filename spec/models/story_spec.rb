@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Story do
-  it 'should get a short id' do
+  it 'gets a short id' do
     s = create(:story, title: 'hello', url: 'http://example.com/')
 
     expect(s.short_id).to match(/^\A[a-zA-Z0-9]{1,10}\z/)
@@ -14,17 +14,17 @@ RSpec.describe Story do
 
     expect do
       create(:story, title: 'hello', description: 'hi', url: nil)
-    end.to_not raise_error
+    end.not_to raise_error
 
     expect do
       create(:story, title: 'hello', url: 'http://ex.com/', description: nil)
-    end.to_not raise_error
+    end.not_to raise_error
   end
 
   it 'does not allow too-short titles' do
     expect { create(:story, title: '') }.to raise_error
     expect { create(:story, title: 'hi') }.to raise_error
-    expect { create(:story, title: 'hello') }.to_not raise_error
+    expect { create(:story, title: 'hello') }.not_to raise_error
   end
 
   it 'does not allow too-long titles' do
@@ -35,51 +35,56 @@ RSpec.describe Story do
     expect { create(:story, tags_a: nil) }.to raise_error
     expect { create(:story, tags_a: ['', ' ']) }.to raise_error
 
-    expect { create(:story, tags_a: ['', 'tag1']) }.to_not raise_error
+    expect { create(:story, tags_a: ['', 'tag1']) }.not_to raise_error
   end
 
   it 'removes redundant http port 80 and https port 443' do
-    expect(Story.new(url: 'http://example.com:80').url).to eq('http://example.com')
-    expect(Story.new(url: 'http://example.com:80/').url).to eq('http://example.com/')
-    expect(Story.new(url: 'https://example.com:443').url).to eq('https://example.com')
-    expect(Story.new(url: 'https://example.com:443/').url).to eq('https://example.com/')
+    expect(described_class.new(url: 'http://example.com:80').url).to eq('http://example.com')
+    expect(described_class.new(url: 'http://example.com:80/').url).to eq('http://example.com/')
+    expect(described_class.new(url: 'https://example.com:443').url).to eq('https://example.com')
+    expect(described_class.new(url: 'https://example.com:443/').url).to eq('https://example.com/')
   end
 
   it 'removes utm_ tracking parameters' do
-    expect(Story.new(url: 'http://a.com?a=b').url).to eq('http://a.com?a=b')
-    expect(Story.new(url: 'http://a.com?utm_term=track&c=d').url).to eq('http://a.com?c=d')
-    expect(Story.new(url: 'http://a.com?a=b&utm_term=track&c=d').url).to eq('http://a.com?a=b&c=d')
+    expect(described_class.new(url: 'http://a.com?a=b').url).to eq('http://a.com?a=b')
+    expect(described_class.new(url: 'http://a.com?utm_term=track&c=d').url).to eq('http://a.com?c=d')
+    expect(described_class.new(url: 'http://a.com?a=b&utm_term=track&c=d').url).to eq('http://a.com?a=b&c=d')
   end
 
   it 'checks for invalid urls' do
-    expect(Story.new(url: 'http://example.com').tap(&:valid?).errors[:url]).to be_empty
+    expect(described_class.new(url: 'http://example.com').tap(&:valid?).errors[:url]).to be_empty
 
-    expect(Story.new(url: 'http://example/').tap(&:valid?).errors[:url]).to_not be_empty
-    expect(Story.new(url: 'ftp://example.com/').tap(&:valid?).errors[:url]).to_not be_empty
-    expect(Story.new(url: 'http://example.com:123/').tap(&:valid?).errors[:url]).to be_empty
+    expect(described_class.new(url: 'http://example/').tap(&:valid?).errors[:url])
+      .not_to be_empty
+
+    expect(described_class.new(url: 'ftp://example.com/').tap(&:valid?).errors[:url])
+      .not_to be_empty
+
+    expect(described_class.new(url: 'http://example.com:123/').tap(&:valid?).errors[:url])
+      .to be_empty
   end
 
   it 'checks for a previously posted story with same url' do
-    expect(Story.count).to eq(0)
+    expect(described_class.count).to eq(0)
 
     create(:story, title: 'flim flam', url: 'http://example.com/')
-    expect(Story.count).to eq(1)
+    expect(described_class.count).to eq(1)
 
     expect do
       create(:story, title: 'flim flam 2', url: 'http://example.com/')
     end.to raise_error
 
-    expect(Story.count).to eq(1)
+    expect(described_class.count).to eq(1)
 
     expect do
       create(:story, title: 'flim flam 2', url: 'http://www.example.com/')
     end.to raise_error
 
-    expect(Story.count).to eq(1)
+    expect(described_class.count).to eq(1)
   end
 
   it 'parses domain properly' do
-    story = Story.new
+    story = described_class.new
     {
       'http://example.com' => 'example.com',
       'https://example.com' => 'example.com',
@@ -95,7 +100,7 @@ RSpec.describe Story do
 
   it "has domain straight out of the db, when Rails doesn't use setters" do
     s = create(:story, url: 'https://example.com/foo.html')
-    s = Story.find(s.id)
+    s = described_class.find(s.id)
     expect(s.domain).to eq('example.com')
     s.url = 'http://example.org'
     expect(s.domain).to eq('example.org')
@@ -136,8 +141,11 @@ RSpec.describe Story do
   end
 
   it 'does not fetch title with a port specified' do
-    expect(Sponge).to_not receive(:new)
-    story = Story.new url: 'https://example.com:123/'
+    # rubocop:disable RSpec/MessageSpies
+    expect(Sponge).not_to receive(:new)
+    # rubocop:enable RSpec/MessageSpies
+
+    story = described_class.new url: 'https://example.com:123/'
     expect(story.fetched_attributes[:title]).to eq('')
   end
 

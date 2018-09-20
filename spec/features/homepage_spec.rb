@@ -14,7 +14,8 @@ RSpec.feature 'Reading Homepage' do
 
   context 'when logged in' do
     let(:user) { create(:user) }
-    before(:each) { stub_login_as user }
+
+    before { stub_login_as user }
 
     scenario 'reading a story' do
       visit '/'

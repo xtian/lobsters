@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/BeforeAfterAll, RSpec/InstanceVariable
+
 require 'rails_helper'
 
 RSpec.describe Search do
@@ -59,7 +61,7 @@ RSpec.describe Search do
   end
 
   it 'can search for stories' do
-    search = Search.new
+    search = described_class.new
     search.q = 'unique'
 
     search.search_for_user!(@user)
@@ -69,7 +71,7 @@ RSpec.describe Search do
   end
 
   it 'can search for multitaged stories' do
-    search = Search.new
+    search = described_class.new
     search.q = 'multitag'
 
     search.search_for_user!(@user)
@@ -79,7 +81,7 @@ RSpec.describe Search do
   end
 
   it 'can search for stories by domain' do
-    search = Search.new
+    search = described_class.new
     search.q = 'term1 domain:lobste.rs'
 
     search.search_for_user!(@user)
@@ -89,7 +91,7 @@ RSpec.describe Search do
   end
 
   it 'can search for stories by tag' do
-    search = Search.new
+    search = described_class.new
     search.q = 'term1 tag:tag1'
 
     search.search_for_user!(@user)
@@ -106,8 +108,8 @@ RSpec.describe Search do
     expect(multi_tag_res.first.tags.second.tag).to eq('tag2')
   end
 
-  it 'should return only stories with both tags if multiple tags are present' do
-    search = Search.new
+  it 'returns only stories with both tags if multiple tags are present' do
+    search = described_class.new
     search.q = 'term1 tag:tag1 tag:tag2'
 
     search.search_for_user!(@user)
@@ -116,7 +118,7 @@ RSpec.describe Search do
   end
 
   it 'can search for stories with only tags' do
-    search = Search.new
+    search = described_class.new
     search.q = 'tag:tag2'
 
     search.search_for_user!(@user)
@@ -125,7 +127,7 @@ RSpec.describe Search do
   end
 
   it 'can search for comments' do
-    search = Search.new
+    search = described_class.new
     search.q = 'comment1'
     search.what = 'comments'
 
@@ -134,7 +136,7 @@ RSpec.describe Search do
     expect(search.results).to include(@comments[1])
   end
   it 'can search for comments by tag' do
-    search = Search.new
+    search = described_class.new
     search.q = 'comment2 comment3 tag:tag1'
     search.what = 'comments'
 
@@ -144,7 +146,7 @@ RSpec.describe Search do
     expect(search.results).not_to include(@comments[3])
   end
   it 'can search for comments with only tags' do
-    search = Search.new
+    search = described_class.new
     search.q = 'tag:tag1'
     search.what = 'comments'
 
@@ -153,8 +155,8 @@ RSpec.describe Search do
     expect(search.results).to include(@comments[2])
     expect(search.results).not_to include(@comments[3])
   end
-  it 'should only return comments matching all tags if multiple are present' do
-    search = Search.new
+  it 'returns only comments matching all tags if multiple are present' do
+    search = described_class.new
     search.q = 'tag:tag1 tag:tag2'
     search.what = 'comments'
 
@@ -163,8 +165,8 @@ RSpec.describe Search do
     expect(search.results).to eq([@comments[0]])
   end
 
-  it 'should only return comments with stories in domain if domain present' do
-    search = Search.new
+  it 'returns only comments with stories in domain if domain present' do
+    search = described_class.new
     search.q = 'comment3 comment4 domain:lobste.rs'
     search.what = 'comments'
 
@@ -174,3 +176,5 @@ RSpec.describe Search do
     expect(search.results).not_to include(@comments[3])
   end
 end
+
+# rubocop:enable RSpec/BeforeAfterAll, RSpec/InstanceVariable

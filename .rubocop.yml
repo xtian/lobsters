@@ -1,3 +1,5 @@
+require: rubocop-rspec
+
 # Project setup:
 Rails:
   Enabled: true
@@ -47,6 +49,14 @@ Rails/FilePath:
 Rails/OutputSafety:
   Enabled: false
 Rails/SkipsModelValidations:
+  Enabled: false
+
+# RSpec
+Capybara/FeatureMethods:
+  Enabled: false
+RSpec/ExampleLength:
+  Max: 16
+RSpec/MultipleExpectations:
   Enabled: false
 
 # Style

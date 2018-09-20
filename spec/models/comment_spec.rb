@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Comment do
-  it 'should get a short id' do
+  it 'gets a short id' do
     c = create(:comment)
 
     expect(c.short_id).to match(/^\A[a-zA-Z0-9]{1,10}\z/)
