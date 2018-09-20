@@ -60,7 +60,7 @@ module Lobsters
     config.skip_yarn = true
 
     config.after_initialize do
-      require "#{Rails.root}/lib/monkey.rb"
+      require "#{Rails.root}/lib/monkey_patches.rb"
     end
 
     config.generators do |g|
