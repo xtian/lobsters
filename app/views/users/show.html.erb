@@ -42,7 +42,7 @@
     <%= time_ago_in_words_label(@showing_user.created_at) %>
     <% if @showing_user.invited_by_user %>
       by <a href="/u#<%= @showing_user.username %>">invitation</a> from
-      <%= link_to @showing_user.invited_by_user.try(:username),
+      <%= link_to @showing_user.invited_by_user&.username,
         @showing_user.invited_by_user %>
     <% end %>
   </span>
@@ -53,7 +53,7 @@
     <span class="d">
       <%= time_ago_in_words_label(@showing_user.banned_at) %>
       <% if @showing_user.banned_by_user %>
-        by <%= link_to @showing_user.banned_by_user.try(:username),
+        by <%= link_to @showing_user.banned_by_user&.username,
           @showing_user.banned_by_user %>:
           <em><%= @showing_user.banned_reason %></em>
       <% end %>
@@ -203,14 +203,14 @@
         <% @showing_user.votes_for_others.limit(15).each do |v| %><tr>
           <td><%= v.vote == 1 ? '+' : v.reason %></td>
           <% if v.comment_id %>
-            <td><a href="/u/<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
+            <td><a href="/u/<%= v.comment.user&.username %>"><%= v.comment.user&.username %></a></td>
             <td>
               <%= v.story.title %>
               <a href="<%= v.comment.short_id_url %>">comment</a>:<br>
               <%= v.comment.comment.split[0..10].join(' ') %>
             </td>
           <% elsif v.story_id && !v.comment_id %>
-            <td><a href="/u/<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
+            <td><a href="/u/<%= v.story.user&.username %>"><%= v.story.user&.username %></a></td>
             <td><a href="<%= v.story.short_id_url %>"><%= v.story.title %></a></td>
           <% end %>
           </p>

@@ -510,7 +510,7 @@ class Story < ApplicationRecord
     if editing_from_suggestions
       m.is_from_suggestions = true
     else
-      m.moderator_user_id = editor.try(:id)
+      m.moderator_user_id = editor&.id
     end
     m.story_id = id
 
@@ -558,7 +558,7 @@ class Story < ApplicationRecord
   end
 
   def merge_story_short_id
-    merged_story_id ? merged_into_story.try(:short_id) : nil
+    merged_story_id ? merged_into_story&.short_id : nil
   end
 
   def recalculate_hotness!
@@ -766,7 +766,7 @@ class Story < ApplicationRecord
   end
 
   def url=(url)
-    super(url.try(:strip)) || return if url.blank?
+    super(url&.strip) || return if url.blank?
 
     if (match = url.match(URL_RE))
       # remove well-known port for http and https if present
@@ -875,7 +875,7 @@ class Story < ApplicationRecord
     end
 
     # then try plain old <title>
-    title = parsed.at_css('title').try(:text).to_s if title.to_s == ''
+    title = parsed.at_css('title')&.text.to_s if title.to_s == ''
 
     # see if the site name is available, so we can strip it out in case it was
     # present in the fetched title

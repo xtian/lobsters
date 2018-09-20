@@ -49,7 +49,7 @@ class Tag < ApplicationRecord
 
   def valid_for?(user)
     if privileged?
-      !!user.try(:is_moderator?)
+      user&.is_moderator?
     else
       true
     end

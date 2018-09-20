@@ -10,7 +10,7 @@ class Keystore < ApplicationRecord
   end
 
   def self.value_for(key)
-    find_by(key: key).try(:value)
+    find_by(key: key)&.value
   end
 
   def self.put(key, value)

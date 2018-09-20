@@ -3,7 +3,7 @@
     Tags
   </div>
 
-  <% is_admin = @user.try(:is_admin?) %>
+  <% is_admin = @user&.is_admin? %>
   <% if is_admin %>
     <div>
       <%= link_to 'Create New Tag', new_tag_path %>

@@ -367,7 +367,7 @@ class StoriesController < ApplicationController
     story = Story.where(short_id: params[:story_id]).first
     if @user && story
       story.vote = Vote.where(user_id: @user.id,
-                              story_id: story.id, comment_id: nil).first.try(:vote)
+                              story_id: story.id, comment_id: nil).first&.vote
     end
 
     story

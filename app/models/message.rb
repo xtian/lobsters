@@ -45,8 +45,8 @@ class Message < ApplicationRecord
 
     h = super(only: attrs)
 
-    h[:author_username] = author.try(:username)
-    h[:recipient_username] = recipient.try(:username)
+    h[:author_username] = author&.username
+    h[:recipient_username] = recipient&.username
 
     h
   end

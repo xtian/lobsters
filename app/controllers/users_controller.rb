@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     @showing_user = User.where(username: params[:username]).first!
     @title = "User #{@showing_user.username}"
 
-    if @user.try(:is_moderator?)
+    if @user&.is_moderator?
       @mod_note = ModNote.new(user: @showing_user)
       @mod_note.note = params[:note]
     end

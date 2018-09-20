@@ -255,7 +255,7 @@ class Comment < ApplicationRecord
 
   def deliver_reply_notifications
     if parent_comment_id &&
-       (u = parent_comment.try(:user)) &&
+       (u = parent_comment&.user) &&
        u.id != user.id
       if u.email_replies?
         begin
@@ -295,7 +295,7 @@ class Comment < ApplicationRecord
 
   def gone_text
     if is_moderated?
-      reason = moderation.try(:reason) || 'No reason given'
+      reason = moderation&.reason || 'No reason given'
 
       "Comment removed by moderator #{moderation&.moderator&.username}: #{reason}"
 
