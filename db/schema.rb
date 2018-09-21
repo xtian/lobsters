@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_21_022024) do
+ActiveRecord::Schema.define(version: 2018_09_21_023907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -29,9 +29,9 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
     t.integer "downvotes", default: 0, null: false
     t.decimal "confidence", precision: 20, scale: 19, default: "0.0", null: false
     t.text "markeddown_comment"
-    t.boolean "is_deleted", default: false
-    t.boolean "is_moderated", default: false
-    t.boolean "is_from_email", default: false
+    t.boolean "is_deleted", default: false, null: false
+    t.boolean "is_moderated", default: false, null: false
+    t.boolean "is_from_email", default: false, null: false
     t.integer "hat_id"
     t.index ["confidence"], name: "confidence_idx"
     t.index ["short_id"], name: "short_id", unique: true
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
     t.integer "granted_by_user_id", null: false
     t.string "hat", null: false
     t.string "link"
-    t.boolean "modlog_use", default: false
+    t.boolean "modlog_use", default: false, null: false
     t.datetime "doffed_at"
     t.index ["user_id", "hat"], name: "index_hats_on_user_id_and_hat", unique: true
   end
@@ -70,8 +70,8 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
   end
 
   create_table "invitation_requests", id: :serial, force: :cascade do |t|
-    t.string "code"
-    t.boolean "is_verified", default: false
+    t.string "code", null: false
+    t.boolean "is_verified", default: false, null: false
     t.citext "email", null: false
     t.string "name", null: false
     t.text "memo"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
   create_table "invitations", id: :serial, force: :cascade do |t|
     t.integer "user_id", null: false
     t.citext "email"
-    t.string "code"
+    t.string "code", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "memo"
@@ -103,12 +103,12 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
     t.datetime "created_at", null: false
     t.integer "author_user_id", null: false
     t.integer "recipient_user_id", null: false
-    t.boolean "has_been_read", default: false
+    t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
     t.text "body"
     t.string "short_id", limit: 30
-    t.boolean "deleted_by_author", default: false
-    t.boolean "deleted_by_recipient", default: false
+    t.boolean "deleted_by_author", default: false, null: false
+    t.boolean "deleted_by_recipient", default: false, null: false
     t.bigint "hat_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["short_id"], name: "random_hash", unique: true
@@ -132,13 +132,13 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
     t.integer "user_id"
     t.text "action"
     t.text "reason"
-    t.boolean "is_from_suggestions", default: false
+    t.boolean "is_from_suggestions", default: false, null: false
     t.integer "tag_id"
     t.index ["created_at"], name: "index_moderations_on_created_at"
   end
 
   create_table "read_ribbons", force: :cascade do |t|
-    t.boolean "is_following", default: true
+    t.boolean "is_following", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
@@ -158,7 +158,7 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
   create_table "stories", id: :serial, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "user_id", null: false
-    t.string "url", limit: 250, default: ""
+    t.string "url", limit: 250, default: "", null: false
     t.string "title", limit: 150, default: "", null: false
     t.text "description"
     t.string "short_id", limit: 6, default: "", null: false
@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
     t.integer "merged_story_id"
     t.datetime "unavailable_at"
     t.string "twitter_id", limit: 20
-    t.boolean "user_is_author", default: false
+    t.boolean "user_is_author", default: false, null: false
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["hotness"], name: "hotness_idx"
     t.index ["is_expired", "is_moderated"], name: "is_idxes"
@@ -217,10 +217,10 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
   create_table "tags", id: :serial, force: :cascade do |t|
     t.string "tag", limit: 25, null: false
     t.string "description", limit: 100
-    t.boolean "privileged", default: false
-    t.boolean "is_media", default: false
-    t.boolean "inactive", default: false
-    t.float "hotness_mod", default: 0.0
+    t.boolean "privileged", default: false, null: false
+    t.boolean "is_media", default: false, null: false
+    t.boolean "inactive", default: false, null: false
+    t.float "hotness_mod", default: 0.0, null: false
     t.index ["tag"], name: "tag", unique: true
   end
 
@@ -229,16 +229,16 @@ ActiveRecord::Schema.define(version: 2018_09_21_022024) do
     t.citext "email"
     t.string "password_digest", limit: 75
     t.datetime "created_at", null: false
-    t.boolean "is_admin", default: false
+    t.boolean "is_admin", default: false, null: false
     t.string "password_reset_token", limit: 75
     t.string "session_token", limit: 75, default: "", null: false
     t.text "about"
     t.integer "invited_by_user_id"
-    t.boolean "is_moderator", default: false
-    t.boolean "pushover_mentions", default: false
+    t.boolean "is_moderator", default: false, null: false
+    t.boolean "pushover_mentions", default: false, null: false
     t.string "rss_token", limit: 75
     t.string "mailing_list_token", limit: 75
-    t.integer "mailing_list_mode", default: 0
+    t.integer "mailing_list_mode", default: 0, null: false
     t.integer "karma", default: 0, null: false
     t.datetime "banned_at"
     t.integer "banned_by_user_id"
