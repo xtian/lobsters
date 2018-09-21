@@ -3,7 +3,16 @@
 class Markdowner
   # opts[:allow_images] allows <img> tags
 
+  def initialize(text, opts)
+    @text = text
+    @allow_images = opts[:allow_images]
+  end
+
   def self.to_html(text, opts = {})
+    new(text, opts).to_html
+  end
+
+  def to_html
     return '' if text.blank?
 
     exts = %i[tagfilter autolink strikethrough]
@@ -18,7 +27,7 @@ class Markdowner
       h.name = 'strong'
     end
 
-    ng.css('img').remove unless opts[:allow_images]
+    ng.css('img').remove unless allow_images?
 
     # make links have rel=nofollow
     ng.css('a').each do |h|
@@ -36,16 +45,24 @@ class Markdowner
     end
   end
 
-  def self.walk_text_nodes(node, &block)
+  private
+
+  attr_reader :text
+
+  def allow_images?
+    @allow_images
+  end
+
+  def walk_text_nodes(node, &block)
     return if node.type == :link
-    return block.call(node) if node.type == :text
+    return yield(node) if node.type == :text
 
     node.each do |child|
       walk_text_nodes(child, &block)
     end
   end
 
-  def self.postprocess_text_node(node)
+  def postprocess_text_node(node)
     while node
       return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/
 
@@ -70,13 +87,13 @@ class Markdowner
       end
 
       if after.empty?
+        node = nil
+      else
         remainder = CommonMarker::Node.new(:text)
         remainder.string_content = after
         node.insert_after(remainder)
 
         node = remainder
-      else
-        node = nil
       end
     end
   end
