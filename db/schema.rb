@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_20_200007) do
+ActiveRecord::Schema.define(version: 2018_09_21_022024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_200007) do
     t.string "hat", null: false
     t.string "link", null: false
     t.text "comment", null: false
+    t.index ["user_id", "hat"], name: "index_hat_requests_on_user_id_and_hat", unique: true
   end
 
   create_table "hats", id: :serial, force: :cascade do |t|
@@ -59,6 +60,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_200007) do
     t.string "link"
     t.boolean "modlog_use", default: false
     t.datetime "doffed_at"
+    t.index ["user_id", "hat"], name: "index_hats_on_user_id_and_hat", unique: true
   end
 
   create_table "hidden_stories", id: :serial, force: :cascade do |t|
@@ -76,6 +78,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_200007) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_invitation_requests_on_code", unique: true
   end
 
   create_table "invitations", id: :serial, force: :cascade do |t|
@@ -87,6 +90,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_200007) do
     t.text "memo"
     t.datetime "used_at"
     t.integer "new_user_id"
+    t.index ["code"], name: "index_invitations_on_code", unique: true
   end
 
   create_table "keystores", id: false, force: :cascade do |t|
@@ -140,7 +144,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_200007) do
     t.bigint "user_id", null: false
     t.bigint "story_id", null: false
     t.index ["story_id"], name: "index_read_ribbons_on_story_id"
-    t.index ["user_id"], name: "index_read_ribbons_on_user_id"
+    t.index ["user_id", "story_id"], name: "index_read_ribbons_on_user_id_and_story_id", unique: true
   end
 
   create_table "saved_stories", force: :cascade do |t|
@@ -186,12 +190,14 @@ ActiveRecord::Schema.define(version: 2018_09_20_200007) do
     t.integer "story_id", null: false
     t.integer "tag_id", null: false
     t.integer "user_id", null: false
+    t.index ["story_id", "tag_id", "user_id"], name: "index_suggested_taggings_on_story_id_and_tag_id_and_user_id", unique: true
   end
 
   create_table "suggested_titles", id: :serial, force: :cascade do |t|
     t.integer "story_id", null: false
     t.integer "user_id", null: false
     t.string "title", limit: 150, default: "", null: false
+    t.index ["story_id", "user_id"], name: "index_suggested_titles_on_story_id_and_user_id", unique: true
   end
 
   create_table "tag_filters", id: :serial, force: :cascade do |t|
