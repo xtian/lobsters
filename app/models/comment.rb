@@ -3,7 +3,7 @@
 class Comment < ApplicationRecord
   include PgSearch
 
-  pg_search_scope :search_by_comment, against: :comment
+  pg_search_scope :search_by_comment, against: :comment, using: { tsearch: { any_word: true } }
 
   belongs_to :user
   belongs_to :story,

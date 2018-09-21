@@ -3,7 +3,8 @@
 class Story < ApplicationRecord
   include PgSearch
 
-  pg_search_scope :search, against: { title: 'A', description: 'B', story_cache: 'C' }
+  pg_search_scope :search, against: { title: 'A', description: 'B', story_cache: 'C' },
+                           using: { tsearch: { any_word: true } }
 
   belongs_to :user
   belongs_to :merged_into_story,
