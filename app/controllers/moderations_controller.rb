@@ -32,7 +32,7 @@ class ModerationsController < ApplicationController
     @what.each do |type, checked|
       next if checked
 
-      @moderations = @moderations.where("`moderations`.`#{type.to_s.singularize}_id` is null")
+      @moderations = @moderations.where("moderations.#{type.to_s.singularize}_id is null")
     end
 
     # paginate
