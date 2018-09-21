@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe Tag do
   describe 'validations' do
@@ -37,20 +37,22 @@ RSpec.describe Tag do
   end
 
   describe 'logs modification in moderation log' do
+    let(:user) { create(:user) }
+
     it 'logs on create' do
-      expect { described_class.create(tag: 'tag_name', edit_user_id: 5) }
+      expect { described_class.create(tag: 'tag_name', edit_user_id: user.id) }
         .to(change(Moderation, :count))
       mod = Moderation.order(id: :desc).first
       expect(mod.action).to include 'tag_name'
-      expect(mod.moderator_user_id).to be 5
+      expect(mod.moderator_user_id).to be user.id
     end
 
     it 'logs on update' do
-      expect { described_class.first.update(tag: 'new_tag_name', edit_user_id: 5) }
+      expect { described_class.first.update(tag: 'new_tag_name', edit_user_id: user.id) }
         .to(change(Moderation, :count))
       mod = Moderation.order(id: :desc).first
       expect(mod.action).to include 'new_tag_name'
-      expect(mod.moderator_user_id).to be 5
+      expect(mod.moderator_user_id).to be user.id
     end
   end
 end
