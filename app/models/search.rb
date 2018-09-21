@@ -63,8 +63,9 @@ class Search
 
   def with_stories_in_domain(base, domain)
     reg = Regexp.new("//([^/]*\.)?#{domain}/")
-    base.where("`stories`.`url` REGEXP '" +
-      ActiveRecord::Base.connection.quote_string(reg.source) + "'")
+    quoted = ActiveRecord::Base.connection.quote_string(reg.source)
+
+    base.where("stories.url ~* '#{quoted}'")
   rescue RegexpError
     base
   end
