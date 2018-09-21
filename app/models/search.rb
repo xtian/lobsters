@@ -58,7 +58,6 @@ class Search
       .joins({ taggings: :tag }, :user)
       .where(tags: { tag: tag_scopes })
       .having('COUNT(stories.id) = ?', tag_scopes.length)
-      .group('stories.id')
   end
 
   def with_stories_in_domain(base, domain)
@@ -73,7 +72,8 @@ class Search
   def with_stories_matching_tags(base, tag_scopes)
     story_ids_matching_tags = with_tags(
       Story.unmerged.where(is_expired: false), tag_scopes
-    ).select(:id).map(&:id)
+    ).group('stories.id').select(:id).map(&:id)
+
     base.where(story_id: story_ids_matching_tags)
   end
 
@@ -103,12 +103,15 @@ class Search
                        base = base.search(words)
 
                        if tag_scopes.present?
-                         with_tags(base, tag_scopes)
+                         base = with_tags(base, tag_scopes)
+                         base.group("stories.id, #{PgSearch::Configuration.alias('stories')}.rank")
                        else
                          base.includes({ taggings: :tag }, :user)
                        end
+
                      elsif tag_scopes.present?
-                       with_tags(base, tag_scopes)
+                       base = with_tags(base, tag_scopes)
+                       base.group('stories.id')
                      else
                        base.includes({ taggings: :tag }, :user)
                      end
@@ -131,7 +134,10 @@ class Search
       base = with_stories_in_domain(base.joins(:story), domain) if domain.present?
       base = with_stories_matching_tags(base, tag_scopes) if tag_scopes.present?
 
-      base = base.search_by_comment(words) if words.present?
+      if words.present?
+        base = base.search_by_comment(words)
+          .group("comments.id, #{PgSearch::Configuration.alias('comments')}.rank")
+      end
 
       self.results = base.includes(:user, :story)
 
