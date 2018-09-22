@@ -14,5 +14,6 @@ before_script:
   - ./bin/rails db:schema:load
 
 script:
-  - bundle exec rubocop
+  - bin/rake rubocop
+  - bin/rake eslint:run
   - bundle exec rspec

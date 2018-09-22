@@ -42,6 +42,7 @@ group :test, :development do
   gem 'bullet'
   gem 'byebug'
   gem 'capybara'
+  gem 'eslint-rails' # Ensures consistent JavaScript style
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'listen'
