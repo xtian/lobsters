@@ -44,9 +44,7 @@
   <div id="wrapper">
     <div id="header">
       <div id="headerleft">
-        <a id="l_holder" style="<%= @traffic_style %>"
-          href="/" title="<%= Rails.application.name %> (Current traffic: <%=
-          @traffic.to_i %>)"></a>
+        <a id="l_holder" href="/" title="<%= Rails.application.name %>"></a>
 
         <% if @cur_url.present? && !header_links.keys.include?(@cur_url) &&
         @heading.present? %>
