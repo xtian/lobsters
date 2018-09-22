@@ -350,7 +350,7 @@ class User < ApplicationRecord
     self.password_reset_token = "#{Time.current.to_i}-#{Utils.random_str(30)}"
     save!
 
-    PasswordReset.password_reset_link(self, ip).deliver_now
+    PasswordReset.password_reset_link(self, ip).deliver_later
   end
 
   def has_2fa?

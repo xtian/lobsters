@@ -26,6 +26,6 @@ class InvitationRequest < ApplicationRecord
   end
 
   def send_email
-    InvitationRequestMailer.invitation_request(self).deliver_now
+    InvitationRequestMailer.invitation_request(self).deliver_later
   end
 end

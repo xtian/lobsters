@@ -2,21 +2,16 @@
 
 require_relative 'boot'
 
-# included from https://github.com/rails/rails/blob/5-2-stable/railties/lib/rails/all.rb
 require 'rails'
-
-%w[
-  active_record/railtie
-  action_controller/railtie
-  action_view/railtie
-  action_mailer/railtie
-  rails/test_unit/railtie
-  sprockets/railtie
-].each do |railtie|
-
-  require railtie
-rescue LoadError
-end
+# Pick the frameworks you want:
+# require 'action_cable/engine'
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'action_view/railtie'
+require 'active_job/railtie'
+require 'active_record/railtie'
+require 'rails/test_unit/railtie'
+require 'sprockets/railtie'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -50,6 +45,8 @@ module Lobsters
 
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
+
+    config.active_job.queue_adapter = :sidekiq
 
     # config.active_record.raise_in_transactional_callbacks = true
 

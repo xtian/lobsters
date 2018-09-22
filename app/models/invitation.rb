@@ -23,6 +23,6 @@ class Invitation < ApplicationRecord
   end
 
   def send_email
-    InvitationMailer.invitation(self).deliver_now
+    InvitationMailer.invitation(self).deliver_later
   end
 end

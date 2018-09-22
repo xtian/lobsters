@@ -74,13 +74,7 @@ class Message < ApplicationRecord
   def deliver_email_notifications
     return if Rails.env.development?
 
-    if recipient.email_messages?
-      begin
-        EmailMessage.notify(self, recipient).deliver_now
-      rescue StandardError => e
-        Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
-      end
-    end
+    EmailMessage.notify(self, recipient).deliver_later if recipient.email_messages?
 
     if recipient.pushover_messages?
       recipient.pushover!(

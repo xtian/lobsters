@@ -233,13 +233,7 @@ class Comment < ApplicationRecord
       next unless (u = User.find_by(username: mention))
       next if u.id == user.id
 
-      if u.email_mentions?
-        begin
-          EmailReply.mention(self, u).deliver_now
-        rescue StandardError => e
-          Rails.logger.error "error e-mailing #{u.email}: #{e}"
-        end
-      end
+      EmailReply.mention(self, u).deliver_later if u.email_mentions?
 
       next unless u.pushover_mentions?
 
@@ -257,13 +251,7 @@ class Comment < ApplicationRecord
     if parent_comment_id &&
        (u = parent_comment&.user) &&
        u.id != user.id
-      if u.email_replies?
-        begin
-          EmailReply.reply(self, u).deliver_now
-        rescue StandardError => e
-          Rails.logger.error "error e-mailing #{u.email}: #{e}"
-        end
-      end
+      EmailReply.reply(self, u).deliver_later if u.email_replies?
 
       if u.pushover_replies?
         u.pushover!(

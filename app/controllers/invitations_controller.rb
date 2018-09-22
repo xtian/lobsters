@@ -47,15 +47,9 @@ class InvitationsController < ApplicationController
     i.email = params[:email]
     i.memo = params[:memo]
 
-    begin
-      i.save!
-      i.send_email
-      flash[:success] = 'Successfully e-mailed invitation to ' \
-                        "#{params[:email]}."
-    rescue StandardError
-      flash[:error] = 'Could not send invitation, verify the e-mail ' \
-                      'address is valid.'
-    end
+    i.save!
+    i.send_email
+    flash[:success] = "Successfully e-mailed invitation to #{params[:email]}."
 
     if params[:return_home]
       return redirect_to '/'
