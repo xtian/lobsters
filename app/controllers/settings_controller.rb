@@ -262,8 +262,7 @@ class SettingsController < ApplicationController
       :username, :email, :password, :password_confirmation, :about,
       :email_replies, :email_messages, :email_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
-      :mailing_list_mode, :show_story_previews,
-      :show_submitted_story_threads
+      :show_story_previews, :show_submitted_story_threads
     )
   end
 end

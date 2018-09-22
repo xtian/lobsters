@@ -104,11 +104,6 @@ class << Rails.application
     )
   end
 
-  # used as mailing list prefix, cannot have spaces
-  def shortname
-    name.downcase.gsub(/[^a-z]/, '')
-  end
-
   # whether absolute URLs should include https (does not require that
   # config.force_ssl be on)
   def ssl?

@@ -34,7 +34,6 @@ gem 'commonmarker', '~> 0.14'
 gem 'htmlentities'
 gem 'nokogiri', '>= 1.7.2'
 
-gem 'mail' # for parsing incoming mail
 gem 'oauth' # for twitter-posting bot
 gem 'sitemap_generator' # for better search engine indexing
 

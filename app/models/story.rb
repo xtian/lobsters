@@ -540,10 +540,6 @@ class Story < ApplicationRecord
     self.is_moderated = true
   end
 
-  def mailing_list_message_id
-    "story.#{short_id}.#{created_at.to_i}@#{Rails.application.domain}"
-  end
-
   def mark_submitter
     Keystore.increment_value_for("user:#{user_id}:stories_submitted")
   end

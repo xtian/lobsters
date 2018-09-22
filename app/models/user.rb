@@ -98,7 +98,6 @@ class User < ApplicationRecord
   before_save :check_session_token
   before_validation on: :create do
     create_rss_token
-    create_mailing_list_token
   end
 
   BANNED_USERNAMES = ['admin', 'administrator', 'contact', 'fraud', 'guest',
@@ -266,10 +265,6 @@ class User < ApplicationRecord
 
   def check_session_token
     self.session_token = Utils.random_str(60) if session_token.blank?
-  end
-
-  def create_mailing_list_token
-    self.mailing_list_token = Utils.random_str(10) if mailing_list_token.blank?
   end
 
   def create_rss_token

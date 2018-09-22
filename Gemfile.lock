@@ -276,7 +276,6 @@ DEPENDENCIES
   jquery-rails (~> 4.3)
   json
   listen
-  mail
   nokogiri (>= 1.7.2)
   oauth
   pg

@@ -388,15 +388,6 @@ class Comment < ApplicationRecord
     Keystore.increment_value_for("user:#{user_id}:comments_posted")
   end
 
-  def mailing_list_message_id
-    [
-      'comment',
-      short_id,
-      is_from_email ? 'email' : nil,
-      created_at.to_i
-    ].reject(&:!).join('.') + '@' + Rails.application.domain
-  end
-
   def path
     story.comments_path + "#c_#{short_id}"
   end

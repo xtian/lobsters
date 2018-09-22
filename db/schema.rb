@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_21_042037) do
+ActiveRecord::Schema.define(version: 2018_09_22_212429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -237,8 +237,6 @@ ActiveRecord::Schema.define(version: 2018_09_21_042037) do
     t.boolean "is_moderator", default: false, null: false
     t.boolean "pushover_mentions", default: false, null: false
     t.string "rss_token", limit: 75
-    t.string "mailing_list_token", limit: 75
-    t.integer "mailing_list_mode", default: 0, null: false
     t.integer "karma", default: 0, null: false
     t.datetime "banned_at"
     t.integer "banned_by_user_id"
@@ -249,8 +247,6 @@ ActiveRecord::Schema.define(version: 2018_09_21_042037) do
     t.string "disabled_invite_reason", limit: 200
     t.text "settings"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["mailing_list_mode"], name: "mailing_list_enabled"
-    t.index ["mailing_list_token"], name: "mailing_list_token", unique: true
     t.index ["password_reset_token"], name: "password_reset_token", unique: true
     t.index ["rss_token"], name: "rss_token", unique: true
     t.index ["session_token"], name: "session_hash", unique: true
