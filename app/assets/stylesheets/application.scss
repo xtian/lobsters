@@ -346,7 +346,6 @@ footer#footer {
   float: right;
   font-weight: bold;
   margin-top: 1.5em;
-  padding-right: 10px;
 }
 footer#footer a {
   color: #999;
@@ -1079,7 +1078,7 @@ table.data pre {
 /* boxes */
 .box {
   border: 0;
-  margin: 0 40px;
+  margin-left: 40px;
   padding: 0;
 }
 .box_submitter {
