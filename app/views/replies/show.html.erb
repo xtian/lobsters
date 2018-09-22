@@ -31,7 +31,7 @@
 <% if @replies.count > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>
 <div class="morelink">
   <% if @page && @page > 1 %>
-    <a href="/replies<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt;
+    <a href="/replies<%= @page == 2 ? "" : "/page/#{@page - 1}" %>" rel="prev">&lt;&lt;
       Page <%= @page - 1 %></a>
   <% end %>
 
@@ -40,7 +40,7 @@
       |
     <% end %>
 
-    <a href="/replies/page/<%= @page + 1 %>">Page
+    <a href="/replies/page/<%= @page + 1 %>" rel="next">Page
       <%= @page + 1 %> &gt;&gt;</a>
   <% end %>
 </div>

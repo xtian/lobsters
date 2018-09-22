@@ -9,7 +9,7 @@
 
 <div class="morelink">
   <% if @page && @page > 1 %>
-    <a href="/comments<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; 
+    <a href="/comments<%= @page == 2 ? "" : "/page/#{@page - 1}" %>" rel="prev">&lt;&lt;
       Page <%= @page - 1 %></a>
   <% end %>
 
@@ -18,7 +18,7 @@
       |
     <% end %>
 
-    <a href="/comments/page/<%= @page + 1 %>">Page
+    <a href="/comments/page/<%= @page + 1 %>" rel="next">Page
       <%= @page + 1 %> &gt;&gt;</a>
   <% end %>
 </div>
