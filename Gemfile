@@ -12,10 +12,11 @@ gem 'pg_search'
 gem 'activerecord-typedstore'
 gem 'scenic'
 
-# js
+# assets
 gem 'dynamic_form'
 gem 'jquery-rails', '~> 4.3'
 gem 'json'
+gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
 
 # deployment
