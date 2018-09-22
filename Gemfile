@@ -34,6 +34,7 @@ gem 'commonmarker', '~> 0.14'
 gem 'htmlentities'
 gem 'nokogiri', '>= 1.7.2'
 
+gem 'mailgun-ruby' # Client for sending email via Mailgun
 gem 'oauth' # for twitter-posting bot
 gem 'sidekiq' # Background job queue built on Redis
 gem 'sitemap_generator' # for better search engine indexing
