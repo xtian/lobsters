@@ -7,7 +7,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
 <%= story.is_saved_by_cur_user ? "saved" : "" %>
 <%= story.is_expired? ? "expired" : "" %>">
-<div class="story_liner">
+<article class="story_liner">
   <div class="voters">
     <% if @user %>
       <a class="upvoter"></a>
@@ -173,7 +173,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
     </div>
   </div>
-</div>
+</article>
 <a href="<%= story.comments_path %> "class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
   <span><%= story.comments_count %></span>
 </a>

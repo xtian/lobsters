@@ -129,7 +129,7 @@
     border-bottom: 1px solid #e0e0e0;
     display: table;
   }
-  ol.stories.list li.story div.story_liner {
+  ol.stories.list li.story article.story_liner {
     background-color: #fbfbfb;
     display: table-cell;
     padding-top: 0.5em;
@@ -217,7 +217,7 @@
     margin-left: 36px;
     float: none;
   }
-  li.story div.byline {
+  li.story footer.byline {
     font-size: 10pt;
   }
 
@@ -233,7 +233,7 @@
 
   div.boxline textarea,
   div.boxline input[type="text"],
-  div.comment textarea {
+  article.comment textarea {
     max-width: 90%;
   }
 

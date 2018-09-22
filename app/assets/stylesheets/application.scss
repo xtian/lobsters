@@ -456,7 +456,7 @@ div.voters .downvoter.downvoter_stub {
 li.story {
   clear: both;
 }
-ol.stories li.story div.story_liner {
+ol.stories li.story article.story_liner {
   padding-top: 0.25em;
   padding-bottom: 0.25em;
 }
@@ -472,7 +472,7 @@ ol.stories li.story div.story_liner {
   color: #666;
 }
 
-ol.stories li:first-child div.story_liner {
+ol.stories li:first-child article.story_liner {
   padding-top: 0.5em;
 }
 li div.details {
@@ -576,15 +576,15 @@ li .comment_folder:before {
 li .comment_folder_button:checked ~ .comment .comment_folder:before {
   content: "[+]";
 }
-li .comment_folder_button:checked ~ div.comment div.comment_text {
+li .comment_folder_button:checked ~ article.comment div.comment_text {
   display: none;
 }
-li .comment_folder_button:checked ~ div.comment div.voters {
+li .comment_folder_button:checked ~ article.comment div.voters {
   visibility: hidden;
   margin-bottom: -15px;
 }
 li .comment_folder_button:checked ~ ol.comments ol,
-li .comment_folder_button:checked ~ ol.comments div.comment,
+li .comment_folder_button:checked ~ ol.comments article.comment,
 li .comment_folder_button:checked ~ ol.comments li {
   display: none;
 }
@@ -621,8 +621,8 @@ li:last-child > .comment_siblings_tree_line {
 }
 
 /* try to force a highlighted comment to stay visible */
-div.comment:target div.comment_text,
-div.comment:target div.voters {
+article.comment:target div.comment_text,
+article.comment:target div.voters {
   display: block !important;
 }
 
