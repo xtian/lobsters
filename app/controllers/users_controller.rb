@@ -22,7 +22,7 @@ class UsersController < ApplicationController
   def tree
     @title = 'Users'
 
-    newest_user = User.last.id
+    newest_user = User.last&.id
 
     if params[:by].to_s == 'karma'
       content = Rails.cache.fetch("users_by_karma_#{newest_user}", expires_in: (60 * 60 * 24)) do
