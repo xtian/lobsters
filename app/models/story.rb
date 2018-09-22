@@ -623,7 +623,7 @@ class Story < ApplicationRecord
     st.reload
 
     new_tag_names_a.each do |tag_name|
-      # XXX: AR bug? st.exists?(:tag => tag_name) does not work
+      # XXX: AR bug? st.exists?(tag: tag_name) does not work
       if tag_name.to_s != '' && !st.map { |x| x.tag.tag }.include?(tag_name)
         if (t = Tag.active.find_by(tag: tag_name)) &&
            t.valid_for?(user)

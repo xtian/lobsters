@@ -36,21 +36,21 @@
   verification of project association.
   </p>
 
-  <%= form_for @hat_request, :url => create_hat_request_path do |f| %>
+  <%= form_for @hat_request, url: create_hat_request_path do |f| %>
     <p>
     <%= f.label :hat, "Hat:" %>
-    <%= f.text_field :hat, :size => 20,
-      :placeholder => "XYZ Project Member" %>
+    <%= f.text_field :hat, size: 20,
+      placeholder: "XYZ Project Member" %>
     <br />
 
     <%= f.label :link, "Link:" %>
-    <%= f.text_field :link, :size => 50,
-      :placeholder => "user@project.org, or a URL to an employment page" %>
+    <%= f.text_field :link, size: 50,
+      placeholder: "user@project.org, or a URL to an employment page" %>
     <br />
 
     <%= f.label :comment, "Comment:" %>
-    <%= f.text_area :comment, :rows => 4,
-      :placeholder => "Will only be shown to moderators during approval" %>
+    <%= f.text_area :comment, rows: 4,
+      placeholder: "Will only be shown to moderators during approval" %>
     </p>
 
     <p>

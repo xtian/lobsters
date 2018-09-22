@@ -73,7 +73,7 @@
     <label class="required">Karma:</label>
     <span class="d">
       <%= @showing_user.karma %>, averaging <%=
-        number_with_precision(@showing_user.average_karma, :precision => 2) %>
+        number_with_precision(@showing_user.average_karma, precision: 2) %>
         per story/comment
     </span>
     <br>
@@ -176,8 +176,8 @@
       <%= error_messages_for @mod_note %>
       <%= f.hidden_field :username %>
       <div class="boxline">
-        <%= f.label :note, "New Note:", :class => "required" %>
-        <%= f.text_area :note, :style => "width: 500px;", :rows => 5 %>
+        <%= f.label :note, "New Note:", class: "required" %>
+        <%= f.text_area :note, style: "width: 500px;", rows: 5 %>
       </div>
       <div class="boxline"><p></p><%= submit_tag "ModNote" %></div>
     <% end %>
@@ -217,7 +217,7 @@
       </table>
 
       <% if @showing_user.is_banned? || @showing_user.banned_from_inviting? %>
-        <%= form_tag user_unban_path, :method => :post do %>
+        <%= form_tag user_unban_path, method: :post do %>
           <p>
             <% if @showing_user.is_banned? %>
               <%= submit_tag "Unban" %>
@@ -234,10 +234,10 @@
           Banning or disabling invites for a user will send an e-mail to the user with the reason below,
           with your e-mail address as the Reply-To so the user can respond.
         </p>
-        <%= form_tag user_ban_path, :method => :post do %>
+        <%= form_tag user_ban_path, method: :post do %>
           <div class="boxline">
-            <%= label_tag :reason, "Reason:", :class => "required" %>
-            <%= text_field_tag :reason, "", :size => 40 %>
+            <%= label_tag :reason, "Reason:", class: "required" %>
+            <%= text_field_tag :reason, "", size: 40 %>
           </div>
           <p>
             <% if !@showing_user.is_banned? %>

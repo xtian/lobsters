@@ -15,8 +15,8 @@
 <% end %>
 
 <ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
-  <%= render :partial => "stories/listdetail", :collection => @stories,
-    :as => :story %>
+  <%= render partial: "stories/listdetail", collection: @stories,
+    as: :story %>
 </ol>
 
 <div class="morelink">

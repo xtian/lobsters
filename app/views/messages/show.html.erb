@@ -33,20 +33,20 @@
 
   <div class="boxline clearfix">
     <div style="float: left;">
-      <%= form_tag message_path(@message.short_id), :method => :delete do %>
+      <%= form_tag message_path(@message.short_id), method: :delete do %>
         <%= submit_tag "Delete Message" %>
       <% end %>
     </div>
 
     <div style="float: left; padding-left: 1em;">
-      <%= form_tag message_keep_as_new_path(@message.short_id), :method => :post do %>
+      <%= form_tag message_keep_as_new_path(@message.short_id), method: :post do %>
         <%= submit_tag "Keep As New" %>
       <% end %>
     </div>
 
     <% if @user.is_moderator? %>
       <div style="float: left; padding-left: 1em;">
-        <%= form_tag message_mod_note_path(@message.short_id), :method => :post do %>
+        <%= form_tag message_mod_note_path(@message.short_id), method: :post do %>
           <%= submit_tag "ModNote" %>
         <% end %>
       </div>

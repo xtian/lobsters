@@ -3,7 +3,7 @@
     Moderation Log
   </div>
 
-  <%= form_tag(moderations_path, :method => :get) do |f| %>
+  <%= form_tag(moderations_path, method: :get) do |f| %>
     <label class="normal" for="moderator">Moderator:</label>
     <%= select_tag 'moderator', options_for_select(@moderators, @moderator) %>
     <% @what.each do |type, checked| %>

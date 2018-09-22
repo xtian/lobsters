@@ -9,12 +9,12 @@
   Take a moment and invite someone you know.
   </p>
 
-  <%= render :partial => "users/invitationform",
-    :locals => { :return_home => true } %>
+  <%= render partial: "users/invitationform",
+    locals: { return_home: true } %>
 
   or
 
   <p>
-  <%= button_to "Skip", "/", :method => :get %>
+  <%= button_to "Skip", "/", method: :get %>
   </p>
 </div>

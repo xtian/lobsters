@@ -6,7 +6,7 @@
     <%= @title %>
   </div>
 
-  <%= form_for @user, :url => twofa_auth_url, :method => :post do |f| %>
+  <%= form_for @user, url: twofa_auth_url, method: :post do |f| %>
     <p>
     <% if @user.has_2fa? %>
       To turn off two-factor authentication for your account, enter your
@@ -18,8 +18,8 @@
     </p>
 
     <div class="boxline">
-      <%= f.label :password, "Current Password:", :class => "required" %>
-      <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
+      <%= f.label :password, "Current Password:", class: "required" %>
+      <%= f.password_field :password, size: 40, autocomplete: "off" %>
     </div>
 
     <p>

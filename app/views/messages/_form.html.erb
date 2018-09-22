@@ -1,24 +1,24 @@
-<%= form_for new_message, :method => :post do |f| %>
+<%= form_for new_message, method: :post do |f| %>
   <%= error_messages_for @new_message %>
 
   <% if replying %>
     <%= f.hidden_field :recipient_username %>
   <% else %>
     <div class="boxline">
-      <%= f.label :recipient_username, "To:", :class => "required" %>
-      <%= f.text_field :recipient_username, :size => 20 %>
+      <%= f.label :recipient_username, "To:", class: "required" %>
+      <%= f.text_field :recipient_username, size: 20 %>
     </div>
   <% end %>
 
   <div class="boxline">
-    <%= f.label :subject, "Subject:", :class => "required" %>
-    <%= f.text_field :subject, :style => "width: 500px;",
-      :maxlength => 100 %>
+    <%= f.label :subject, "Subject:", class: "required" %>
+    <%= f.text_field :subject, style: "width: 500px;",
+      maxlength: 100 %>
   </div>
 
   <div class="boxline">
-    <%= f.label :body, "Message:", :class => "required" %>
-    <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
+    <%= f.label :body, "Message:", class: "required" %>
+    <%= f.text_area :body, style: "width: 500px;", rows: 5 %>
   </div>
 
   <% if @user.wearable_hats.any? %>

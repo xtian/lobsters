@@ -1,7 +1,7 @@
 <div class="comment comment_form_container"
 data-shortid="<%= comment.short_id if comment.persisted? %>">
 <%= form_for comment,
-:html => { :id => "edit_comment_#{comment.short_id}" } do |f| %>
+:html => { id: "edit_comment_#{comment.short_id}" } do |f| %>
   <% if comment.errors.any? %>
     <%= errors_for comment %>
   <% end %>
@@ -14,9 +14,9 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
   <% end %>
 
   <div style="width: 100%;">
-    <%= text_area_tag "comment", comment.comment, :rows => 5,
-      :disabled => !@user,
-      :placeholder => (@user ? "" : "You must be logged in to leave a comment.")
+    <%= text_area_tag "comment", comment.comment, rows: 5,
+      disabled: !@user,
+      placeholder: (@user ? "" : "You must be logged in to leave a comment.")
       %>
 
     <p></p>
@@ -33,14 +33,14 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
       <% end %>
 
       <%= submit_tag "#{comment.new_record?? "Post" : "Update"}",
-        :class => "comment-post", :disabled => !@user %>
+        class: "comment-post", disabled: !@user %>
       &nbsp;
-      <%= button_tag "Preview", :class => "comment-preview",
-        :type => "button", :disabled => !@user %>
+      <%= button_tag "Preview", class: "comment-preview",
+        type: "button", disabled: !@user %>
       <% if comment.persisted? || comment.parent_comment_id %>
         &nbsp;
-        <%= button_tag "Cancel", :class => "comment-cancel",
-          :type => "button" %>
+        <%= button_tag "Cancel", class: "comment-cancel",
+          type: "button" %>
       <% end %>
 
       <% if @user && @user.wearable_hats.any? %>
@@ -48,12 +48,12 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
         Put on hat:
         <%= select_tag "hat_id",
           options_from_collection_for_select(@user.hats, "id", "hat",
-          comment.hat_id), :include_blank => true %>
+          comment.hat_id), include_blank: true %>
         </div>
       <% end %>
 
       <% if @user %>
-        <%= render :partial => "global/markdownhelp" %>
+        <%= render partial: "global/markdownhelp" %>
       <% end %>
     </div>
   </div>
@@ -62,8 +62,8 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
 <% end %>
 <% if defined?(show_comment) && show_comment.valid? %>
   <div class="preview">
-    <%= render "comments/comment", :comment => show_comment,
-      :show_tree_lines => defined?(show_tree_lines) && show_tree_lines %>
+    <%= render "comments/comment", comment: show_comment,
+      show_tree_lines: defined?(show_tree_lines) && show_tree_lines %>
   </div>
 <% end %>
 </div>

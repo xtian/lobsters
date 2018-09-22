@@ -22,7 +22,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if @user %>
         <a class="upvoter"></a>
       <% else %>
-        <%= link_to "", login_path, :class => "upvoter" %>
+        <%= link_to "", login_path, class: "upvoter" %>
       <% end %>
       <div class="score"><%= score_display %></div>
       <% if can_downvote %>

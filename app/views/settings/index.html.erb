@@ -2,21 +2,21 @@
   <div class="legend right">
     <a href="/filters">Filtered Tags</a>
     |
-    <%= link_to "Logout", { :controller => "login", :action => "logout" },
-      :data => { :confirm => "Are you sure you want to logout?" },
-      :method => "post" %>
+    <%= link_to "Logout", { controller: "login", action: "logout" },
+      data: { confirm: "Are you sure you want to logout?" },
+      method: "post" %>
   </div>
   <div class="legend">
     Account Settings (<a href="/u/<%= @user.username %>">View Profile</a>)
   </div>
 
-  <%= form_for @edit_user, :url => settings_path, :method => :post,
-  :html => { :id => "edit_user" } do |f| %>
+  <%= form_for @edit_user, url: settings_path, method: :post,
+  html: { id: "edit_user" } do |f| %>
     <%= error_messages_for f.object %>
 
     <div class="boxline">
-      <%= f.label :username, "Username:", :class => "required" %>
-      <%= f.text_field :username, :size => 15 %>
+      <%= f.label :username, "Username:", class: "required" %>
+      <%= f.text_field :username, size: 15 %>
       <span class="hint">
         <tt><%= User.username_regex_s %></tt>
       </span>
@@ -24,30 +24,30 @@
 
     <div class="boxline">
       <%= label_tag :current_password, "Current Password:",
-        :class => "required" %>
-      <%= password_field_tag :current_password, nil, :size => 40 %>
+        class: "required" %>
+      <%= password_field_tag :current_password, nil, size: 40 %>
     </div>
 
     <div class="boxline">
-      <%= f.label :password, "New Password:", :class => "required" %>
-      <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
+      <%= f.label :password, "New Password:", class: "required" %>
+      <%= f.password_field :password, size: 40, autocomplete: "off" %>
     </div>
 
     <div class="boxline">
       <%= f.label :password_confirmation, "Confirm Password:",
-        :class => "required" %>
-      <%= f.password_field :password_confirmation, :size => 40,
-        :autocomplete => "off" %>
+        class: "required" %>
+      <%= f.password_field :password_confirmation, size: 40,
+        autocomplete: "off" %>
     </div>
 
     <div class="boxline">
-      <%= f.label :email, "E-mail Address:", :class => "required" %>
-      <%= f.email_field :email, :size => 40 %>
+      <%= f.label :email, "E-mail Address:", class: "required" %>
+      <%= f.email_field :email, size: 40 %>
     </div>
 
     <div class="boxline">
-      <%= f.label :about, "About:", :class => "required" %>
-      <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
+      <%= f.label :about, "About:", class: "required" %>
+      <%= f.text_area :about, size: "100x5", style: "width: 600px;" %>
     </div>
 
     <div class="box clearfix">
@@ -57,7 +57,7 @@
           Markdown formatting available
         </div>
 
-        <%= render :partial => "global/markdownhelp" %>
+        <%= render partial: "global/markdownhelp" %>
       </div>
     </div>
 
@@ -75,12 +75,12 @@
       <div class="boxline">
         <%= label_tag :pushover_user_key,
           raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
-          :class => "required" %>
+          class: "required" %>
         <span>
         <%= link_to((@edit_user.pushover_user_key.present??
           "Manage Pushover Subscription" : "Subscribe With Pushover"),
-          "/settings/pushover_auth", :class => "pushover_button",
-          :method => :post) %>
+          "/settings/pushover_auth", class: "pushover_button",
+          method: :post) %>
         <span class="hint">
           For optional comment and message notifications below
         </span>
@@ -93,13 +93,13 @@
         <span>
         <%= label_tag :github_username,
           raw("<a href=\"https://github.com/\">GitHub</a>:"),
-          :class => "required" %>
+          class: "required" %>
         <% if @edit_user.github_username.present? %>
           Linked to
           <strong><a href="https://github.com/<%= h(@edit_user.github_username)
             %>"><%= h(@edit_user.github_username) %></a></strong>
             (<%= link_to "Disconnect", "/settings/github_disconnect",
-              :method => :post %>)
+              method: :post %>)
         <% else %>
           <a href="/settings/github_auth">Connect</a>
         <% end %>
@@ -111,14 +111,14 @@
       <div class="boxline">
         <%= label_tag :twitter_username,
           raw("<a href=\"https://twitter.com/\">Twitter</a>:"),
-          :class => "required" %>
+          class: "required" %>
         <span>
         <% if @edit_user.twitter_username.present? %>
           Linked to
           <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
             %>">@<%= h(@edit_user.twitter_username) %></a></strong>
             (<%= link_to "Disconnect", "/settings/twitter_disconnect",
-              :method => :post %>)
+              method: :post %>)
         <% else %>
           <a href="/settings/twitter_auth">Connect</a>
         <% end %>
@@ -133,7 +133,7 @@
     </div>
 
     <div class="boxline">
-      <%= f.label :twofa, "Two-Factor Auth:", :class => "required" %>
+      <%= f.label :twofa, "Two-Factor Auth:", class: "required" %>
       <span>
       <% if @edit_user.totp_secret.present? %>
         <span style="color: green; font-weight: bold;">
@@ -152,13 +152,13 @@
     </div>
 
     <div class="boxline">
-      <%= f.label :email_replies, "Receive E-mail:", :class => "required" %>
+      <%= f.label :email_replies, "Receive E-mail:", class: "required" %>
       <%= f.check_box :email_replies %>
     </div>
 
     <div class="boxline">
       <%= f.label :pushover_replies, "Receive Pushover Alert:",
-        :class => "required" %>
+        class: "required" %>
       <%= f.check_box :pushover_replies %>
       <span class="hint">
         Requires Pushover subscription above
@@ -172,13 +172,13 @@
     </div>
 
     <div class="boxline">
-      <%= f.label :email_mentions, "Receive E-mail:", :class => "required" %>
+      <%= f.label :email_mentions, "Receive E-mail:", class: "required" %>
       <%= f.check_box :email_mentions %>
     </div>
 
     <div class="boxline">
       <%= f.label :pushover_mentions, "Receive Pushover Alert:",
-        :class => "required" %>
+        class: "required" %>
       <%= f.check_box :pushover_mentions %>
       <span class="hint">
         Requires Pushover subscription above
@@ -192,13 +192,13 @@
     </div>
 
     <div class="boxline">
-      <%= f.label :email_messages, "Receive E-mail:", :class => "required" %>
+      <%= f.label :email_messages, "Receive E-mail:", class: "required" %>
       <%= f.check_box :email_messages %>
     </div>
 
     <div class="boxline">
       <%= f.label :pushover_messages, "Receive Pushover Alert:",
-        :class => "required" %>
+        class: "required" %>
       <%= f.check_box :pushover_messages %>
       <span class="hint">
         Requires Pushover subscription above
@@ -214,7 +214,7 @@
     <div class="boxline">
       <%= f.label :show_submitted_story_threads,
         raw("Show in <a href=\"/threads\">Your Threads</a>:"),
-        :class => "required" %>
+        class: "required" %>
       <%= f.check_box :show_submitted_story_threads %>
     </div>
 
@@ -236,7 +236,7 @@
 
     <div class="boxline">
       <%= f.label :mailing_list_mode, "Receive List E-mails:",
-        :class => "required" %>
+        class: "required" %>
       <%= f.select :mailing_list_mode, [ [ "No e-mails", 0 ],
         [ "All stories and comments", 1 ], [ "Only stories", 2 ] ] %>
     </div>
@@ -257,7 +257,7 @@
 
     <div class="boxline">
       <%= f.label :show_story_previews, "Show Story Previews:",
-        :class => "required" %>
+        class: "required" %>
       <%= f.check_box :show_story_previews %>
     </div>
 
@@ -274,7 +274,7 @@
   </div>
 
   <% if @user.can_invite? %>
-    <%= render :partial => "users/invitationform" %>
+    <%= render partial: "users/invitationform" %>
   <% else %>
       You cannot send invitations: <%= @user.disabled_invite_reason %>
   <% end %>
@@ -283,8 +283,8 @@
   <br>
 
   <div class="deletion">
-    <%= form_for @edit_user, :url => delete_account_path, :method => :post,
-    :html => { :id => "delete_user" } do |f| %>
+    <%= form_for @edit_user, url: delete_account_path, method: :post,
+    html: { id: "delete_user" } do |f| %>
       <div class="legend">
         Delete Account
       </div>
@@ -306,17 +306,17 @@
       </ul>
 
       <div class="boxline">
-        <%= f.label :password, "Verify Password:", :class => "required" %>
-        <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
+        <%= f.label :password, "Verify Password:", class: "required" %>
+        <%= f.password_field :password, size: 40, autocomplete: "off" %>
       </div>
       <div class="boxline">
-        <%= f.label :i_am_sure, "I am sure:", :class => "required" %>
+        <%= f.label :i_am_sure, "I am sure:", class: "required" %>
         <%= check_box_tag :i_am_sure %>
         <br />
         <%= f.label :disown, "Disown Comments:" %>
         <%= check_box_tag :disown %> (optional)
       </div>
-      <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
+      <%= f.submit "Yes, Delete My Account", class: "deletion" %>
     <% end %>
   </div>
 </div>

@@ -12,7 +12,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     <% if @user %>
       <a class="upvoter"></a>
     <% else %>
-      <%= link_to "", login_path, :class => "upvoter" %>
+      <%= link_to "", login_path, class: "upvoter" %>
     <% end %>
     <div class="score"><%= story.score %></div>
   </div>
@@ -29,7 +29,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     </span>
     <% if story.markeddown_description.present? %>
       <a class="description_present" title="<%= truncate(story.description,
-        :length => 500) %>" href="<%= story.comments_path %>">&#x2636;</a>
+        length: 500) %>" href="<%= story.comments_path %>">&#x2636;</a>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
@@ -119,7 +119,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if story.can_have_suggestions_from_user?(@user) %>
           | <%= link_to "suggest", story_suggest_path(story.short_id),
-            :class => "suggester" %>
+            class: "suggester" %>
         <% end %>
         <% if !story.is_gone? && @user %>
           <% if @user && story.vote && story.vote[:vote] == -1 %>
@@ -130,20 +130,20 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           <% end %>
           <% if story.is_hidden_by_cur_user %>
             | <%= link_to "unhide", story_unhide_path(story.short_id),
-              :class => "hider" %>
+              class: "hider" %>
           <% else %>
             | <%= link_to "hide", story_hide_path(story.short_id),
-              :class => "hider" %>
+              class: "hider" %>
           <% end %>
           <% if defined?(single_story) && single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
           <% if story.is_saved_by_cur_user %>
             | <%= link_to "unsave", story_unsave_path(story.short_id),
-              :class => "saver" %>
+              class: "saver" %>
           <% else %>
             | <%= link_to "save", story_save_path(story.short_id),
-              :class => "saver" %>
+              class: "saver" %>
           <% end %>
         <% end %>
         <% if story.url.present? %>
