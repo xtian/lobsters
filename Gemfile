@@ -57,6 +57,10 @@ group :test do
   gem 'webmock' # Mocks external requests
 end
 
+group :development do
+  gem 'letter_opener' # Preview email in the browser instead of sending it
+end
+
 group :production do
   gem 'exception_notification' # Sends notifications when errors occur
   gem 'puma-heroku' # Default Puma configuration
