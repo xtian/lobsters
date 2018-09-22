@@ -13,10 +13,11 @@ gem 'activerecord-typedstore'
 gem 'scenic'
 
 # assets
+gem 'autoprefixer-rails' # Generates vendor-prefixed CSS
 gem 'dynamic_form'
 gem 'jquery-rails', '~> 4.3'
 gem 'json'
-gem 'sassc-rails'
+gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'uglifier', '>= 1.3.0'
 
 # deployment
