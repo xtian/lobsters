@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class AddUniqueIndexToUsersEmail < ActiveRecord::Migration[5.2]
   def up
-    execute "CREATE EXTENSION IF NOT EXISTS citext;"
+    execute 'CREATE EXTENSION IF NOT EXISTS citext;'
 
     change_column :invitation_requests, :email, :citext
     change_column :invitations, :email, :citext
@@ -16,6 +18,6 @@ class AddUniqueIndexToUsersEmail < ActiveRecord::Migration[5.2]
 
     remove_index :users, :email
 
-    execute "DROP EXTENSION IF EXISTS citext;"
+    execute 'DROP EXTENSION IF EXISTS citext;'
   end
 end

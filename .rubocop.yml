@@ -8,7 +8,7 @@ AllCops:
   Exclude:
     - Brewfile
     - 'bin/**/*'
-    - 'db/**/*'
+    - 'db/schema.rb'
     - 'vendor/**/*'
 
 # Layout
