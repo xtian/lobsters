@@ -1,6 +1,6 @@
 {
   "name": "Lobsters",
-  "repository": "https://github.com/xtian/lobsters",
+  "repository": "https://github.com/xtian/obelisk.link",
   "scripts": {
     "dokku": {
       "postdeploy": "bin/rake db:migrate"
