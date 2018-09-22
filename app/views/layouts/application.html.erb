@@ -42,7 +42,7 @@
 </head>
 <body>
   <div id="wrapper">
-    <div id="header">
+    <header id="header">
       <div id="headerleft">
         <a id="l_holder" href="/" title="<%= Rails.application.name %>"></a>
 
@@ -83,9 +83,11 @@
         <% end %>
       <% end %>
 
-      <%= yield %>
+      <main>
+        <%= yield %>
+      </main>
 
-      <div id="footer">
+      <footer id="footer">
         <% if lookup_context.template_exists?("footer", "layouts", true) %>
           <%= render :partial => "layouts/footer" %>
         <% else %>
