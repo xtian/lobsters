@@ -52,8 +52,6 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
         </div>
       <% end %>
 
-      <div style="clear: both;"></div>
-
       <% if @user %>
         <%= render :partial => "global/markdownhelp" %>
       <% end %>

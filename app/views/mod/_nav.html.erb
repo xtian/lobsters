@@ -1,4 +1,4 @@
-<div class="box wide">
+<div class="box wide clearfix">
   <div class="legend right">
     <%= link_to 'Notes', mod_notes_path(period: '2w') %>
     Flagged: <% @periods.each do |p| %><%= link_to_different_page(p, mod_flagged_path(period: p)) %> <% end %>
@@ -10,4 +10,3 @@
     <%= link_to 'Dashboard', mod_path %>
   </div>
 </div>
-<div class="clear"></div>

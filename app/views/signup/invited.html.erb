@@ -58,14 +58,12 @@
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
     </div>
 
-    <div class="box">
+    <div class="box clearfix">
       <div class="boxline markdown_help_toggler"
         style="margin-left: 9em; width: 600px;">
         <div class="markdown_help_label">
           Markdown formatting available
         </div>
-
-        <div style="clear: both;"></div>
 
         <%= render :partial => "global/markdownhelp" %>
       </div>

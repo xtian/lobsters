@@ -46,6 +46,16 @@ h2 {
   font-size: 11pt;
 }
 
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
 .clear {
   clear: both;
 }
