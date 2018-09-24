@@ -304,13 +304,18 @@ div#inside {
 
 #l_holder {
   background-position: center;
+  bottom: 2px;
+  color: #333;
   float: left;
   display: block;
   width: 16px;
   height: 16px;
+  left: 4px;
   padding: 1px;
   margin-left: 4px;
   margin-right: 11px;
+  position: relative;
+  text-decoration: none;
 }
 
 #headertitle {
