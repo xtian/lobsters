@@ -1,2 +1,2 @@
 web: bin/rails server
-queue: bin/sidekiq
+queue: bin/sidekiq -q default -q mailers
