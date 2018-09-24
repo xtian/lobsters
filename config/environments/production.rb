@@ -74,7 +74,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :mailgun
   config.action_mailer.mailgun_settings = {
     api_key: Rails.application.secrets.mailgun_api_key,
-    domain: Rails.application.secrets.domain
+    domain: Rails.application.secrets.mailgun_domain
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.
