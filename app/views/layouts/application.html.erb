@@ -58,8 +58,11 @@
             <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
               v[:title] %></a>
           <% end %>
+          <% if !@user && Rails.application.allow_invitation_requests? %>
+            <a href="/invitations/request">Request Invitation</a>
+          <% end %>
           <% if !@user && Rails.application.open_signups? %>
-            <strong><a href="/invitations/open" class="signup-text">Sign Up Now</a></strong>
+            <a href="/invitations/open">Sign Up Now</a>
           <% end %>
         </span>
       </div>
