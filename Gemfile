@@ -35,7 +35,6 @@ gem 'htmlentities'
 gem 'nokogiri', '>= 1.7.2'
 
 gem 'hiredis' # Bindings to native Redis client
-gem 'mailgun-ruby' # Client for sending email via Mailgun
 gem 'oauth' # for twitter-posting bot
 gem 'redis' # Redis client
 gem 'sidekiq' # Background job queue built on Redis
@@ -66,6 +65,7 @@ end
 
 group :production do
   gem 'exception_notification' # Sends notifications when errors occur
-  gem 'slack-notifier' # Sends Slack webhook notifications
+  gem 'mailgun-ruby' # Client for sending email via Mailgun
   gem 'puma-heroku' # Default Puma configuration
+  gem 'slack-notifier' # Sends Slack webhook notifications
 end
