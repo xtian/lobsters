@@ -66,5 +66,6 @@ end
 
 group :production do
   gem 'exception_notification' # Sends notifications when errors occur
+  gem 'slack-notifier' # Sends Slack webhook notifications
   gem 'puma-heroku' # Default Puma configuration
 end
